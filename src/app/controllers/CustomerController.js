@@ -9,6 +9,11 @@ class CustomerController {
     //@route GET /home/order
     createOrder(req, res) {
         console.log(req.body)
+        const {sender, senderAddress, receiver, receiverAddress} = req.body; 
+        if(!sender || !senderAddress || !receiver || !receiverAddress) {
+            res.status(400)
+            throw new Error("All fields are mandatory")
+        }
         res.status(201).json({ message: 'POST ORDER' })
     }
 
