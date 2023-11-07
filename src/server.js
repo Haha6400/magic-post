@@ -7,8 +7,10 @@ var route = require('./routes')
 
 //Parse data stream from client
 app.use(express.json())
-app.use(errorHandler)
+
 route(app)
+app.use(errorHandler)
+
 
 // Create a server to listen at port 3000
 var server = app.listen(3000, function(){
