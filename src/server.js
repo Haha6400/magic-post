@@ -1,8 +1,9 @@
-
+//REST API demo in Node.js
 const express = require('express'); // requre the express framework
 const app = express();
-const fs = require('fs'); //require file system object
 const errorHandler = require("./app/middleware/errorHandler"); 
+var fs = require('fs'); //require file system object
+var route = require('./routes')
 const connectDB = require('./config/dbConnection');
 const dotenv = require("dotenv").config();
 
