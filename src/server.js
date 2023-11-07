@@ -1,8 +1,14 @@
 //REST API demo in Node.js
 var express = require('express'); // requre the express framework
 var app = express();
+var errorHandler = require('./app/middleware/errorHandler')
 var fs = require('fs'); //require file system object
+var route = require('./routes')
 
+//Parse data stream from client
+app.use(express.json())
+app.use(errorHandler)
+route(app)
 
 // Create a server to listen at port 3000
 var server = app.listen(3000, function(){
