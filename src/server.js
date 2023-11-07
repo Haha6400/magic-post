@@ -1,16 +1,20 @@
-//REST API demo in Node.js
-var express = require('express'); // requre the express framework
-var app = express();
-var errorHandler = require('./app/middleware/errorHandler')
-var fs = require('fs'); //require file system object
-var route = require('./routes')
 
-//Parse data stream from client
-app.use(express.json())
-app.use(errorHandler)
-route(app)
+const express = require('express'); // requre the express framework
+const app = express();
+const fs = require('fs'); //require file system object
+const errorHandler = require("./app/middleware/errorHandler"); 
+const connectDB = require('./config/dbConnection');
+const dotenv = require("dotenv").config();
 
-// Create a server to listen at port 3000
+connectDB();
+// const staff = require('./models/staff'); //import class staff
+
+app.use(express.json());
+app.use(errorHandler);
+app.use("/api/accounts", require("./routes/staffRoutes"));
+
+
+// create a server to listen at port 3000
 var server = app.listen(3000, function(){
     var host = server.address().address
     var port = server.address().port
