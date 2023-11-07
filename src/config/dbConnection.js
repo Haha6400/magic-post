@@ -1,14 +1,17 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
-async function connect() {
+const connectDB = async () => {
     try {
-        await mongoose.connect('mongodb://localhost:27017/MagicPost?authMechanism=DEFAULT')
-            .then(() => console.log('Database Connected!'));
-    } catch (error) {
-        console.log('Fail!')
+        const connect = await mongoose.connect(process.env.CONNECTION_STRING);
+        console.log(
+            "Database connected: ",
+            connect.connection.host,
+            connect.connection.name
+        );
+    } catch (err) {
+        console.log(err);
+        process.exit(1);
     }
+};
 
-}
-
-
-module.exports = connect;
+module.exports = connectDB;
