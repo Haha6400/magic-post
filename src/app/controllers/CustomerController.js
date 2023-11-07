@@ -1,4 +1,5 @@
 const asyncHandler = require('express-async-handler')
+const Customer = require('../models/customerModel')
 
 /*
 @desc Get all orders
