@@ -3,7 +3,7 @@ const express = require('express'); // requre the express framework
 const app = express();
 const errorHandler = require("./app/middleware/errorHandler"); 
 var fs = require('fs'); //require file system object
-var route = require('./routes')
+// var route = require('./routes')
 const connectDB = require('./config/dbConnection');
 const dotenv = require("dotenv").config();
 
