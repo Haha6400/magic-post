@@ -10,9 +10,10 @@ Includes:
 
 const express = require("express");
 const router = express.Router();
-const { getAllAccounts, createAccount } = require("../app/controllers/staffController")
+const { getAllAccounts, createAccount, loginStaff } = require("../app/controllers/staffController")
 
 router.route("/").get(getAllAccounts);
 router.post("/", createAccount);
+router.post("/login", loginStaff);
 
 module.exports = router;
