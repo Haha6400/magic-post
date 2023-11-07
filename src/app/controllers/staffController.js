@@ -13,6 +13,8 @@ const asyncHandler = require('express-async-handler');
 const staff = require("../models/staffModel");
 const bcrypt = require('bcrypt');
 const saltRounds = 10
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 /*
 @des Create a new account
@@ -55,6 +57,44 @@ const createAccount = asyncHandler(async (req, res) => {
 });
 
 /*
+@des Login user
+@route POST /api/accounts/login
+@access public
+*/
+const loginStaff = asyncHandler(async (req, res) => {
+    const {email, password} = req.body;
+    if(!email || !password){
+        res.status(400);
+        throw new Error(`All fileds are mandatory`);
+    }
+    const account = await staff.findOne({email});
+    if(account){
+        console.log(account.password);
+    }
+
+    //compare password with hashed password
+    const match = await bcrypt.compare(password, account.password);
+    if(match){
+        //create JWTs
+        const accessToken = jwt.sign({
+            "accountInfo":{
+                "userName": account.userName,
+                "email": account.email,
+                "role": account.role
+            }
+        },
+        process.env.ACCESS_TOKEN_SECRET,
+        {expiresIn: "30m"}
+        );
+        res. status(200).json({accessToken});
+    } else {
+        res.status(401);
+        throw new Error(`Email or password mismatch`);
+    }
+});
+
+
+/*
 @des Get all accounts
 @route GET /api/accounts
 @access supervisor
@@ -69,4 +109,4 @@ const getAllAccounts = asyncHandler(async (req, res) => {
 
 
 
-module.exports = {getAllAccounts, createAccount};
+module.exports = {getAllAccounts, createAccount, loginStaff};
