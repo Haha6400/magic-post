@@ -6,7 +6,7 @@ const Customer = require('../models/customerModel')
 @route GET /home/order
 @access supervisor
 */
-const getAllOrders = asyncHandler(async (req, res) => {
+const getAllOrders = asyncHandler(async (req, res) => { 
     res.status(200).json({ message: 'GET ALL ORDERS' })
 })
 
