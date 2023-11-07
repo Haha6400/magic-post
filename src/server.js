@@ -11,7 +11,7 @@ connectDB();
 
 app.use(express.json());
 app.use(errorHandler);
-app.use("/api/accounts", require("./routes/accountRoutes"));
+app.use("/api/accounts", require("./routes/staffRoutes"));
 
 
 // create a server to listen at port 3000
