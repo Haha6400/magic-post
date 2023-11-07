@@ -1,7 +1,7 @@
 /*
 @desc Functions for account management.
 Includes: 
-- Create/ delete account (only for branch managers)
+- Create/ delete account
 - Get account by email, username, id, workplace, role.
 - Get all accounts
 - Login, logout
@@ -13,11 +13,13 @@ const asyncHandler = require('express-async-handler');
 const staff = require("../models/staffModel");
 const bcrypt = require('bcrypt');
 const saltRounds = 10
+
 /*
 @des Create a new account
 @route POST /api/accounts
 @access hubManager, warehouseManager
 */
+//TODO: Thêm access role
 const createAccount = asyncHandler(async (req, res) => {
     console.log(req.body);
     const {userName, email, phoneNumber, password, workplace, role} = req.body;
@@ -34,12 +36,6 @@ const createAccount = asyncHandler(async (req, res) => {
 
     //Hash password
     const hashedPassword = await bcrypt.hash(password, saltRounds);
-    // bcrypt.genSalt(saltRounds).then(salt => {
-    //     console.log("Salt: ", salt);
-    //     hashedPassword = bcrypt.hash(password, salt);
-    // }).then(hash => {
-    //     console.log('Hash: ', hash)
-    // }).catch(err => console.error(err.message))
 
     const staffAccount = await staff.create({
         userName, 
@@ -63,6 +59,7 @@ const createAccount = asyncHandler(async (req, res) => {
 @route GET /api/accounts
 @access supervisor
 */
+// TODO: Thêm access role
 const getAllAccounts = asyncHandler(async (req, res) => {
     staff.find({}).then(function (staffAccounts){
         res.send(staffAccounts);
