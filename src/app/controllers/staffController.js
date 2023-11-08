@@ -2,6 +2,7 @@
 @desc Functions for account management.
 Includes: 
 - Create/ delete account
+- CRUD account
 - Get account by email, username, id, workplace, role.
 - Get all accounts
 - Login, logout
@@ -70,6 +71,22 @@ const createAccount = asyncHandler(async (req, res) => {
 });
 
 /*
+@des Delete an account
+@route DELETE /api/accounts/:id
+@access hubManager, warehouseManager, supervisor
+*/
+const deleteAccount = asyncHandler(async (req, res) => {
+    const staffAccount = await staff.findById(req.params.id);
+    if(!staffAccount){
+        res.status(404);
+        throw new Error("Staff account not found");
+    }
+    await staff.deleteOne({_id: req.params.id});
+    res.status(200).json(staffAccount);
+});
+
+
+/*
 @des Login user
 @route POST /api/accounts/login
 @access public
@@ -126,4 +143,4 @@ const currentAccount = asyncHandler(async (req, res) => {
   });
 
 
-module.exports = {getAllAccounts, createAccount, loginStaff, currentAccount};
+module.exports = {getAllAccounts, createAccount, loginStaff, currentAccount, deleteAccount};
