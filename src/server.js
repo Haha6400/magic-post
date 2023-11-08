@@ -6,12 +6,16 @@ var fs = require('fs'); //require file system object
 // var route = require('./routes')
 const connectDB = require('./config/dbConnection');
 const dotenv = require("dotenv").config();
+const cookieParser = require('cookie-parser');
 
 connectDB();
-// const staff = require('./models/staff'); //import class staff
 
 app.use(express.json());
 app.use(errorHandler);
+
+//Configuring cookie-parser
+app.use(cookieParser()); 
+
 app.use("/api/accounts", require("./routes/staffRoutes"));
 app.use("/api/orders", require("./routes/orderRoutes"));
 

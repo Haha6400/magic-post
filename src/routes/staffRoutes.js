@@ -10,10 +10,19 @@ Includes:
 
 const express = require("express");
 const router = express.Router();
-const { getAllAccounts, createAccount, loginStaff } = require("../app/controllers/staffController")
+const { getAllAccounts, createAccount, loginStaff, currentAccount } = require("../app/controllers/staffController")
+const {staffAuth, roleCheck} = require("../app/middleware/auth");
 
-router.route("/").get(getAllAccounts);
-router.post("/", createAccount);
+//@access PERSONALITY
+router.get("/current", staffAuth, currentAccount);
+
+//@access PUBLIC
 router.post("/login", loginStaff);
 
-module.exports = router;
+//@access SUPERVISOR
+router.get("/all", staffAuth, roleCheck(["supervisor"]), getAllAccounts);
+
+//@access HUBMANAGER, WAREHOUSEMANEGER, SUPERVISOR
+router.post("/create",staffAuth, roleCheck(["hubManager", "warehouseManager", "supervisor"]), createAccount);
+
+module.exports = router; 
