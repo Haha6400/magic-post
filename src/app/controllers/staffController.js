@@ -78,15 +78,6 @@ const createAccount = asyncHandler(async (req, res) => {
 const deleteAccount = asyncHandler(async (req, res) => {
     const staffAccount = await staff.findById(req.params.id);
     console.log("staffAccount ID: ", staffAccount.id);
-    /*Check the current user's access rights:
-    - If the user is supervisor, they can delete any staff account
-    - If the user is hubManager or warehouseManager, they can only delete account of staff working in the same workplace.
-    */
-    const currentAccount = req.currentAccount;
-    if((currentAccount.role == "hubManager" || currentAccount.role == "warehouseManager") && (currentAccount.workplace !== staffAccount.workplace)) {
-        res.status(400);
-        throw new Error(`You can not delete this staff account.`);
-    }
     if(!staffAccount){
         res.status(404);
         throw new Error("Staff account not found");
@@ -94,6 +85,14 @@ const deleteAccount = asyncHandler(async (req, res) => {
     await staff.deleteOne({_id: req.params.id});
     res.status(200).json(staffAccount);
 });
+
+/*
+@des Update an account
+@route PUT /api/accounts/:id
+@access personal
+*/
+//TODO: Lười vải nhớ viết hàm Update
+
 
 
 /*
@@ -120,7 +119,8 @@ const loginStaff = asyncHandler(async (req, res) => {
             "accountInfo":{
                 "userName": account.userName,
                 "email": account.email,
-                "role": account.role
+                "role": account.role,
+                "workplace": account.workplace
             }
         },
         process.env.ACCESS_TOKEN_SECRET,
@@ -145,12 +145,38 @@ const getAllAccounts = asyncHandler(async (req, res) => {
     res.status(200).json({staffAccounts, count: staffAccounts.length});
 });
 
+/*
+@des Get accounts by workplace
+@route GET /api/accounts/:workplace
+@access hubManager, warehouseManager, supervisor
+*/
+//TODO:
+
+/*
+@des Get accounts by userName
+@route GET /api/accounts/:userName
+@access hubManager, warehouseManager, supervisor
+*/
+//TODO:
+
+/*
+@des Get account by id
+@route GET /api/accounts/:id
+@access hubManager, warehouseManager, supervisor
+*/
+const getAccountById = asyncHandler(async (req, res) => {
+    const staffAccount = await staff.findById(req.params.id);s
+    res.status(200).json(staffAccount);
+});
+
+
 //@desc Current user info
 //@route POST /api/accounts/current
-//@access private
+//@access personal
 const currentAccount = asyncHandler(async (req, res) => {
     res.status(200).json(req.currentAccount);
   });
 
 
-module.exports = {getAllAccounts, createAccount, loginStaff, currentAccount, deleteAccount};
+module.exports = {getAllAccounts, createAccount, loginStaff, currentAccount, deleteAccount, 
+                getAccountById};

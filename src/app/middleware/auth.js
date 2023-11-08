@@ -30,4 +30,23 @@ const roleCheck = (roles) => async (req, res, next) =>{
     !roles.includes(currentAccount.role) ? res.status(401).json("SOrry u dont not have access") : next();
 }
 
-module.exports = {staffAuth, roleCheck}
+const workplaceCheck = async(req, res, next) => {
+    console.log("Workplace check");
+    const currentAccount = req.currentAccount;
+    if(currentAccount.role === "supervisor"){
+        next();
+    }
+    const staffAccount = await staff.findById(req.params.id);
+    if(!staffAccount){
+        res.status(404);
+        throw new Error("Account not found");
+    }
+    console.log(staffAccount.workplace);
+    if(staffAccount.workplace !== currentAccount.workplace) {
+        res.status(401);
+        throw new Error("SOrry u dont have access");
+    }
+    next();
+}
+
+module.exports = {staffAuth, roleCheck, workplaceCheck}
