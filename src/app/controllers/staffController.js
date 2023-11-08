@@ -77,6 +77,16 @@ const createAccount = asyncHandler(async (req, res) => {
 */
 const deleteAccount = asyncHandler(async (req, res) => {
     const staffAccount = await staff.findById(req.params.id);
+    console.log("staffAccount ID: ", staffAccount.id);
+    /*Check the current user's access rights:
+    - If the user is supervisor, they can delete any staff account
+    - If the user is hubManager or warehouseManager, they can only delete account of staff working in the same workplace.
+    */
+    const currentAccount = req.currentAccount;
+    if((currentAccount.role == "hubManager" || currentAccount.role == "warehouseManager") && (currentAccount.workplace !== staffAccount.workplace)) {
+        res.status(400);
+        throw new Error(`You can not delete this staff account.`);
+    }
     if(!staffAccount){
         res.status(404);
         throw new Error("Staff account not found");

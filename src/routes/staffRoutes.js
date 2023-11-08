@@ -24,6 +24,6 @@ router.get("/all", staffAuth, roleCheck(["supervisor"]), getAllAccounts);
 
 //@access HUBMANAGER, WAREHOUSEMANEGER, SUPERVISOR
 router.post("/create",staffAuth, roleCheck(["hubManager", "warehouseManager", "supervisor"]), createAccount);
-router.delete("/create",staffAuth, roleCheck(["hubManager", "warehouseManager", "supervisor"]), deleteAccount);
-
+router.delete("/:id",staffAuth, roleCheck(["hubManager", "warehouseManager", "supervisor"]), deleteAccount);
+// router.delete("/:id", deleteAccount);
 module.exports = router; 
