@@ -3,20 +3,20 @@ const mongoose = require('mongoose');
 const customerSchema = new mongoose.Schema({
     fullname: {
         type: String,
-        required: [true, "Please add the staff username"],
+        required: [true, "Please add fullname"],
     },
     address: {
         type: String,
-        required: [true, "Please add the staff email"],
+        required: [true, "Please add the address"],
     },
     phoneNumber: {
         type: String,
-        required: [true, "Please add the staff phone number"],
+        required: [true, "Please add phone number"],
     },
-    zipcode: {
+    zipCode: {
         type: String,
-        required: [true, "Please add the staff workplace"],
-    },
+        required: [true, "Please add the zipcode"],
+    }
     },
     {
         timestamps: true,
