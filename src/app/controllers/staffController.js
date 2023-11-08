@@ -19,15 +19,28 @@ require('dotenv').config();
 /*
 @des Create a new account
 @route POST /api/accounts
-@access hubManager, warehouseManager
+@access hubManager, warehouseManager, supervisor
 */
-//TODO: Thêm access role
 const createAccount = asyncHandler(async (req, res) => {
     console.log(req.body);
     const {userName, email, phoneNumber, password, workplace, role} = req.body;
     if(!userName || !email || !phoneNumber || !password || !workplace || !role) {
         res.status(400);
         throw new Error(`Error creating account`);
+    }
+
+    /*Check the current user's access rights:
+    - If the user is supervisor, they can only create accounts for hubManager and warehouseManager.
+    - If the user is hubManager, they can only create accounts for hubStaff.
+    - If the user is warehouseManager, they can only create accounts for warehouseStaff.
+    */
+    const currentAccount = req.currentAccount;
+    if((currentAccount.role === "supervisor" && (role !== "hubManager" && role !== "warehouseManager")) ||
+        (currentAccount.role === "hubManager" && (role !== "hubStaff")) ||
+        (currentAccount.role === "warehouseManager" && (role !== "warehouseStaff"))) 
+    {
+        res.status(400);
+        throw new Error(`Select correct staff's role that you want to create account for`);
     }
     
     //Check if the staff account already exists
@@ -68,8 +81,8 @@ const loginStaff = asyncHandler(async (req, res) => {
         throw new Error(`All fileds are mandatory`);
     }
     const account = await staff.findOne({email});
-    if(account){
-        console.log(account.password);
+    if(!account){
+        return res.json({message: 'Wrong credentials'})
     }
 
     //compare password with hashed password
@@ -99,14 +112,18 @@ const loginStaff = asyncHandler(async (req, res) => {
 @route GET /api/accounts
 @access supervisor
 */
-// TODO: Thêm access role
 const getAllAccounts = asyncHandler(async (req, res) => {
-    staff.find({}).then(function (staffAccounts){
-        res.send(staffAccounts);
-    })
+    console.log("OK");
+    const staffAccounts = await staff.find().sort('createdAt');
+    res.status(200).json({staffAccounts, count: staffAccounts.length});
 });
 
+//@desc Current user info
+//@route POST /api/accounts/current
+//@access private
+const currentAccount = asyncHandler(async (req, res) => {
+    res.status(200).json(req.currentAccount);
+  });
 
 
-
-module.exports = {getAllAccounts, createAccount, loginStaff};
+module.exports = {getAllAccounts, createAccount, loginStaff, currentAccount};
