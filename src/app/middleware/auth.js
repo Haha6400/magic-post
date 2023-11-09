@@ -37,9 +37,12 @@ const roleCheck = (roles) => async (req, res, next) =>{
 }
 
 /*
-@desc check workplace Middleware
+@desc check accessCheck Middleware
+- currentAccount access their own account
+- If currentAccount is supervisor: access manager account
+- If currentAccount is manager: access same workplace staff account
 */
-const workplaceCheck = async (req, res, next) => {
+const accessCheck = async (req, res, next) => {
     const currentAccount = req.currentAccount;
     const staffAccount = await staff.findById(req.params.id);
     if(!staffAccount){
@@ -48,20 +51,21 @@ const workplaceCheck = async (req, res, next) => {
     }
 
     //Check if currentAccount has permission to access their own account
-    if((currentAccount.id === staffAccount.id) || (currentAccount.role === "supervisor")){
+    if((currentAccount.id === staffAccount.id) ||
+    (currentAccount.role === "supervisor" && (staffAccount.role === "hubManager" || staffAccount.role === "workerManager"))){ 
         next();
     }
 
     //Check if currentAccount has permission to access other user accounts
     if((currentAccount.role === "hubManager" && staffAccount.role !== "hubStaff") ||
     (currentAccount.role === "warehouseManager" && staffAccount.role !== "warehouseStaff") ||
+    (currentAccount.role === "supervisor" && staffAccount.role !== "hubManager" && staffAccount.role !== "workerManager") || //supervisor only can access manager accounts or their own account
     (staffAccount.workplace !== currentAccount.workplace) //If currentAccount is manager, they can access same workplace accounts
     ){
         res.status(401);
         throw new Error("SOrry u dont have access");
     }
     next();
-    
 }
 
-module.exports = {staffAuth, roleCheck, workplaceCheck}
+module.exports = {staffAuth, roleCheck, accessCheck}
