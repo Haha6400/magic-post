@@ -10,12 +10,16 @@ Includes:
 
 const express = require("express");
 const router = express.Router();
-const { getAllAccounts, createAccount, loginStaff, currentAccount, deleteAccount, getAccountById, getAccountByEmail, getAccountsByWorkplace, getAccountsByEachWorkplace, updateAccount} = require("../app/controllers/staffController")
-const {staffAuth, roleCheck, workplaceCheck} = require("../app/middleware/auth");
+const { getAllAccounts, createAccount, loginStaff, currentAccount, deleteAccount, getAccountById, getAccountByEmail, getAccountsByWorkplace, getAccountsByEachWorkplace, updateAccount, passwordReset, resetPasswordEmail} = require("../app/controllers/staffController")
+const {staffAuth, roleCheck, accessCheck} = require("../app/middleware/auth");
+
+//TEST
+router.post("/createe", createAccount);
 
 //@access PERSONAL
 router.get("/current", staffAuth, currentAccount);
-router.put("/update/:id", staffAuth, roleCheck(["hubManager", "warehouseManager", "supervisor", "hubStaff", "warehouseStaff"]), workplaceCheck, updateAccount)
+router.put("/update/:id", staffAuth, roleCheck(["hubManager", "warehouseManager", "supervisor", "hubStaff", "warehouseStaff"]), accessCheck, updateAccount)
+// router.put("/update/:id", staffAuth, roleCheck(["hubManager", "warehouseManager", "supervisor", "hubStaff", "warehouseStaff"]), updateAccount)
 
 //@access PUBLIC
 router.post("/login", loginStaff);
@@ -27,11 +31,15 @@ router.get("/wp/:workplace", staffAuth, roleCheck(["supervisor"]), getAccountsBy
 
 //@access HUBMANAGER, WAREHOUSEMANEGER, SUPERVISOR
 router.post("/create",staffAuth, roleCheck(["hubManager", "warehouseManager", "supervisor"]), createAccount);
-router.delete("/:id",staffAuth, roleCheck(["hubManager", "warehouseManager", "supervisor"]), workplaceCheck, deleteAccount);
-router.get("/i/:id",staffAuth, roleCheck(["hubManager", "warehouseManager", "supervisor"]), workplaceCheck, getAccountById);
+router.delete("/:id",staffAuth, roleCheck(["hubManager", "warehouseManager", "supervisor"]), accessCheck, deleteAccount);
+router.get("/i/:id",staffAuth, roleCheck(["hubManager", "warehouseManager", "supervisor"]), accessCheck, getAccountById);
 router.get("/e/:email", staffAuth, roleCheck(["hubManager", "warehouseManager", "supervisor"]), getAccountByEmail);
 
 //@access HUBMANAGER, WAREHOUSEMANEGER
 router.get("/wp", staffAuth, roleCheck(["hubManager", "warehouseManager"]), getAccountsByWorkplace);
+
+
+router.post("/reset-password", staffAuth, resetPasswordEmail);
+router.post("/reset-password/:id/:accessToken", staffAuth, passwordReset)
 
 module.exports = router; 
