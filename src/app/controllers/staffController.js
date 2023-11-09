@@ -91,7 +91,38 @@ const deleteAccount = asyncHandler(async (req, res) => {
 @route PUT /api/accounts/:id
 @access personal
 */
-//TODO: Lười vải nhớ viết hàm Update
+const updateAccount = asyncHandler(async(req, res) => {
+    console.log("updateAccount check");
+    const staffAccount = await staff.findById(req.params.id);
+    // console.log(staffAccount.email);
+    if(!staffAccount){
+        res.status(404);
+        throw new Error("Account not found");
+    }
+    const {email, phoneNumber} = req.body;
+    console.log("email new: ", email, "phone number: ", phoneNumber);
+    if(!email || !phoneNumber) {
+        throw new Error("Please provide all values");
+    }
+    const updatedAccount = await staff.findByIdAndUpdate(req.params.id, req.body, {new: true});
+    // res.status(200).json({updatedAccount});
+
+
+    //create JWTs
+    const accessToken = jwt.sign({
+        "accountInfo":{
+            "userName": updatedAccount.userName,
+            "email": updatedAccount.email,
+            "role": updatedAccount.role,
+            "workplace": updatedAccount.workplace
+        }
+    },
+    process.env.ACCESS_TOKEN_SECRET,
+    {expiresIn: "30m"}
+    );
+    res.status(200).json({accessToken});
+    // res.json({staffAccount});
+});
 
 
 
@@ -204,6 +235,10 @@ const getAccountByEmail = asyncHandler(async (req, res) => {
 */
 const getAccountById = asyncHandler(async (req, res) => {
     const staffAccount = await staff.findById(req.params.id);
+    if(!staffAccounts){
+        res.status(404);
+        throw new Error("Account not found");
+    }
     res.status(200).json(staffAccount);
 });
 
@@ -217,4 +252,5 @@ const currentAccount = asyncHandler(async (req, res) => {
 
 
 module.exports = {getAllAccounts, createAccount, loginStaff, currentAccount, deleteAccount, 
-                getAccountById, getAccountByEmail, getAccountsByWorkplace, getAccountsByEachWorkplace};
+                getAccountById, getAccountByEmail, getAccountsByWorkplace, getAccountsByEachWorkplace,
+                updateAccount};

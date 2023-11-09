@@ -10,11 +10,12 @@ Includes:
 
 const express = require("express");
 const router = express.Router();
-const { getAllAccounts, createAccount, loginStaff, currentAccount, deleteAccount, getAccountById, getAccountByEmail, getAccountsByWorkplace, getAccountsByEachWorkplace} = require("../app/controllers/staffController")
+const { getAllAccounts, createAccount, loginStaff, currentAccount, deleteAccount, getAccountById, getAccountByEmail, getAccountsByWorkplace, getAccountsByEachWorkplace, updateAccount} = require("../app/controllers/staffController")
 const {staffAuth, roleCheck, workplaceCheck} = require("../app/middleware/auth");
 
 //@access PERSONAL
 router.get("/current", staffAuth, currentAccount);
+router.put("/update/:id", staffAuth, roleCheck(["hubManager", "warehouseManager", "supervisor", "hubStaff", "warehouseStaff"]), workplaceCheck, updateAccount)
 
 //@access PUBLIC
 router.post("/login", loginStaff);
