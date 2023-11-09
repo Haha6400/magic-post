@@ -49,22 +49,28 @@ const accessCheck = async (req, res, next) => {
         res.status(404);
         throw new Error("Account not found");
     }
+    // console.log(currentAccount.email);
 
-    //Check if currentAccount has permission to access their own account
-    if((currentAccount.id === staffAccount.id) ||
-    (currentAccount.role === "supervisor" && (staffAccount.role === "hubManager" || staffAccount.role === "workerManager"))){ 
-        next();
-    }
-
-    //Check if currentAccount has permission to access other user accounts
-    if((currentAccount.role === "hubManager" && staffAccount.role !== "hubStaff") ||
-    (currentAccount.role === "warehouseManager" && staffAccount.role !== "warehouseStaff") ||
-    (currentAccount.role === "supervisor" && staffAccount.role !== "hubManager" && staffAccount.role !== "workerManager") || //supervisor only can access manager accounts or their own account
-    (staffAccount.workplace !== currentAccount.workplace) //If currentAccount is manager, they can access same workplace accounts
-    ){
+    //Access own account
+    if((currentAccount.role == staffAccount.role) && (currentAccount.email !== staffAccount.email)){
         res.status(401);
         throw new Error("SOrry u dont have access");
     }
+
+    //If currentAccount is supervisor: access manager account
+    if(currentAccount.role === "supervisor" && 
+    (staffAccount.role === "hubStaff" && staffAccount.role !== "warehouseStaff")){
+        res.status(401);
+        throw new Error("SOrry u dont have access");
+    }
+
+    //If currentAccount is manager: access same workplace accounts
+    if((currentAccount.role === "hubManager" || currentAccount.role == "warehouseManager") && 
+    (currentAccount.workplace !== staffAccount.workplace)){
+        res.status(401);
+        throw new Error("SOrry u dont have access");
+    }
+
     next();
 }
 

@@ -6,7 +6,7 @@ Includes:
 - Get account by email, username, id, workplace, role.
 - Get all accounts
 - Login, logout
-- Change password
+- Reset password
 - Update account
 */
 
@@ -15,6 +15,7 @@ const staff = require("../models/staffModel");
 const bcrypt = require('bcrypt');
 const saltRounds = 10
 const jwt = require('jsonwebtoken');
+const sendEmail = require ("../utils/sendEmail");
 require('dotenv').config();
 
 /*
@@ -104,7 +105,7 @@ const updateAccount = asyncHandler(async(req, res) => {
     if(!email || !phoneNumber) {
         throw new Error("Please provide all values");
     }
-    const updatedAccount = await staff.findByIdAndUpdate(req.params.id, req.body, {new: true});
+    const updatedAccount = await staff.findByIdAndUpdate(staffAccount.id, req.body, {new: true});
     // res.status(200).json({updatedAccount});
 
 
@@ -121,7 +122,6 @@ const updateAccount = asyncHandler(async(req, res) => {
     {expiresIn: "30m"}
     );
     res.status(200).json({accessToken});
-    // res.json({staffAccount});
 });
 
 
@@ -148,10 +148,12 @@ const loginStaff = asyncHandler(async (req, res) => {
         //create JWTs
         const accessToken = jwt.sign({
             "accountInfo":{
+                "_id": account.id,
                 "userName": account.userName,
                 "email": account.email,
                 "role": account.role,
-                "workplace": account.workplace
+                "workplace": account.workplace,
+                "password": account.password
             }
         },
         process.env.ACCESS_TOKEN_SECRET,
@@ -250,7 +252,54 @@ const currentAccount = asyncHandler(async (req, res) => {
     res.status(200).json(req.currentAccount);
   });
 
+//@desc Send email inclues link to reset password
+//@route POST /api/accounts/reset-password
+//@access personal
+const resetPasswordEmail = asyncHandler(async (req, res) => {
+    try{
+        const currentAccount = req.currentAccount;
+        const accessToken = jwt.sign({
+            "accountInfo":{
+                "_id": currentAccount.id,
+                "userName": currentAccount.userName,
+                "email": currentAccount.email,
+                "role": currentAccount.role,
+                "workplace": currentAccount.workplace,
+                "password": currentAccount.password
+            }
+        },
+        process.env.ACCESS_TOKEN_SECRET,
+        {expiresIn: "30m"}
+        );
+        const link = `http://localhost:3000/api/accounts/reset-password/${currentAccount._id}/${accessToken}`;
+        await sendEmail(currentAccount.email, "Magic Post Password Reset", link);
+        res.send("password reset link sent to your email account");
+    } catch (error) {
+        res.send("error reset password");
+        console.log(error);
+    }
+});
+
+//@desc Reset password
+//@route POST /api/accounts/reset-password/:id/:token
+//@access personal
+const passwordReset = asyncHandler(async (req, res) => {
+    const currentAccount = req.currentAccount;
+    console.log("currentAccount._id:", currentAccount._id);
+    console.log("req.params.id:", req.params.id);
+    if(currentAccount._id != req.params.id){
+        res.status(400);
+        res.json("Invalid id");
+    }
+
+    const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+    const updateAccount = await staff.findByIdAndUpdate(req.params.id, {password: hashedPassword}, {new: true});
+    // await currentAccount.accessToken.delete();
+    res.status(200).json("password reset sucessfully.");
+
+});
+
 
 module.exports = {getAllAccounts, createAccount, loginStaff, currentAccount, deleteAccount, 
                 getAccountById, getAccountByEmail, getAccountsByWorkplace, getAccountsByEachWorkplace,
-                updateAccount};
+                updateAccount, passwordReset, resetPasswordEmail};
