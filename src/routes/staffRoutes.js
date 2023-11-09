@@ -10,20 +10,28 @@ Includes:
 
 const express = require("express");
 const router = express.Router();
-const { getAllAccounts, createAccount, loginStaff, currentAccount, deleteAccount } = require("../app/controllers/staffController")
-const {staffAuth, roleCheck} = require("../app/middleware/auth");
+const { getAllAccounts, createAccount, loginStaff, currentAccount, deleteAccount, getAccountById, getAccountByEmail, getAccountsByWorkplace, getAccountsByEachWorkplace, updateAccount} = require("../app/controllers/staffController")
+const {staffAuth, roleCheck, workplaceCheck} = require("../app/middleware/auth");
 
-//@access PERSONALITY
+//@access PERSONAL
 router.get("/current", staffAuth, currentAccount);
+router.put("/update/:id", staffAuth, roleCheck(["hubManager", "warehouseManager", "supervisor", "hubStaff", "warehouseStaff"]), workplaceCheck, updateAccount)
 
 //@access PUBLIC
 router.post("/login", loginStaff);
 
 //@access SUPERVISOR
 router.get("/all", staffAuth, roleCheck(["supervisor"]), getAllAccounts);
+router.get("/wp/:workplace", staffAuth, roleCheck(["supervisor"]), getAccountsByEachWorkplace);
+
 
 //@access HUBMANAGER, WAREHOUSEMANEGER, SUPERVISOR
 router.post("/create",staffAuth, roleCheck(["hubManager", "warehouseManager", "supervisor"]), createAccount);
-router.delete("/:id",staffAuth, roleCheck(["hubManager", "warehouseManager", "supervisor"]), deleteAccount);
-// router.delete("/:id", deleteAccount);
+router.delete("/:id",staffAuth, roleCheck(["hubManager", "warehouseManager", "supervisor"]), workplaceCheck, deleteAccount);
+router.get("/i/:id",staffAuth, roleCheck(["hubManager", "warehouseManager", "supervisor"]), workplaceCheck, getAccountById);
+router.get("/e/:email", staffAuth, roleCheck(["hubManager", "warehouseManager", "supervisor"]), getAccountByEmail);
+
+//@access HUBMANAGER, WAREHOUSEMANEGER
+router.get("/wp", staffAuth, roleCheck(["hubManager", "warehouseManager"]), getAccountsByWorkplace);
+
 module.exports = router; 

@@ -78,15 +78,6 @@ const createAccount = asyncHandler(async (req, res) => {
 const deleteAccount = asyncHandler(async (req, res) => {
     const staffAccount = await staff.findById(req.params.id);
     console.log("staffAccount ID: ", staffAccount.id);
-    /*Check the current user's access rights:
-    - If the user is supervisor, they can delete any staff account
-    - If the user is hubManager or warehouseManager, they can only delete account of staff working in the same workplace.
-    */
-    const currentAccount = req.currentAccount;
-    if((currentAccount.role == "hubManager" || currentAccount.role == "warehouseManager") && (currentAccount.workplace !== staffAccount.workplace)) {
-        res.status(400);
-        throw new Error(`You can not delete this staff account.`);
-    }
     if(!staffAccount){
         res.status(404);
         throw new Error("Staff account not found");
@@ -94,6 +85,45 @@ const deleteAccount = asyncHandler(async (req, res) => {
     await staff.deleteOne({_id: req.params.id});
     res.status(200).json(staffAccount);
 });
+
+/*
+@des Update an account
+@route PUT /api/accounts/:id
+@access personal
+*/
+const updateAccount = asyncHandler(async(req, res) => {
+    console.log("updateAccount check");
+    const staffAccount = await staff.findById(req.params.id);
+    // console.log(staffAccount.email);
+    if(!staffAccount){
+        res.status(404);
+        throw new Error("Account not found");
+    }
+    const {email, phoneNumber} = req.body;
+    console.log("email new: ", email, "phone number: ", phoneNumber);
+    if(!email || !phoneNumber) {
+        throw new Error("Please provide all values");
+    }
+    const updatedAccount = await staff.findByIdAndUpdate(req.params.id, req.body, {new: true});
+    // res.status(200).json({updatedAccount});
+
+
+    //create JWTs
+    const accessToken = jwt.sign({
+        "accountInfo":{
+            "userName": updatedAccount.userName,
+            "email": updatedAccount.email,
+            "role": updatedAccount.role,
+            "workplace": updatedAccount.workplace
+        }
+    },
+    process.env.ACCESS_TOKEN_SECRET,
+    {expiresIn: "30m"}
+    );
+    res.status(200).json({accessToken});
+    // res.json({staffAccount});
+});
+
 
 
 /*
@@ -120,7 +150,8 @@ const loginStaff = asyncHandler(async (req, res) => {
             "accountInfo":{
                 "userName": account.userName,
                 "email": account.email,
-                "role": account.role
+                "role": account.role,
+                "workplace": account.workplace
             }
         },
         process.env.ACCESS_TOKEN_SECRET,
@@ -145,12 +176,81 @@ const getAllAccounts = asyncHandler(async (req, res) => {
     res.status(200).json({staffAccounts, count: staffAccounts.length});
 });
 
+/*
+@des Get accounts by workplace
+@route GET /api/accounts/wp
+@access hubManager, warehouseManager
+*/
+const getAccountsByWorkplace = asyncHandler(async (req, res) =>{
+    const currentAccount = req.currentAccount;
+    const staffAccounts = await staff.find({workplace: currentAccount.workplace}).sort('createdAt');
+    if(!staffAccounts){
+        res.status(404);
+        throw new Error("Account not found");
+    }
+    res.status(200).json({staffAccounts, count: staffAccounts.length});
+});
+
+/*
+@des Get accounts by each workplace
+@route GET /api/accounts/wp/:workplace
+@access supervisor
+*/
+const getAccountsByEachWorkplace = asyncHandler(async (req, res) =>{
+    const staffAccounts = await staff.find({workplace: req.params.workplace}).sort('createdAt');
+    if(!staffAccounts){
+        res.status(404);
+        throw new Error("Account not found");
+    }
+    res.status(200).json({staffAccounts, count: staffAccounts.length});
+});
+
+/*
+@des Get accounts by email
+@route GET /api/accounts/e/:email
+@access hubManager, warehouseManager, supervisor
+*/
+const getAccountByEmail = asyncHandler(async (req, res) => {
+    // console.log("Get by email check");
+    const staffAccount = await staff.findOne({email: req.params.email});
+    // console.log("HERE");
+    if(!staffAccount){
+        res.status(404);
+        throw new Error("Account not found");
+    }
+    // console.log("staffAccount: ", staffAccount);
+
+    const currentAccount = req.currentAccount;
+    if(staffAccount.workplace !== currentAccount.workplace){
+        res.status(401);
+        throw new Error("SOrry u dont have access");
+    }
+    res.status(200).json(staffAccount);
+});
+
+/*
+@des Get account by id
+@route GET /api/accounts/i/:id
+@access hubManager, warehouseManager, supervisor
+*/
+const getAccountById = asyncHandler(async (req, res) => {
+    const staffAccount = await staff.findById(req.params.id);
+    if(!staffAccounts){
+        res.status(404);
+        throw new Error("Account not found");
+    }
+    res.status(200).json(staffAccount);
+});
+
+
 //@desc Current user info
 //@route POST /api/accounts/current
-//@access private
+//@access personal
 const currentAccount = asyncHandler(async (req, res) => {
     res.status(200).json(req.currentAccount);
   });
 
 
-module.exports = {getAllAccounts, createAccount, loginStaff, currentAccount, deleteAccount};
+module.exports = {getAllAccounts, createAccount, loginStaff, currentAccount, deleteAccount, 
+                getAccountById, getAccountByEmail, getAccountsByWorkplace, getAccountsByEachWorkplace,
+                updateAccount};

@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const staff = require("../models/staffModel")
 
 /*
-@desc Verify JWT from authorization header and check role Middleware
+@desc Verify JWT from authorization header Middleware
 */
 const staffAuth = async (req, res, next) => {
     const authHeader = req.headers['authorization']
@@ -22,12 +22,46 @@ const staffAuth = async (req, res, next) => {
     });
 };
 
+/*
+@desc check role Middleware but dont using id
+*/
 const roleCheck = (roles) => async (req, res, next) =>{
     console.log("roleCheck");
     const currentAccount = req.currentAccount;
     console.log(currentAccount);
     console.log(currentAccount.role);
-    !roles.includes(currentAccount.role) ? res.status(401).json("SOrry u dont not have access") : next();
+    if(!roles.includes(currentAccount.role)){
+        res.status(401).json("SOrry u dont not have access");
+    }
+    next();
 }
 
-module.exports = {staffAuth, roleCheck}
+/*
+@desc check workplace Middleware
+*/
+const workplaceCheck = async (req, res, next) => {
+    const currentAccount = req.currentAccount;
+    const staffAccount = await staff.findById(req.params.id);
+    if(!staffAccount){
+        res.status(404);
+        throw new Error("Account not found");
+    }
+
+    //Check if currentAccount has permission to access their own account
+    if((currentAccount.id === staffAccount.id) || (currentAccount.role === "supervisor")){
+        next();
+    }
+
+    //Check if currentAccount has permission to access other user accounts
+    if((currentAccount.role === "hubManager" && staffAccount.role !== "hubStaff") ||
+    (currentAccount.role === "warehouseManager" && staffAccount.role !== "warehouseStaff") ||
+    (staffAccount.workplace !== currentAccount.workplace) //If currentAccount is manager, they can access same workplace accounts
+    ){
+        res.status(401);
+        throw new Error("SOrry u dont have access");
+    }
+    next();
+    
+}
+
+module.exports = {staffAuth, roleCheck, workplaceCheck}
