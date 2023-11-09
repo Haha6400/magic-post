@@ -33,6 +33,7 @@ const roleCheck = (roles) => async (req, res, next) =>{
 const workplaceCheck = async(req, res, next) => {
     console.log("Workplace check");
     const currentAccount = req.currentAccount;
+    //If currentAccount is supervisor, they can access all workplace accounts
     if(currentAccount.role === "supervisor"){
         next();
     }
@@ -42,6 +43,12 @@ const workplaceCheck = async(req, res, next) => {
         throw new Error("Account not found");
     }
     console.log(staffAccount.workplace);
+    //If currentAccount is staff, they only can access their own accounts
+    if((currentAccount.role === "hubStaff" || currentAccount.role === "warehouseStaff") && staffAccount.id !== currentAccount.id){
+        res.status(401);
+        throw new Error("SOrry u dont have access");
+    }
+    //If currentAccount is manager, they can access same workplace accounts
     if(staffAccount.workplace !== currentAccount.workplace) {
         res.status(401);
         throw new Error("SOrry u dont have access");
