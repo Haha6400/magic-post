@@ -1,4 +1,4 @@
-# magicpost
+# frontend
 
 ## Project setup
 ```
