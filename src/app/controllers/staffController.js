@@ -147,10 +147,32 @@ const getAllAccounts = asyncHandler(async (req, res) => {
 
 /*
 @des Get accounts by workplace
-@route GET /api/accounts/:workplace
-@access hubManager, warehouseManager, supervisor
+@route GET /api/accounts/wp
+@access hubManager, warehouseManager
 */
-//TODO:
+const getAccountsByWorkplace = asyncHandler(async (req, res) =>{
+    const currentAccount = req.currentAccount;
+    const staffAccounts = await staff.find({workplace: currentAccount.workplace}).sort('createdAt');
+    if(!staffAccounts){
+        res.status(404);
+        throw new Error("Account not found");
+    }
+    res.status(200).json({staffAccounts, count: staffAccounts.length});
+});
+
+/*
+@des Get accounts by each workplace
+@route GET /api/accounts/wp/:workplace
+@access supervisor
+*/
+const getAccountsByEachWorkplace = asyncHandler(async (req, res) =>{
+    const staffAccounts = await staff.find({workplace: req.params.workplace}).sort('createdAt');
+    if(!staffAccounts){
+        res.status(404);
+        throw new Error("Account not found");
+    }
+    res.status(200).json({staffAccounts, count: staffAccounts.length});
+});
 
 /*
 @des Get accounts by email
@@ -195,4 +217,4 @@ const currentAccount = asyncHandler(async (req, res) => {
 
 
 module.exports = {getAllAccounts, createAccount, loginStaff, currentAccount, deleteAccount, 
-                getAccountById, getAccountByEmail};
+                getAccountById, getAccountByEmail, getAccountsByWorkplace, getAccountsByEachWorkplace};
