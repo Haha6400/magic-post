@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const staff = require("../models/staffModel")
 
 /*
-@desc Verify JWT from authorization header and check role Middleware
+@desc Verify JWT from authorization header Middleware
 */
 const staffAuth = async (req, res, next) => {
     const authHeader = req.headers['authorization']

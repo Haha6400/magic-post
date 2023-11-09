@@ -153,19 +153,35 @@ const getAllAccounts = asyncHandler(async (req, res) => {
 //TODO:
 
 /*
-@des Get accounts by userName
-@route GET /api/accounts/:userName
+@des Get accounts by email
+@route GET /api/accounts/e/:email
 @access hubManager, warehouseManager, supervisor
 */
-//TODO:
+const getAccountByEmail = asyncHandler(async (req, res) => {
+    // console.log("Get by email check");
+    const staffAccount = await staff.findOne({email: req.params.email});
+    // console.log("HERE");
+    if(!staffAccount){
+        res.status(404);
+        throw new Error("Account not found");
+    }
+    // console.log("staffAccount: ", staffAccount);
+
+    const currentAccount = req.currentAccount;
+    if(staffAccount.workplace !== currentAccount.workplace){
+        res.status(401);
+        throw new Error("SOrry u dont have access");
+    }
+    res.status(200).json(staffAccount);
+});
 
 /*
 @des Get account by id
-@route GET /api/accounts/:id
+@route GET /api/accounts/i/:id
 @access hubManager, warehouseManager, supervisor
 */
 const getAccountById = asyncHandler(async (req, res) => {
-    const staffAccount = await staff.findById(req.params.id);s
+    const staffAccount = await staff.findById(req.params.id);
     res.status(200).json(staffAccount);
 });
 
@@ -179,4 +195,4 @@ const currentAccount = asyncHandler(async (req, res) => {
 
 
 module.exports = {getAllAccounts, createAccount, loginStaff, currentAccount, deleteAccount, 
-                getAccountById};
+                getAccountById, getAccountByEmail};
