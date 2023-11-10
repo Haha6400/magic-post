@@ -1,24 +1,50 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <p>abs</p>
+  <div class="container">
+    <!-- <img alt="Vue logo" src="../assets/logo.png" /> -->
+    <p>Test</p>
+    <!-- Banner -->
+    <div class="banner">
+      <div class="card">p</div>
+    </div>
+    <div class="banner">
+      <div class="card">p</div>
+      <div class="card">p</div>
+    </div>
+    <div class="banner">
+      <div class="card">p</div>
+    </div>
   </div>
 </template>
 
 <script>
-
 export default {
   name: "HomeView",
 };
 </script>
 
 <style>
-.home {
-  /* margin-left: 260px; */
+.container {
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 2.5vh;
+  /* background-color: #FFFFFF; */
+}
+
+.banner {
   display: flex;
-  flex-direction: column;
+	grid-gap: 20px;
+	margin-top: 20px;
+	flex-wrap: wrap;
+  height: 10vh;
 }
-.home img {
-  width: 100px;
+  
+.card {
+  flex-grow: 1;
+	flex-basis: 400px;
+	padding: 20px;
+	border-radius: 12px;
+	/* box-shadow: 4px 4px 16px rgba(0, 0, 0, .1); */
 }
+  
+
 </style>

@@ -175,7 +175,7 @@ li {
   /* top: 2.5%; */
   left: 15px;
   margin-top: 2.5vh;
-  margin-left: 10px;
+  margin-left: 20px;
   border-radius: 12dp;
   overflow-y: auto;
   scrollbar-width: none;
@@ -272,7 +272,9 @@ li {
 
 @media (max-width: 800px) {
   #sidebar {
+    width: 60px;
     max-width: 60px;
+    min-width: 60px;
   }
 
   #sidebar:hover {
