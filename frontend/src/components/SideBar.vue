@@ -1,6 +1,5 @@
 <template>
   <section id="sidebar">
-    <!-- <a href="#" class="brand"><i class='bx bxs-smile icon'></i> AdminSite</a> -->
     <div class="topPart">
       <router-link to="/" class="brand">
         <img class="logo" src="@/assets/logo.png" alt="logo"/>
@@ -186,15 +185,11 @@ li {
   /* font-family: 'Nunito Sans', sans-serif;
     font-size: 20px; */
 }
-#sidebar.hide {
-  max-width: 60px;
-}
-#sidebar.hide:hover {
-  max-width: 260px;
-}
+
 #sidebar::-webkit-scrollbar {
-  display: none;
+	display: none;
 }
+
 #sidebar .brand {
   font-size: 24px;
   display: flex;
@@ -221,20 +216,10 @@ li {
   align-items: left;
   margin-right: 6px;
 }
-#sidebar .icon-right {
-  margin-left: auto;
-  transition: all 0.3s ease;
-}
 #sidebar .side-menu {
   margin: 25px 0;
   padding: 0 20px;
   transition: all 0.3s ease;
-}
-#sidebar.hide .side-menu {
-  padding: 0 6px;
-}
-#sidebar.hide:hover .side-menu {
-  padding: 0 20px;
 }
 #sidebar .side-menu a {
   display: flex;
@@ -280,83 +265,12 @@ li {
   background: var(--blue);
   color: var(--light);
 }
-#sidebar .divider {
-  margin-top: 24px;
-  font-size: 12px;
-  text-transform: uppercase;
-  font-weight: 700;
-  color: var(--dark-grey);
-  transition: all 0.3s ease;
-  white-space: nowrap;
-}
-#sidebar.hide:hover .divider {
-  text-align: left;
-}
-#sidebar.hide .divider {
-  text-align: center;
-}
-#sidebar .side-dropdown {
-  padding-left: 54px;
-  max-height: 0;
-  overflow-y: hidden;
-  transition: all 0.15s ease;
-}
-#sidebar .side-dropdown.show {
-  max-height: 1000px;
-}
-#sidebar .side-dropdown a:hover {
-  color: var(--blue);
-}
-#sidebar .ads {
-  width: 100%;
-  padding: 20px;
-}
-#sidebar.hide .ads {
-  display: none;
-}
-#sidebar.hide:hover .ads {
-  display: block;
-}
-#sidebar .ads .wrapper {
-  background: var(--grey);
-  padding: 20px;
-  border-radius: 10px;
-}
-#sidebar .btn-upgrade {
-  font-size: 14px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 12px 0;
-  color: var(--light);
-  background: var(--blue);
-  transition: all 0.3s ease;
-  border-radius: 5px;
-  font-weight: 600;
-  margin-bottom: 12px;
-}
-#sidebar .btn-upgrade:hover {
-  background: var(--dark-blue);
-}
-#sidebar .ads .wrapper p {
-  font-size: 12px;
-  color: var(--dark-grey);
-  text-align: center;
-}
-#sidebar .ads .wrapper p span {
-  font-weight: 700;
-}
 
 .signinButton {
   align-items: flex-end;
 }
-/* SIDEBAR */
 
 @media (max-width: 700px) {
-  /* .side {
-    max-width: 100px;
-  } */
-
   #sidebar {
     max-width: 60px;
   }
