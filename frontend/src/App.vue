@@ -3,10 +3,7 @@
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link>
   </nav> -->
-  <div class="app">
-    <SideBar />
-  </div>
-
+  <SideBar />
   <router-view />
 </template>
 
@@ -21,6 +18,8 @@ import SideBar from "@/components/SideBar.vue";
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  display:flex;
+  flex-direction: row;
 }
 
 * {
@@ -45,6 +44,11 @@ nav a.router-link-exact-active {
 }
 body {
   background-color: #aadfff;
+}
+
+.main {
+  display: flex;
+  flex-direction: row;
 }
 
 .app {

@@ -163,18 +163,20 @@ li {
 
 
 #sidebar {
-  position: fixed;
+  /* position: fixed; */
   max-width: 260px;
+  /* max-height: 1000px; */
   width: 100%;
-  background: var(--light);
+  height: 95vh;
+  /* background: var(--light); */
   background-color: #ffffff;
   border-collapse: separate;
   border-radius: 12px;
-  top: 2.5%;
+  /* top: 2.5%; */
   left: 15px;
+  margin-top: 2.5vh;
   margin-left: 10px;
   border-radius: 12dp;
-  height: 95%;
   overflow-y: auto;
   scrollbar-width: none;
   transition: all 0.3s ease;
@@ -182,8 +184,6 @@ li {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  /* font-family: 'Nunito Sans', sans-serif;
-    font-size: 20px; */
 }
 
 #sidebar::-webkit-scrollbar {
@@ -270,7 +270,7 @@ li {
   align-items: flex-end;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 800px) {
   #sidebar {
     max-width: 60px;
   }
