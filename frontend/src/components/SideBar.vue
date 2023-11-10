@@ -1,10 +1,14 @@
 <template>
-  <div class="side">
-    <section id="sidebar">
-      <!-- <a href="#" class="brand"><i class='bx bxs-smile icon'></i> AdminSite</a> -->
+  <section id="sidebar">
+    <!-- <a href="#" class="brand"><i class='bx bxs-smile icon'></i> AdminSite</a> -->
+    <div class="topPart">
+      <router-link to="/" class="brand">
+        <img class="logo" src="@/assets/logo.png" alt="logo"/>
+      </router-link>
+
       <ul class="side-menu">
         <li>
-          <a href="#">
+          <router-link to="/">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -21,10 +25,10 @@
             </svg>
 
             Trang chủ
-          </a>
+          </router-link>
         </li>
         <li>
-          <a href="#">
+          <router-link to="/">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -40,11 +44,11 @@
               />
             </svg>
 
-            Tra cứu đơn hàng</a
+            Tra cứu đơn hàng</router-link
           >
         </li>
         <li>
-          <a href="#">
+          <router-link to="/">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -60,11 +64,11 @@
               />
             </svg>
 
-            Dịch vụ</a
+            Dịch vụ</router-link
           >
         </li>
         <li>
-          <a href="#">
+          <router-link to="/">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -80,11 +84,11 @@
               />
             </svg>
 
-            Tin tức</a
+            Tin tức</router-link
           >
         </li>
         <li>
-          <a href="#">
+          <router-link to="/about">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -100,12 +104,36 @@
               />
             </svg>
 
-            Về Magic Post</a
+            Về Magic Post</router-link
           >
         </li>
       </ul>
-    </section>
-  </div>
+    </div>
+    <div class="signinButton">
+      <ul class="side-menu">
+        <li>
+          <a href="#">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6 icon"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"
+              />
+            </svg>
+
+            Đăng nhập
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -123,13 +151,26 @@ a {
 li {
   list-style: none;
 }
-.side {
+
+.topPart {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.topPart a img {
+    width: 50px;
+  }
+
+
+#sidebar {
   position: fixed;
   max-width: 260px;
   width: 100%;
+  background: var(--light);
   background-color: #ffffff;
   border-collapse: separate;
-  border-radius: 10px;
+  border-radius: 12px;
   top: 2.5%;
   left: 15px;
   margin-left: 10px;
@@ -138,19 +179,10 @@ li {
   overflow-y: auto;
   scrollbar-width: none;
   transition: all 0.3s ease;
-  font-family: "Nunito Sans", sans-serif;
-}
-#sidebar {
-  position: fixed;
-  max-width: 260px;
-  width: 100%;
-  background: var(--light);
-  border-collapse: separate;
-  border-radius: 10px;
-  overflow-y: auto;
-  scrollbar-width: none;
-  transition: all 0.3s ease;
   z-index: 200;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   /* font-family: 'Nunito Sans', sans-serif;
     font-size: 20px; */
 }
@@ -166,12 +198,13 @@ li {
 #sidebar .brand {
   font-size: 24px;
   display: flex;
+  justify-content: center;
   align-items: center;
   height: 64px;
   font-weight: 700;
   color: var(--blue);
   position: sticky;
-  top: 0;
+  top: 10px;
   left: 0;
   z-index: 100;
   background: var(--light);
@@ -193,7 +226,7 @@ li {
   transition: all 0.3s ease;
 }
 #sidebar .side-menu {
-  margin: 36px 0;
+  margin: 25px 0;
   padding: 0 20px;
   transition: all 0.3s ease;
 }
@@ -211,16 +244,33 @@ li {
   color: #2c3e50;
   color: black;
   font-weight: 500;
-  padding: 12px 16px 12px 0;
+  padding: 8px 16px 8px 0;
   transition: all 0.3s ease;
   border-radius: 10px;
   margin: 4px 0;
   white-space: nowrap;
   font-family: "Nunito Sans", sans-serif;
 }
+
+#sidebar .side-menu a p {
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  /* color: var(--dark); */
+  color: #2c3e50;
+  color: black;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border-radius: 10px;
+  margin: 4px 0;
+  white-space: nowrap;
+  font-family: "Nunito Sans", sans-serif;
+}
+
 #sidebar .side-menu > li > a:hover {
   /* background: var(--grey); */
-  background-color: #ffa500;
+  background-color: #f8b760;
+  /* background-color: #AADFFF; */
 }
 #sidebar .side-menu > li > a.active .icon-right {
   transform: rotateZ(90deg);
@@ -296,9 +346,46 @@ li {
 #sidebar .ads .wrapper p span {
   font-weight: 700;
 }
+
+.signinButton {
+  align-items: flex-end;
+}
 /* SIDEBAR */
 
-/* @media (max-width: 300px) {
-  padding-left: 6rem;
-} */
+@media (max-width: 700px) {
+  /* .side {
+    max-width: 100px;
+  } */
+
+  #sidebar {
+    max-width: 60px;
+  }
+
+  #sidebar:hover {
+    max-width: 260px;
+  }
+
+  #sidebar .side-menu {
+    padding: 0 6px;
+  }
+
+  #sidebar:hover .side-menu {
+    padding: 0 20px;
+  }
+
+  #sidebar:hover .divider {
+    text-align: left;
+  }
+  #sidebar .divider {
+    text-align: center;
+  }
+
+  #sidebar .side-menu a p {
+    visibility: hidden;
+  }
+
+  .topPart a img {
+    width: 40px;
+  }
+}
 </style>
