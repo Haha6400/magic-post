@@ -12,6 +12,7 @@ Includes:
 
 const asyncHandler = require('express-async-handler');
 const staff = require("../models/staffModel");
+const workplace = require("../models/workplaceModel");
 const bcrypt = require('bcrypt');
 const saltRounds = 10
 const jwt = require('jsonwebtoken');
@@ -26,8 +27,8 @@ require('dotenv').config();
 */
 const createAccount = asyncHandler(async (req, res) => {
     console.log(req.body);
-    const {userName, email, phoneNumber, password, workplace, role} = req.body;
-    if(!userName || !email || !phoneNumber || !password || !workplace || !role) {
+    const {userName, email, phoneNumber, password, workplaceName, role} = req.body;
+    if(!userName || !email || !phoneNumber || !password || !workplaceName || !role) {
         res.status(400);
         throw new Error(`Error creating account`);
     }
@@ -60,7 +61,7 @@ const createAccount = asyncHandler(async (req, res) => {
         email, 
         phoneNumber, 
         password: hashedPassword, 
-        workplace, 
+        workplace_id: await workplace.findOne({name: workplaceName}), 
         role
     });
 
@@ -69,7 +70,6 @@ const createAccount = asyncHandler(async (req, res) => {
         res.status(400);
         throw new Error(`Invalid`);
     }
-    res.status(200).json({message: "Create an account"})
 });
 
 /*
@@ -116,7 +116,7 @@ const updateAccount = asyncHandler(async(req, res) => {
             "userName": updatedAccount.userName,
             "email": updatedAccount.email,
             "role": updatedAccount.role,
-            "workplace": updatedAccount.workplace
+            "workplace_id": await workplace.findById(updatedAccount.workplace_id)
         }
     },
     process.env.ACCESS_TOKEN_SECRET,
@@ -153,7 +153,7 @@ const loginStaff = asyncHandler(async (req, res) => {
                 "userName": account.userName,
                 "email": account.email,
                 "role": account.role,
-                "workplace": account.workplace,
+                "workplace_id": await workplace.findById(account.workplace_id),
                 "password": account.password
             }
         },
@@ -186,7 +186,9 @@ const getAllAccounts = asyncHandler(async (req, res) => {
 */
 const getAccountsByWorkplace = asyncHandler(async (req, res) =>{
     const currentAccount = req.currentAccount;
-    const staffAccounts = await staff.find({workplace: currentAccount.workplace}).sort('createdAt');
+    const staffWorkplace = await workplace.findById(currentAccount.workplace_id).sort('createdAt');
+    console.log("staffWorkplace:", staffWorkplace);
+    const staffAccounts = await staff.find({workplace_id: staffWorkplace}).sort('createdAt');
     if(!staffAccounts){
         res.status(404);
         throw new Error("Account not found");
@@ -196,11 +198,12 @@ const getAccountsByWorkplace = asyncHandler(async (req, res) =>{
 
 /*
 @des Get accounts by each workplace
-@route GET /api/accounts/wp/:workplace
+@route GET /api/accounts/wp/:workplaceName
 @access supervisor
 */
 const getAccountsByEachWorkplace = asyncHandler(async (req, res) =>{
-    const staffAccounts = await staff.find({workplace: req.params.workplace}).sort('createdAt');
+    const staffWorkplace = await workplace.findOne({name: req.params.workplaceName}).sort('createdAt');
+    const staffAccounts = await staff.find({workplace_id: staffWorkplace}).sort('createdAt');
     if(!staffAccounts){
         res.status(404);
         throw new Error("Account not found");
@@ -222,12 +225,6 @@ const getAccountByEmail = asyncHandler(async (req, res) => {
         throw new Error("Account not found");
     }
     // console.log("staffAccount: ", staffAccount);
-
-    const currentAccount = req.currentAccount;
-    if(staffAccount.workplace !== currentAccount.workplace){
-        res.status(401);
-        throw new Error("SOrry u dont have access");
-    }
     res.status(200).json(staffAccount);
 });
 
@@ -265,7 +262,7 @@ const resetPasswordEmail = asyncHandler(async (req, res) => {
                 "userName": currentAccount.userName,
                 "email": currentAccount.email,
                 "role": currentAccount.role,
-                "workplace": currentAccount.workplace,
+                "workplace_id": await workplace.findById(currentAccount.workplace_id),
                 "password": currentAccount.password
             }
         },

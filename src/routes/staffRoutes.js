@@ -28,7 +28,7 @@ router.post("/login", loginStaff);
 
 //@access SUPERVISOR
 router.get("/all", staffAuth, roleCheck(["supervisor"]), getAllAccounts);
-router.get("/wp/:workplace", staffAuth, roleCheck(["supervisor"]), getAccountsByEachWorkplace);
+router.get("/wp/:workplaceName", staffAuth, roleCheck(["supervisor"]), getAccountsByEachWorkplace);
 
 
 //@access HUBMANAGER, WAREHOUSEMANEGER, SUPERVISOR

@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const staff = require("../models/staffModel")
+const workplace = require('../models/workplaceModel')
 
 /*
 @desc Verify JWT from authorization header Middleware
@@ -64,9 +65,14 @@ const accessAccountCheck = async (req, res, next) => {
         throw new Error("SOrry u dont have access");
     }
 
+    // console.log(currentAccount.workplace_id);
+    const currentWorkplace = await workplace.findById(currentAccount.workplace_id);
+    const staffWorkplace = await workplace.findById(staffAccount.workplace_id);
+    // console.log("currentWorkplace:", currentWorkplace._id.toString());
+    // console.log(currentWorkplace._id.toString() === staffWorkplace._id.toString());
     //If currentAccount is manager: access same workplace accounts
     if((currentAccount.role === "hubManager" || currentAccount.role == "warehouseManager") && 
-    (currentAccount.workplace !== staffAccount.workplace)){
+    (currentWorkplace._id.toString() !== staffWorkplace._id.toString())){
         res.status(401);
         throw new Error("SOrry u dont have access");
     }
