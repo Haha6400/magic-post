@@ -42,7 +42,7 @@ const roleCheck = (roles) => async (req, res, next) =>{
 - If currentAccount is supervisor: access manager account
 - If currentAccount is manager: access same workplace staff account
 */
-const accessCheck = async (req, res, next) => {
+const accessAccountCheck = async (req, res, next) => {
     const currentAccount = req.currentAccount;
     const staffAccount = await staff.findById(req.params.id);
     if(!staffAccount){
@@ -74,4 +74,4 @@ const accessCheck = async (req, res, next) => {
     next();
 }
 
-module.exports = {staffAuth, roleCheck, accessCheck}
+module.exports = {staffAuth, roleCheck, accessAccountCheck}

@@ -38,6 +38,7 @@ const mjmlTemplate = `
                     </p>
 
                     <p>If you initiated this request, kindly proceed by following the secure link provided below:
+[Password Reset Link]
                     </p>
                 </mj-text>
 
@@ -121,6 +122,11 @@ We appreciate your prompt attention to this matter and thank you for entrusting 
     </mj-body>
 </mjml>
 `
+
+// const renderedMJML = mustache.render(mjmlTemplate, templateData);
+
+// const html =  mjml(renderedMJML).html;
+// don't forget the `.html`
 
 const sendEmail = async (email, subject, link) => {
     try{
