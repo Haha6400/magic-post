@@ -107,7 +107,7 @@
             <li>Chuyển phát tiết kiệm</li>
             <li>Chuyển phát thương mại điện tử</li>
           </ul> -->
-          <div class="banner-description" style="font-size: 15px;">
+          <div class="banner-description" style="font-size: 15px">
             Magic Post là một công ty vận chuyển hàng đầu, chuyên cung cấp dịch
             vụ vận chuyển nhanh chóng và đáng tin cậy. Với đội ngũ nhân viên
             chuyên nghiệp và hệ thống logistics hiện đại, chúng tôi cam kết mang
@@ -131,6 +131,32 @@ export default {
 </script>
 
 <style>
+.slide-enter {
+  opacity: 0;
+}
+
+.slide-enter-active {
+  animation: slide-in 1s ease-in forwards;
+  transition: opacity 0.5s;
+}
+
+/* .slide-leave {
+} */
+
+.slide-leave-active {
+  animation: slide-out 1s ease-out forwards;
+  opacity: 0;
+  transition: opacity 1s;
+
+  @keyframes slide-in {
+    from {
+      transform: translateY(20px);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+}
 .container {
   margin-left: 20px;
   margin-right: 20px;
@@ -139,7 +165,7 @@ export default {
   overflow-y: scroll;
   height: 95vh;
   border-radius: 12px;
-
+  transition: all 0.3s ease;
 }
 
 ::-webkit-scrollbar {
@@ -151,6 +177,7 @@ export default {
   grid-gap: 20px;
   flex-wrap: wrap;
   margin-bottom: 20px;
+  transition: all 0.3s ease;
 }
 
 .card {
@@ -297,7 +324,7 @@ export default {
   width: 40%;
   height: 25px;
   font-family: "Nunito Sans", sans-serif;
-  color: #ffffff;
+  color: #000000;
   text-align: center;
 }
 
