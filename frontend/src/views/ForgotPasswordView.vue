@@ -2,33 +2,24 @@
   <div class="container">
     <div class="login-container">
       <form>
-        <h1 class="loginHeader">Đăng nhập</h1>
+        <h1 class="loginHeader">Quên mật khẩu</h1>
         <div class="mb-3">
-          <label for="exampleInputEmail1" class="form-label"
-            >Tên đăng nhập</label
-          >
+          <!-- <label for="exampleInputEmail1" class="form-label"
+            >Địa chỉ email</label
+          > -->
           <input
             type="email"
             class="form-control"
             id="exampleInputEmail1"
             aria-describedby="emailHelp"
+            placeholder="Địa chỉ email"
           />
         </div>
-        <div class="mb-3">
-          <label for="exampleInputPassword1" class="form-label">Mật khẩu</label>
-          <input
-            type="password"
-            class="form-control"
-            id="exampleInputPassword1"
-          />
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">Gửi email</button>
         <hr />
         <div class="forgotPass">
-          <p class="forgotPass-p">Quên mật khẩu?</p>
-          <router-link to="/forgotPassword" class="forgot">
-            Click here
-          </router-link>
+          <p class="forgotPass-p">Tự dưng nhớ ra mật khẩu?</p>
+          <router-link to="/login" class="forgot"> Đăng nhập </router-link>
         </div>
       </form>
     </div>
@@ -122,21 +113,24 @@ form {
 }
 
 .btn {
-    color: white;
+  color: white;
 
   /* color: #282225; */
   border: none;
   background-color: #f7b85e;
   border-radius: 30px;
-  width: 90px;
+  width: 100px;
   font-weight: 600;
 }
 .btn:focus {
-  color: #282225;
+  color: white;
+
+  /* color: #282225; */
   border: none;
   background-color: #f7b85e;
   border-radius: 30px;
-  width: 90px;
+  width: 100px;
+  font-weight: 600;
 }
 
 hr {
