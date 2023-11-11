@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const staff = require("../models/staffModel")
+const workplace = require('../models/workplaceModel')
 
 /*
 @desc Verify JWT from authorization header Middleware
@@ -42,7 +43,7 @@ const roleCheck = (roles) => async (req, res, next) =>{
 - If currentAccount is supervisor: access manager account
 - If currentAccount is manager: access same workplace staff account
 */
-const accessCheck = async (req, res, next) => {
+const accessAccountCheck = async (req, res, next) => {
     const currentAccount = req.currentAccount;
     const staffAccount = await staff.findById(req.params.id);
     if(!staffAccount){
@@ -64,9 +65,14 @@ const accessCheck = async (req, res, next) => {
         throw new Error("SOrry u dont have access");
     }
 
+    // console.log(currentAccount.workplace_id);
+    const currentWorkplace = await workplace.findById(currentAccount.workplace_id);
+    const staffWorkplace = await workplace.findById(staffAccount.workplace_id);
+    // console.log("currentWorkplace:", currentWorkplace._id.toString());
+    // console.log(currentWorkplace._id.toString() === staffWorkplace._id.toString());
     //If currentAccount is manager: access same workplace accounts
     if((currentAccount.role === "hubManager" || currentAccount.role == "warehouseManager") && 
-    (currentAccount.workplace !== staffAccount.workplace)){
+    (currentWorkplace._id.toString() !== staffWorkplace._id.toString())){
         res.status(401);
         throw new Error("SOrry u dont have access");
     }
@@ -74,4 +80,4 @@ const accessCheck = async (req, res, next) => {
     next();
 }
 
-module.exports = {staffAuth, roleCheck, accessCheck}
+module.exports = {staffAuth, roleCheck, accessAccountCheck}
