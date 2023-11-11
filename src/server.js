@@ -5,12 +5,13 @@ const errorHandler = require("./app/middleware/errorHandler");
 var fs = require('fs'); //require file system object
 const connectDB = require('./config/dbConnection');
 const dotenv = require("dotenv").config();
+const cookieParser = require('cookie-parser');
 
 connectDB();
-app.use(errorHandler);
-
 // const staff = require('./models/staff'); //import class staff
+
 app.use(express.json());
+app.use(errorHandler);
 app.use("/api/accounts", require("./routes/staffRoutes"));
 app.use("/api/orders", require("./routes/orderRoutes"));
 app.use("/api/customers", require("./routes/customerRoutes"));

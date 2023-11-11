@@ -7,6 +7,8 @@ const addCustomer = asyncHandler(async (req, res) => {
     if (!fullname || !address || !phoneNumber || !zipCode) {
         res.status(400)
         throw new Error('All fields are mandatory')
+    } else {
+        Customer.findOne
     }
     const customer = Customer.create({
         fullname, address, phoneNumber, zipCode
