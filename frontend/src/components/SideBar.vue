@@ -163,7 +163,7 @@ li {
 
 
 #sidebar {
-  /* position: fixed; */
+  position: sticky;
   max-width: 260px;
   /* max-height: 1000px; */
   width: 100%;
@@ -172,7 +172,6 @@ li {
   background-color: #ffffff;
   border-collapse: separate;
   border-radius: 12px;
-  /* top: 2.5%; */
   left: 15px;
   margin-top: 2.5vh;
   margin-left: 20px;
@@ -268,9 +267,18 @@ li {
 
 .signinButton {
   align-items: flex-end;
+  
 }
 
-@media (max-width: 800px) {
+.signinButton .side-menu a{
+  background-color: #f8b760;
+  padding: 8px 16px 8px 0;
+  transition: all 0.3s ease;
+  border-radius: 10px;
+  margin: 4px 0;
+}
+
+@media (max-width: 1200px) {
   #sidebar {
     width: 60px;
     max-width: 60px;
@@ -286,7 +294,7 @@ li {
   }
 
   #sidebar:hover .side-menu {
-    padding: 0 20px;
+    /* padding: 0 20px; */
   }
 
   #sidebar:hover .divider {
