@@ -17,9 +17,10 @@ const staffSchema = new mongoose.Schema({
         type: String,
         required: [true, "Please add password"],
     },
-    workplace: {
-        type: String,
-        required: [true, "Please add the staff workplace"],
+    branch_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "branch"
     },
     role: {
         type: String,

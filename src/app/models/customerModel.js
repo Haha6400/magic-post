@@ -1,3 +1,4 @@
+const { required } = require('joi');
 const mongoose = require('mongoose');
 
 const customerSchema = new mongoose.Schema({
@@ -13,10 +14,10 @@ const customerSchema = new mongoose.Schema({
         type: String,
         required: [true, "Please add phone number"],
     },
-    zipCode: {
-        type: String,
-        required: [true, "Please add the zipcode"],
-    }
+    branch_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: [true]
+    },
     },
     {
         timestamps: true,
