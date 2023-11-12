@@ -1,4 +1,3 @@
-const fetch = require("node-fetch");
 const mustache = require("mustache");
 const mjml = require("mjml");
 const nodemailer = require('nodemailer');
@@ -15,6 +14,11 @@ const mjmlTemplate = `
         </mj-attributes>
     </mj-head>
     <mj-body>
+        <mj-section>
+        <mj-column width="100%">
+            <mj-image src="https://raw.githubusercontent.com/Haha6400/MJML/main/magic-post-cover-mail.png"></mj-image>
+        </mj-column>
+        </mj-section>
 
         <mj-section>
             <mj-column width="100%">
