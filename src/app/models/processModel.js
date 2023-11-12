@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const packageSchema = new mongoose.Schema({
+const processSchema = new mongoose.Schema({
     amount: {
         type: Number,
     },
@@ -16,4 +16,4 @@ const packageSchema = new mongoose.Schema({
     });
 
 
-module.exports = mongoose.model("Package", packageSchema);
+module.exports = mongoose.model("Process", processSchema);
