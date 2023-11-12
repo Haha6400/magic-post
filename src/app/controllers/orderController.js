@@ -19,42 +19,53 @@ const getAllOrders = asyncHandler(async (req, res) => {
 */
 const createOrder = asyncHandler(async (req, res) => {
     console.log(req.body);
-    const { note, status, senderName, senderAddress, senderPhone, senderZipcode,
-        receiverName, receiverAddress, receiverPhone, receiverZipcode } = req.body
+    const {type, note, status, senderName, senderAddress, senderPhone, senderZipcode,
+        receiverName, receiverAddress, receiverPhone, receiverZipcode, amount, price, mass } = req.body
 
 
-    if (!status || !senderName || !senderAddress || !senderPhone || !senderZipcode
+    if (!type || !status || !senderName || !senderAddress || !senderPhone || !senderZipcode
         || !receiverName || !receiverAddress || !receiverPhone || !receiverZipcode) {
         res.status(400);
-        throw new Error(`All fields should not be left blank!`);
+        throw new Error(`All fields should not be empty!`);
     }
-
-    if (!Customer.find(senderName, senderPhone)) {
-        const sender = await Customer.create({
+    var sender = await Customer.findOne(
+        {
+            'fullname': senderName,
+            'phoneNumber': senderPhone,
+        })
+    var receiver = await Customer.findOne(
+        {
+            'fullname': receiverName,
+            'phoneNumber': receiverPhone,
+        })
+    if (!sender) {
+        sender = await Customer.create({
             fullname: senderName,
             address: senderAddress,
             phoneNumber: senderPhone,
             zipCode: senderZipcode
         })
     }
-    if (!Customer.find(receiverName, receiverPhone)) {
-        const receiver = await Customer.create({
+    if (!receiver) {
+        receiver = await Customer.create({
             fullname: receiverName,
             address: receiverAddress,
             phoneNumber: receiverPhone,
             zipCode: receiverZipcode
         })
     }
-    if (!Order.find()) {
-        const order = await Order.create({
-            note, status, sender, receiver
-        });
-    }
-    if (order) res.status(200).json(order);
-    else {
+
+    const order = await Order.create({
+        type, note, amount, price, mass,
+        'sender_id': sender,
+        'receiver_id': receiver
+    });
+    if (!order) {
         res.status(400);
         throw new Error(`Invalid`);
     }
+    res.status(200).json(order);
+
 });
 
 /*
@@ -103,6 +114,7 @@ const deleteOrder = asyncHandler(async (req, res) => {
         throw new Error("Order not found")
     }
     await Order.deleteOne({ _id: req.params.id })
+    res.json('Delete succeed')
 })
 
 module.exports = { getAllOrders, getOrder, createOrder, updateOrder, deleteOrder };

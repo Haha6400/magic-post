@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
-const { Schema } = mongoose;
 
-
-const orderSchema = Schema({
+const orderSchema = mongoose.Schema({
+    type: { // docs or goods
+        type: String,
+        required: [true, "Type of parcel"]
+    },
     note: {
         type: String,
         required: [true, "Please add fullname"],
@@ -10,18 +12,35 @@ const orderSchema = Schema({
     status: {
         type: String,
     },
-    sender: {
-        type: Schema.Types.ObjectId,
+    sender_id: {
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Customer',
     },
-    receiver: {
-        type: Schema.Types.ObjectId,
+    receiver_id: {
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Customer',
     },
+    special_service: {
+        type: String,
     },
+    instructions: {
+        type: String
+    },
+    sender_commitment: {
+        type: String
+    },
+    fee_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Fee"
+    },
+    package_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "Package"
+    }
+},
     {
         timestamps: true,
-        autoIndex: true
     });
 
 module.exports = mongoose.model("Order", orderSchema);
