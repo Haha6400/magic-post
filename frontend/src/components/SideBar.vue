@@ -2,7 +2,7 @@
   <section id="sidebar">
     <div class="topPart">
       <router-link to="/" class="brand">
-        <img class="logo" src="@/assets/logo.png" alt="logo"/>
+        <img class="logo" src="@/assets/logo.png" alt="logo" />
       </router-link>
 
       <ul class="side-menu">
@@ -108,7 +108,7 @@
         </li>
       </ul>
     </div>
-    <div v-if="!testLogin" class="signinButton">
+    <div v-if="!isLogin" class="signinButton">
       <ul class="side-menu">
         <li>
           <router-link to="/login">
@@ -123,7 +123,7 @@
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"
+                d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z"
               />
             </svg>
 
@@ -133,10 +133,10 @@
       </ul>
     </div>
 
-    <!-- <div v-if="testLogin" class="signinButton">
+    <div v-if="isLogin" class="signinButton">
       <ul class="side-menu">
         <li>
-          <router-link to="/login">
+          <router-link to="/" @click="logout()">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -156,7 +156,7 @@
           </router-link>
         </li>
       </ul>
-    </div> -->
+    </div>
   </section>
 </template>
 
@@ -169,23 +169,24 @@ export default {
 
   data() {
     return {
-      testLogin: false,
-    }
+      isLogin: false,
+    };
   },
-
-
 
   async created() {
     if (localStorage.getItem("token")) {
-      this.testLogin = true
+      this.isLogin = true;
       // this.$forceUpdate()
     }
-    console.log("localstorage")
+    console.log("localstorage");
   },
 
   methods: {
-  }
-  
+    logout() {
+      localStorage.clear();
+      this.isLogin = false;
+    },
+  },
 };
 </script>
 
@@ -203,11 +204,9 @@ li {
   flex-direction: column;
 }
 
-
 .topPart a img {
-    width: 50px;
-  }
-
+  width: 50px;
+}
 
 #sidebar {
   position: sticky;
@@ -233,7 +232,7 @@ li {
 }
 
 #sidebar::-webkit-scrollbar {
-	display: none;
+  display: none;
 }
 
 #sidebar .brand {
@@ -314,10 +313,9 @@ li {
 
 .signinButton {
   align-items: flex-end;
-  
 }
 
-.signinButton .side-menu a{
+.signinButton .side-menu a {
   background-color: #f8b760;
   padding: 8px 16px 8px 0;
   transition: all 0.3s ease;

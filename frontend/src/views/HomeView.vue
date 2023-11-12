@@ -131,6 +131,10 @@ export default {
 </script>
 
 <style>
+::placeholder { 
+  color: #000000;
+}
+
 .slide-enter {
   opacity: 0;
 }
@@ -209,7 +213,7 @@ export default {
 
 .banner-header {
   font-family: "Nunito", sans-serif;
-  color: #48abff;
+  color: #FFA500;
   font-size: 50px;
 }
 
@@ -259,7 +263,7 @@ export default {
 .content-header {
   font-family: "Nunito Sans", sans-serif;
   font-weight: 900;
-  color: #3fa3f9;
+  color: #FFA500;
   font-size: 25px;
   margin-top: 10px;
 }
@@ -302,12 +306,14 @@ export default {
 }
 .search-bar input {
   background: transparent;
+  color: #000000;
   flex: 1;
   border: 0;
   outline: none;
   padding: 2% 3%;
   font-family: "Nunito Sans", sans-serif;
 }
+
 .search-bar button svg {
   padding-right: 20px;
   height: 15px;
@@ -412,6 +418,7 @@ li {
   align-items: left;
   margin-right: 6px;
 }
+
 @media (max-width: 900px) {
   /* .banner-description {
     visibility: hidden;

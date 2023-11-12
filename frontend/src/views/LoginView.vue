@@ -103,7 +103,7 @@ export default {
   border-radius: 18px;
   min-width: 300px;
   width: 50%;
-  height: 45vh;
+  height: 50vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -115,7 +115,7 @@ export default {
   font-family: "Nunito Sans", sans-serif;
   font-weight: 600;
   font-size: 30px;
-  color: #3fa3f9;
+  color: #FFA500;
   line-height: 28px;
   text-align: center;
   margin-bottom: 20px;
@@ -177,17 +177,17 @@ form {
 }
 
 .btn {
-  color: white;
+  color: #000000;
 
   /* color: #282225; */
   border: none;
   background-color: #f7b85e;
   border-radius: 30px;
   width: 115px;
-  font-weight: 600;
+  /* font-weight: 600; */
 }
 .btn:focus {
-  color: #282225;
+  color: #000000;
   border: none;
   background-color: #f7b85e;
   border-radius: 30px;
