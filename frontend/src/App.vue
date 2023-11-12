@@ -3,7 +3,7 @@
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link>
   </nav> -->
-    <SideBar/>
+    <SideBar :key="$route.fullPath"/>
   
   <router-view />
 </template>
@@ -44,7 +44,7 @@ nav a.router-link-exact-active {
   color: #42b983;
 }
 body {
-  background-color: #aadfff;
+  background-color: #FFE4B2;
 }
 
 .main {
