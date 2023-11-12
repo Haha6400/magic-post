@@ -1,17 +1,20 @@
 <template>
   <div class="container">
     <div class="login-container">
-      <form>
+      <form @submit.prevent="Login()">
         <h1 class="loginHeader">Đăng nhập</h1>
         <div class="mb-3">
           <label for="exampleInputEmail1" class="form-label"
             >Tên đăng nhập</label
           >
+          <!-- type="email" -->
           <input
-            type="email"
+            
             class="form-control"
             id="exampleInputEmail1"
             aria-describedby="emailHelp"
+            v-model="email"
+            required
           />
         </div>
         <div class="mb-3">
@@ -20,9 +23,12 @@
             type="password"
             class="form-control"
             id="exampleInputPassword1"
+            v-model="password"
+            required
           />
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button v-if="!auth" type="submit" class="btn btn-primary" v-on:click="Login()">Đăng nhập</button>
+
         <hr />
         <div class="forgotPass">
           <p class="forgotPass-p">Quên mật khẩu?</p>
@@ -34,6 +40,55 @@
     </div>
   </div>
 </template>
+
+<script>
+import axios from "axios";
+
+export default {
+  name: "LoginView",
+  data() {
+    return {
+      email: "",
+      password: "",
+      auth: false,
+    };
+  },
+  methods: {
+    async Login() {
+      let url = "http://localhost:3000/api/accounts/login";
+      await axios
+        .post(url, { email: this.email, password: this.password })
+        .then((response) => {
+          console.log(response.data);
+          localStorage.setItem("token", response.data.accessToken);
+          this.auth = true;
+          // window. location. reload();
+          this.$router.push({ path: "/" });
+          
+        })
+        .catch((error) => {
+          console.log(error);
+          // toast.error("Wrong user", { position: toast.POSITION.BOTTOM_RIGHT }),
+          //   {
+          //     autoClose: 1000,
+          //   };
+          if (error.response) {
+            // The server responded with an error status code
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+          } else if (error.request) {
+            // The request was made but no response was received
+            console.log(error.request);
+          } else {
+            // Something happened in setting up the request that triggered an Error
+            console.log("Error", error.message);
+          }
+        });
+    },
+  },
+};
+</script>
 
 <style scoped>
 .container {
@@ -122,13 +177,13 @@ form {
 }
 
 .btn {
-    color: white;
+  color: white;
 
   /* color: #282225; */
   border: none;
   background-color: #f7b85e;
   border-radius: 30px;
-  width: 90px;
+  width: 115px;
   font-weight: 600;
 }
 .btn:focus {
@@ -136,7 +191,7 @@ form {
   border: none;
   background-color: #f7b85e;
   border-radius: 30px;
-  width: 90px;
+  width: 115px;
 }
 
 hr {

@@ -1,5 +1,6 @@
 //REST API demo in Node.js
 const express = require('express'); // requre the express framework
+const cors = require('cors');  //handle cors requests
 const app = express();
 const errorHandler = require("./app/middleware/errorHandler"); 
 var fs = require('fs'); //require file system object
@@ -12,6 +13,7 @@ connectDB();
 
 app.use(express.json());
 app.use(errorHandler);
+app.use(cors())
 app.use("/api/accounts", require("./routes/staffRoutes"));
 app.use("/api/orders", require("./routes/orderRoutes"));
 app.use("/api/customers", require("./routes/customerRoutes"));
