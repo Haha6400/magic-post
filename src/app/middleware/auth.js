@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const staff = require("../models/staffModel")
-const workplace = require('../models/workplaceModel')
+const branch = require('../models/branchModel')
 
 /*
 @desc Verify JWT from authorization header Middleware
@@ -41,7 +41,7 @@ const roleCheck = (roles) => async (req, res, next) =>{
 @desc check accessCheck Middleware
 - currentAccount access their own account
 - If currentAccount is supervisor: access manager account
-- If currentAccount is manager: access same workplace staff account
+- If currentAccount is manager: access same branch staff account
 */
 const accessAccountCheck = async (req, res, next) => {
     const currentAccount = req.currentAccount;
@@ -65,14 +65,14 @@ const accessAccountCheck = async (req, res, next) => {
         throw new Error("SOrry u dont have access");
     }
 
-    // console.log(currentAccount.workplace_id);
-    const currentWorkplace = await workplace.findById(currentAccount.workplace_id);
-    const staffWorkplace = await workplace.findById(staffAccount.workplace_id);
-    // console.log("currentWorkplace:", currentWorkplace._id.toString());
-    // console.log(currentWorkplace._id.toString() === staffWorkplace._id.toString());
-    //If currentAccount is manager: access same workplace accounts
+    // console.log(currentAccount.branch_id);
+    const currentBranch = await branch.findById(currentAccount.branch_id);
+    const staffBranch = await branch.findById(staffAccount.branch_id);
+    // console.log("currentBranch:", currentBranch._id.toString());
+    // console.log(currentBranch._id.toString() === staffBranch._id.toString());
+    //If currentAccount is manager: access same branch accounts
     if((currentAccount.role === "hubManager" || currentAccount.role == "warehouseManager") && 
-    (currentWorkplace._id.toString() !== staffWorkplace._id.toString())){
+    (currentBranch._id.toString() !== staffBranch._id.toString())){
         res.status(401);
         throw new Error("SOrry u dont have access");
     }

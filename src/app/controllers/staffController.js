@@ -3,7 +3,7 @@
 Includes: 
 - Create/ delete account
 - CRUD account
-- Get account by email, username, id, workplace, role.
+- Get account by email, username, id, branch, role.
 - Get all accounts
 - Login, logout
 - Reset password
@@ -12,12 +12,13 @@ Includes:
 
 const asyncHandler = require('express-async-handler');
 const staff = require("../models/staffModel");
-const workplace = require("../models/workplaceModel");
+const branch = require("../models/branchModel");
 const bcrypt = require('bcrypt');
 const saltRounds = 10
 const jwt = require('jsonwebtoken');
 const sendEmail = require ("../utils/sendEmail");
 const mjml2html = require('mjml');
+const crypto = require('crypto-js');
 require('dotenv').config();
 
 /*
@@ -27,8 +28,8 @@ require('dotenv').config();
 */
 const createAccount = asyncHandler(async (req, res) => {
     console.log(req.body);
-    const {userName, email, phoneNumber, password, workplaceName, role} = req.body;
-    if(!userName || !email || !phoneNumber || !password || !workplaceName || !role) {
+    const {userName, email, phoneNumber, password, branchName, role} = req.body;
+    if(!userName || !email || !phoneNumber || !password || !branchName|| !role) {
         res.status(400);
         throw new Error(`Error creating account`);
     }
@@ -61,7 +62,7 @@ const createAccount = asyncHandler(async (req, res) => {
         email, 
         phoneNumber, 
         password: hashedPassword, 
-        workplace_id: await workplace.findOne({name: workplaceName}), 
+        branch_id: await branch.findOne({name: branchName}), 
         role
     });
 
@@ -116,7 +117,7 @@ const updateAccount = asyncHandler(async(req, res) => {
             "userName": updatedAccount.userName,
             "email": updatedAccount.email,
             "role": updatedAccount.role,
-            "workplace_id": await workplace.findById(updatedAccount.workplace_id)
+            "branch_id": await branch.findById(updatedAccount.branch_id)
         }
     },
     process.env.ACCESS_TOKEN_SECRET,
@@ -153,7 +154,7 @@ const loginStaff = asyncHandler(async (req, res) => {
                 "userName": account.userName,
                 "email": account.email,
                 "role": account.role,
-                "workplace_id": await workplace.findById(account.workplace_id),
+                "branch_id": await branch.findById(account.branch_id),
                 "password": account.password
             }
         },
@@ -180,15 +181,15 @@ const getAllAccounts = asyncHandler(async (req, res) => {
 });
 
 /*
-@des Get accounts by workplace
+@des Get accounts by branch
 @route GET /api/accounts/wp
 @access hubManager, warehouseManager
 */
-const getAccountsByWorkplace = asyncHandler(async (req, res) =>{
+const getAccountsByBranch = asyncHandler(async (req, res) =>{
     const currentAccount = req.currentAccount;
-    const staffWorkplace = await workplace.findById(currentAccount.workplace_id).sort('createdAt');
-    console.log("staffWorkplace:", staffWorkplace);
-    const staffAccounts = await staff.find({workplace_id: staffWorkplace}).sort('createdAt');
+    const staffBranch = await branch.findById(currentAccount.branch_id).sort('createdAt');
+    console.log("staffBranch:", staffBranch);
+    const staffAccounts = await staff.find({branch_id: staffBranch}).sort('createdAt');
     if(!staffAccounts){
         res.status(404);
         throw new Error("Account not found");
@@ -197,13 +198,13 @@ const getAccountsByWorkplace = asyncHandler(async (req, res) =>{
 });
 
 /*
-@des Get accounts by each workplace
-@route GET /api/accounts/wp/:workplaceName
+@des Get accounts by each branch
+@route GET /api/accounts/wp/:branchName
 @access supervisor
 */
-const getAccountsByEachWorkplace = asyncHandler(async (req, res) =>{
-    const staffWorkplace = await workplace.findOne({name: req.params.workplaceName}).sort('createdAt');
-    const staffAccounts = await staff.find({workplace_id: staffWorkplace}).sort('createdAt');
+const getAccountsByEachBranch = asyncHandler(async (req, res) =>{
+    const staffBranch = await branch.findOne({name: req.params.branchName}).sort('createdAt');
+    const staffAccounts = await staff.find({branch_id: staffBranch}).sort('createdAt');
     if(!staffAccounts){
         res.status(404);
         throw new Error("Account not found");
@@ -262,7 +263,7 @@ const resetPasswordEmail = asyncHandler(async (req, res) => {
                 "userName": currentAccount.userName,
                 "email": currentAccount.email,
                 "role": currentAccount.role,
-                "workplace_id": await workplace.findById(currentAccount.workplace_id),
+                "branch_id": await branch.findById(currentAccount.branch_id),
                 "password": currentAccount.password
             }
         },
@@ -299,7 +300,36 @@ const passwordReset = asyncHandler(async (req, res) => {
 
 });
 
+//@desc Send email inclues link to reset password
+//@route POST /api/accounts/forgot-password
+//@access personal
+const forgotPasswordEmail = asyncHandler(async(req, res) => {
+    try{
+        const email = req.body.email;
+        var message = crypto.AES.encrypt(email, 'DinhMaiGetSai').toString();
+        const link = `http://localhost:3000/api/accounts/forgot-password/${message}`
+        await sendEmail(email, "Magic Post Password Reset", link);
+        // await sendEmail(currentAccount.email, "Magic Post Password Reset", text);
+        res.send("password reset link sent to your email account");
+    } catch{
+        res.send("error forgot password");
+        console.log("here" , error);
+    }
+})
 
+//@desc Send email inclues link to reset password
+//@route POST /api/accounts/forgot-password/:message
+//@access personal
+const passwordForgot = asyncHandler(async (req, res) => {
+    const message = req.params.message;
+    var bytes = crypto.AES.decrypt(message, 'DinhMaiGetSai');
+    var emailStaff = bytes.toString(crypto.enc.Utf8);
+    const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+    const updateAccount = await staff.findOneAndUpdate({email: emailStaff}, {password: hashedPassword}, {new: true});
+    // await currentAccount.accessToken.delete();
+    res.status(200).json("password reset sucessfully.");
+
+});
 module.exports = {getAllAccounts, createAccount, loginStaff, currentAccount, deleteAccount, 
-                getAccountById, getAccountByEmail, getAccountsByWorkplace, getAccountsByEachWorkplace,
-                updateAccount, passwordReset, resetPasswordEmail};
+                getAccountById, getAccountByEmail, getAccountsByBranch, getAccountsByEachBranch,
+                updateAccount, passwordReset, resetPasswordEmail, forgotPasswordEmail, passwordForgot};

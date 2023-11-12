@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const workplaceSchema = mongoose.Schema({
+const branchSchema = mongoose.Schema({
     manager_id:{
         type: mongoose.Schema.Types.ObjectId,
         required: true,
@@ -10,10 +10,10 @@ const workplaceSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    higherWorkplace_id:{
+    higherBranch_id:{
         type: mongoose.Schema.Types.ObjectId,
         // required: true,
-        ref: "workplace"
+        ref: "branch"
     }
 });
-module.exports = mongoose.model("Workplace", workplaceSchema);
+module.exports = mongoose.model("branch", branchSchema);

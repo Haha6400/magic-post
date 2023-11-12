@@ -48,11 +48,12 @@ const mjmlTemplate = `
 
 
                 <mj-text>
-                    In the event that you did not initiate this password reset request or if you harbor any reservations regarding the security of your account, we urge you to contact our dedicated support team promptly. You can reach us via email at <strong>support@magicpost.com</strong> or by phone at <strong>0969606295</strong>. Your prompt action is crucial in ensuring the integrity of your account.
-                    <p>
-                  When selecting a new password, we strongly advise that you choose a combination that is robust and unique to fortify the security of your account. Should you encounter any challenges during this process or if you require further assistance, please do not hesitate to reach out to our support team.
+                If you didn't initiate this request or have security concerns, contact our support team immediately at <strong>support@magicpost.com</strong> or <strong>096960629.</strong>
+                <p>
+                For enhanced security, choose a strong and unique password. If you face any issues or need assistance, our support team is here to help.
 
-We appreciate your prompt attention to this matter and thank you for entrusting us with the security of your account.</p>
+                Thank you for entrusting us with your account's security.
+                </p>
                 </mj-text>
 
                 <mj-text>
