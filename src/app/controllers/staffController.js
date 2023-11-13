@@ -246,16 +246,12 @@ const getAccountById = asyncHandler(async (req, res) => {
 
 /*
 @des Get account by role
-@route GET /api/accounts/r/:role
+@route GET /api/accounts/role
 @access public
 */
-const getAccountByRole = asyncHandler(async (req, res) => {
-    const staffAccounts = await staff.find({role: req.params.role}).sort('createdAt');
-    if(!staffAccounts){
-        res.status(404);
-        throw new Error("Account not found");
-    }
-    res.status(200).json(staffAccounts);
+const getRoleOfCurrentAccount = asyncHandler(async (req, res) => {
+    const currentAccount = req.currentAccount;
+    res.status(200).json(currentAccount.role);
 });
 
 //@desc Current user info
@@ -347,4 +343,4 @@ const passwordForgot = asyncHandler(async (req, res) => {
 module.exports = {getAllAccounts, createAccount, loginStaff, currentAccount, deleteAccount, 
                 getAccountById, getAccountByEmail, getAccountsByBranch, getAccountsByEachBranch,
                 updateAccount, passwordReset, resetPasswordEmail, forgotPasswordEmail, passwordForgot,
-                getAccountByRole};
+                getRoleOfCurrentAccount};

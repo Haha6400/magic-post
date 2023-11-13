@@ -16,8 +16,7 @@ const branchSchema = mongoose.Schema({
         ref: "branch"
     },
     postal_code:{
-        type: String,
-        required: true
+        type: String
     }
 });
 module.exports = mongoose.model("branch", branchSchema);

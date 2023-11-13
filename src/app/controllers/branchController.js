@@ -15,10 +15,12 @@ const createBranch = asyncHandler(async (req, res) => {
         res.status(400);
         throw new Error(name + ' is already exists');
     }
+    const postalCode = (Math.random() + 1).toString(36).substring(7).toUpperCase();
     const newBranch = await branch.create({
         manager_id: await staff.findById(managerId),
         name: name,
-        higherBranch_id: await staff.findById(managerId).branch_id
+        higherBranch_id: await staff.findById(managerId).branch_id,
+        postal_code: postalCode
     });
     if(newBranch) res.status(200).json({_id: newBranch.id, name: newBranch.name});
     else {
