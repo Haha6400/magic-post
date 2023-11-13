@@ -9,16 +9,19 @@ const orderSchema = mongoose.Schema({
         type: String,
         required: [true, "Please add fullname"],
     },
-    status: {
-        type: String,
-    },
     sender_id: {
         type: mongoose.Schema.Types.ObjectId,
+        required: true,
         ref: 'Customer',
     },
     receiver_id: {
         type: mongoose.Schema.Types.ObjectId,
+        required: true,
         ref: 'Customer',
+    },
+    process_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Process'
     },
     special_service: {
         type: String,
@@ -31,12 +34,18 @@ const orderSchema = mongoose.Schema({
     },
     fee_id: {
         type: mongoose.Schema.Types.ObjectId,
+        required: true,
         ref: "Fee"
     },
-    package_id: {
+    mass_id: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: "Package"
+        ref: "Mass"
+    },
+    recerver_fee_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "recever_id"
     }
 },
     {

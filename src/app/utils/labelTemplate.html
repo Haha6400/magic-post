@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+      <title>Shipping label</title>
+      <link rel="stylesheet" href="labelTemplate.css" />
+    </head>
+    <body>
+      <div class="wrapper m-4">
+        <!-- wrapper for sample -->
+        <div class="shipping-label border border-gray-500 rounded-lg">
+          <div class="shipping-label-header">
+            <div class="flex items-center px-4 border-b-2 border-gray-700">
+              <div class="flex-auto flex items-center py-2">
+                <img
+                  src="labelLogo.png"
+                  alt=""
+                  class="w-48 inline-block mr-2"
+                />
+                <p class="inline-block text-lg text-gray-700 leading-tight">
+                  Đồng hành cùng bạn trên mọi hành trình
+                </p>
+              </div>
+              <div
+                class="flex-none text-right leading-none border-l border-gray-600 pl-4 py-2"
+              >
+                <strong>Order ID</strong>
+                <p class="text-2xl font-bold">{{orderID}}</p>
+              </div>
+            </div>
+
+            <!-- <p class="flex px-4 py-3 leading-tight">
+                  <strong class="flex-none">
+                    From address:&nbsp;&nbsp;
+                  </strong>
+                  <span class="flex-auto">
+                    25/F Workington Tower, 78 Bonham Strand, Sheung Wan, Hong Kong
+                  </span>
+                </p> -->
+          </div>
+
+          <div
+            class="shipping-label-body border-t-4 border-b-4 border-gray-700 p-4"
+          >
+            <div class="flex -px-2 border-b-2 border-gray-600 pb-4">
+              <div class="right">
+                <strong>1. Họ tên địa chỉ người gửi:</strong>
+                <p>
+                  {{senderName}}<br />
+                  {{senderAddress}}
+                </p>
+                <p class="pt-1">
+                  <strong>Điện thoại:&nbsp;</strong
+                  ><span>{{senderPhonenumber}}</span>
+                </p>
+                <p>
+                  <strong>Mã khách hàng:&nbsp;</strong><span>{{senderId}}</span>
+                </p>
+                <p>
+                  <strong>Mã bưu chính:&nbsp;</strong
+                  ><span>{{senderHubId}}</span>
+                </p>
+              </div>
+              <div class="w-1/2 px-2">
+                <strong>2. Họ tên địa chỉ người nhận:</strong>
+                <p>
+                  {{receiverName}}<br />
+                  {{receiverAddress}}
+                </p>
+                <p class="pt-1">
+                  <strong>Điện thoại:&nbsp;</strong
+                  ><span>{{receiverPhonenumber}}</span>
+                </p>
+                <p><strong>Mã ĐH:&nbsp;</strong><span></span></p>
+                <p>
+                  <strong>Mã bưu chính:&nbsp;</strong
+                  ><span>{{receiverHubId}}</span>
+                </p>
+              </div>
+            </div>
+
+            <div class="flex -px-2 border-b-2 border-gray-600 pb-4">
+              <div class="right">
+                <strong>3. Loại hàng gửi:</strong>
+                <p>{{orderType}}</p>
+                <strong>4. Nội dung trị giá bill gửi:</strong>
+                <p></p>
+                <table id="order">
+                  <thread>
+                    <tr>
+                      <th>Nội dung</th>
+                      <th>Số lượng</th>
+                      <th>Trị giá</th>
+                      <th>Giấy tờ đính kèm</th>
+                    </tr>
+                  </thread>
+                  <tr>
+                    <td>Tổng</td>
+                    <td>0</td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </table>
+                <strong>5. Dịch vụ đặc biệt/ cộng thêm:</strong>
+                <p>{{special_service}}</p>
+                <strong
+                  >6. Chỉ dẫn của người gửi khi không chuyển phát được bưu
+                  gửi:</strong
+                >
+                <p>{{instructions}}</p>
+              </div>
+
+              <div class="w-1/2 px-2 wi-300">
+                <strong>7. Cước:</strong>
+                <p class="pt-1">Cước chính:&nbsp;<span>{{charge}}</span></p>
+                <p class="pt-1">Phụ phí:&nbsp;<span>{{surcharge}}</span></p>
+                <p class="pt-1">
+                  Tổng cước (Gồm VAT):&nbsp;<span>{{VAT}}</span>
+                </p>
+                <p class="pt-1">Thu khác:&nbsp;<span>{{other_fee}}</span></p>
+                <p class="pt-1">
+                  <strong
+                    >Tổng thu:&nbsp;
+                    <span>{{total}}</span>
+                  </strong>
+                </p>
+
+                <strong>9. Thu của người nhận:</strong>
+                <p class="pt-1">
+                  COD:&nbsp;
+                  <span>{{COD}}</span>
+                </p>
+                <p class="pt-1">Thu khác:&nbsp;<span>{{other_fee}}</span></p>
+                <p class="pt-1">
+                  <strong
+                    >Tổng thu:&nbsp;
+                    <span>{{total}}</span>
+                  </strong>
+                </p>
+              </div>
+
+              <div class="w-1/2 px-2 wi-300">
+                <strong>8. Khối lượng:</strong>
+                <p class="pt-1">
+                  Khối lượng thực tế:&nbsp;
+                  <span>{{actual}}</span>
+                </p>
+                <p>
+                  Khối lượng quy đổi:&nbsp;
+                  <span>{{converted}}</span>
+                </p>
+
+                <strong>10. Chú dẫn nghiệp vụ:</strong>
+                <p class="pt-1">
+                  <span>{{note}}</span>
+                </p>
+                <strong>11. Cam kết của người gửi:</strong>
+                <p class="pt-1">
+                  Tôi chấp nhận các điều khoản tại mặt sau của phiến gửi và cam
+                  đoan bưu gửi này không chứa những hàng nguy hiểm.
+                </p>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap items-center">
+              <div class="w-1/2 px-2 wi-200">
+                <strong>Ngày giờ gửi:</strong>
+                <span>{{orderCreatedAt}} </span>
+                <p class="pt-1">
+                  <strong>Chữ kí người gửi:&nbsp;</strong>
+                  <span> </span>
+                </p>
+              </div>
+              <div class="w-1/2 px-2 wi-200">
+                <strong>Ngày giờ nhận:</strong>
+                <span>{{lastUpdatedAt}} </span>
+                <p class="pt-1">
+                  <strong>Chữ kí người nhận:&nbsp;</strong>
+                  <span> </span>
+                </p>
+              </div>
+
+              <div class="w-full sm:w-3/5 text-center">
+                <p class="font-bold text-lg">TRACKING CODE #</p>
+                <img
+                  class="mx-auto"
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdTTT6UQzqt6-vh258osVcIbssOtp-aKVJc_EjLwKx30UzpY288A&s"
+                  alt=""
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </body>
+  </html>
+</html>
