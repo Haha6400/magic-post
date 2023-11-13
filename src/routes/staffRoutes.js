@@ -13,7 +13,7 @@ const router = express.Router();
 const { getAllAccounts, createAccount, loginStaff, currentAccount, deleteAccount, getAccountById, getAccountByEmail, getAccountsByBranch, 
     getAccountsByEachBranch, getRoleOfCurrentAccount, updateAccount, passwordReset, resetPasswordEmail, forgotPasswordEmail, passwordForgot} = require("../app/controllers/staffController")
 const {staffAuth, roleCheck, accessAccountCheck} = require("../app/middleware/auth");
-const {createLabel} = require("../app/controllers/labelController");
+const {createLabel} = require("../app/utils/createLabel");
 
 
 //TEST
