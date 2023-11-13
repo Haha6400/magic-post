@@ -1,10 +1,16 @@
 const asyncHandler = require('express-async-handler');
 const Order = require("../models/orderModel");
-const Customer = require("../models/customerModel")
+const Branch = require("../models/branchModel");
+const { createCustomer,
+    createFeeModel,
+    createMassModel,
+    createReceiverFeeModel,
+    createProcesses } = require('../utils/orderFunctions');
+
 
 /*
 @desc Get all orders
-@route GET /home/order
+@route GET /api/orders/all
 @access supervisor
 */
 const getAllOrders = asyncHandler(async (req, res) => {
@@ -14,52 +20,38 @@ const getAllOrders = asyncHandler(async (req, res) => {
 
 /*
 @desc Post order
-@route GET /home/order
+@route POST /api/orders/create
 @access staff
 */
 const createOrder = asyncHandler(async (req, res) => {
     console.log(req.body);
-    const {type, note, status, senderName, senderAddress, senderPhone, senderZipcode,
-        receiverName, receiverAddress, receiverPhone, receiverZipcode, amount, price, mass } = req.body
+    const { type, note, special_service, instructions, sender_commitment, //order attributes
+        branchName, status, // process attrs
+        senderName, senderAddress, senderPhone, // sender attrs
+        receiverName, receiverAddress, receiverPhone, //receiver attrs
+        charge, surcharge, vat, other_fee, total_fee, //transporting fee
+        actual_mass, converted_mass, // mass attrs
+        cod, rf_other_fee, rf_total, // the fee receiver will pay
+    } = req.body
 
+    const sender = await createCustomer(senderName, senderAddress, senderPhone, branchName)
+    const receiver = await createCustomer(receiverName, receiverAddress, receiverPhone, branchName)
+    const mass = await createMassModel(actual_mass, converted_mass)
+    const fee = await createFeeModel(charge, surcharge, vat, other_fee, total_fee)
+    const receiver_fee = await createReceiverFeeModel(cod, rf_other_fee, rf_total)
+    const processes = await createProcesses(branchName, status)
+    const branch = await Branch.findOne({ name: branchName })
 
-    if (!type || !status || !senderName || !senderAddress || !senderPhone || !senderZipcode
-        || !receiverName || !receiverAddress || !receiverPhone || !receiverZipcode) {
-        res.status(400);
-        throw new Error(`All fields should not be empty!`);
-    }
-    var sender = await Customer.findOne(
-        {
-            'fullname': senderName,
-            'phoneNumber': senderPhone,
-        })
-    var receiver = await Customer.findOne(
-        {
-            'fullname': receiverName,
-            'phoneNumber': receiverPhone,
-        })
-    if (!sender) {
-        sender = await Customer.create({
-            fullname: senderName,
-            address: senderAddress,
-            phoneNumber: senderPhone,
-            zipCode: senderZipcode
-        })
-    }
-    if (!receiver) {
-        receiver = await Customer.create({
-            fullname: receiverName,
-            address: receiverAddress,
-            phoneNumber: receiverPhone,
-            zipCode: receiverZipcode
-        })
-    }
-
-    const order = await Order.create({
-        type, note, amount, price, mass,
+    var order = await Order.create({
+        type, note, special_service, instructions, sender_commitment,
+        'order_code': branch.postal_code,
+        'processes_id': processes,
         'sender_id': sender,
-        'receiver_id': receiver
-    });
+        'receiver_id': receiver,
+        'fee_id': fee,
+        'mass_id': mass,
+        'receiver_fee_id': receiver_fee,
+    })
     if (!order) {
         res.status(400);
         throw new Error(`Invalid`);
@@ -70,7 +62,7 @@ const createOrder = asyncHandler(async (req, res) => {
 
 /*
 @desc Get order
-@route GET /home/order/:id
+@route GET /api/orders/:id
 @access staff
 */
 const getOrder = asyncHandler(async (req, res) => {
@@ -84,7 +76,7 @@ const getOrder = asyncHandler(async (req, res) => {
 
 /*
 @desc Update order
-@route PUT /home/order/:id
+@route PUT /api/orders/update/:id
 @access staff
 */
 const updateOrder = asyncHandler(async (req, res) => {
@@ -104,7 +96,7 @@ const updateOrder = asyncHandler(async (req, res) => {
 
 /*
 @desc Delete order
-@route DELETE /home/order/:id
+@route DELETE /api/orders/delete/:id
 @access staff
 */
 const deleteOrder = asyncHandler(async (req, res) => {
@@ -117,4 +109,17 @@ const deleteOrder = asyncHandler(async (req, res) => {
     res.json('Delete succeed')
 })
 
-module.exports = { getAllOrders, getOrder, createOrder, updateOrder, deleteOrder };
+
+/*
+@desc Get orders by branch name
+@route GET /api/orders/branch/:branchName
+@access staff
+*/
+const getOrdersByBranchName = asyncHandler(async (req,res) => {
+    const branch = await Branch.findOne({'name': req.params.branchName})
+    const orders = await Order.find({'order_code': branch.postal_code})
+    res.status(200).json(orders)
+})
+module.exports = { getAllOrders, getOrder, createOrder, updateOrder, deleteOrder, getOrdersByBranchName };
+
+

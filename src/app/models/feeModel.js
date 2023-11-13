@@ -9,7 +9,7 @@ const feeSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    VAT: {
+    vat: {
         type: Number,
         default: 0
     },
