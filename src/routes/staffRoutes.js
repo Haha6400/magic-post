@@ -11,7 +11,7 @@ Includes:
 const express = require("express");
 const router = express.Router();
 const { getAllAccounts, createAccount, loginStaff, currentAccount, deleteAccount, getAccountById, getAccountByEmail, getAccountsByBranch, 
-    getAccountsByEachBranch, updateAccount, passwordReset, resetPasswordEmail, forgotPasswordEmail, passwordForgot} = require("../app/controllers/staffController")
+    getAccountsByEachBranch, getAccountByRole, updateAccount, passwordReset, resetPasswordEmail, forgotPasswordEmail, passwordForgot} = require("../app/controllers/staffController")
 const {staffAuth, roleCheck, accessAccountCheck} = require("../app/middleware/auth");
 const {createLabel} = require("../app/controllers/labelController");
 
@@ -19,6 +19,7 @@ const {createLabel} = require("../app/controllers/labelController");
 //TEST
 router.post("/createe", createAccount);
 router.get("/label", createLabel);
+router.get('/r/:role', getAccountByRole);
 
 
 //@access PERSONAL

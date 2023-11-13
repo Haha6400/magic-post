@@ -39,14 +39,14 @@ const createAccount = asyncHandler(async (req, res) => {
     - If the user is hubManager, they can only create accounts for hubStaff.
     - If the user is warehouseManager, they can only create accounts for warehouseStaff.
     */
-    const currentAccount = req.currentAccount;
-    if((currentAccount.role === "supervisor" && (role !== "hubManager" && role !== "warehouseManager")) ||
-        (currentAccount.role === "hubManager" && (role !== "hubStaff")) ||
-        (currentAccount.role === "warehouseManager" && (role !== "warehouseStaff"))) 
-    {
-        res.status(400);
-        throw new Error(`Select correct staff's role that you want to create account for`);
-    }
+    // const currentAccount = req.currentAccount;
+    // if((currentAccount.role === "supervisor" && (role !== "hubManager" && role !== "warehouseManager")) ||
+    //     (currentAccount.role === "hubManager" && (role !== "hubStaff")) ||
+    //     (currentAccount.role === "warehouseManager" && (role !== "warehouseStaff"))) 
+    // {
+    //     res.status(400);
+    //     throw new Error(`Select correct staff's role that you want to create account for`);
+    // }
     
     //Check if the staff account already exists
     if (await staff.findOne({email})){
@@ -244,6 +244,20 @@ const getAccountById = asyncHandler(async (req, res) => {
 });
 
 
+/*
+@des Get account by role
+@route GET /api/accounts/r/:role
+@access public
+*/
+const getAccountByRole = asyncHandler(async (req, res) => {
+    const staffAccounts = await staff.find({role: req.params.role}).sort('createdAt');
+    if(!staffAccounts){
+        res.status(404);
+        throw new Error("Account not found");
+    }
+    res.status(200).json(staffAccounts);
+});
+
 //@desc Current user info
 //@route POST /api/accounts/current
 //@access personal
@@ -332,4 +346,5 @@ const passwordForgot = asyncHandler(async (req, res) => {
 });
 module.exports = {getAllAccounts, createAccount, loginStaff, currentAccount, deleteAccount, 
                 getAccountById, getAccountByEmail, getAccountsByBranch, getAccountsByEachBranch,
-                updateAccount, passwordReset, resetPasswordEmail, forgotPasswordEmail, passwordForgot};
+                updateAccount, passwordReset, resetPasswordEmail, forgotPasswordEmail, passwordForgot,
+                getAccountByRole};
