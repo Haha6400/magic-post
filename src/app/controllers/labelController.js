@@ -13,7 +13,7 @@ const createLabel = async(req, res) => {
 
 	// Website URL to export as pdf
 	const html = fs.readFileSync('C:/Study/magic-post/src/app/utils/labelTemplate.html', 'utf-8');
-	const filledHTML = mustache.render(html, data);
+	const filledHTML = mustache.render(html, {data});
 
 	
 	await page.setContent(filledHTML, { waitUntil: 'domcontentloaded' });
@@ -25,8 +25,6 @@ const createLabel = async(req, res) => {
 		printBackground: true,
 		format: 'A4',
 	});
-	// const url = await page.evaluate(() => document.location.href);
-	// console.log(url);
 
 	// Set Content-Disposition header
     res.setHeader('Content-Disposition', 'attachment;filename=magic-post-label.pdf');
