@@ -1,19 +1,24 @@
 const mongoose = require('mongoose');
 
 const processSchema = new mongoose.Schema({
-    amount: {
-        type: Number,
+    order_id:{
+        type: StaticRange,
+        required: true,
+        ref: "order"
     },
-    price: {
-        type: Number,
+    branch_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "branch"
     },
-    mass: {
-        type: Number,
-    }
-    },
+    status:{
+        type: String,
+        default: "begin transported"
+    }},
     {
         timestamps: true,
-    });
+    }
+);
 
 
 module.exports = mongoose.model("Process", processSchema);
