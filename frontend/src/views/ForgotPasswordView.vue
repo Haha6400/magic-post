@@ -4,15 +4,14 @@
       <form>
         <h1 class="loginHeader">Quên mật khẩu</h1>
         <div class="mb-3">
-          <!-- <label for="exampleInputEmail1" class="form-label"
+          <label for="exampleInputEmail1" class="form-label"
             >Địa chỉ email</label
-          > -->
+          >
           <input
             type="email"
             class="form-control"
             id="exampleInputEmail1"
             aria-describedby="emailHelp"
-            placeholder="Địa chỉ email"
           />
         </div>
         <button type="submit" class="btn btn-primary">Gửi email</button>
@@ -51,7 +50,7 @@
   font-family: "Nunito Sans", sans-serif;
   font-weight: 600;
   font-size: 30px;
-  color: #3fa3f9;
+  color: #FFA500;
   line-height: 28px;
   text-align: center;
   margin-bottom: 20px;
@@ -113,24 +112,22 @@ form {
 }
 
 .btn {
-  color: white;
+  color: black;
 
   /* color: #282225; */
   border: none;
   background-color: #f7b85e;
   border-radius: 30px;
   width: 100px;
-  font-weight: 600;
 }
 .btn:focus {
-  color: white;
+  color: black;
 
   /* color: #282225; */
   border: none;
   background-color: #f7b85e;
   border-radius: 30px;
   width: 100px;
-  font-weight: 600;
 }
 
 hr {
