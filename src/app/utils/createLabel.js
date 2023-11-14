@@ -10,6 +10,7 @@ const Branch = require('../models/branchModel');
 const Fee = require('../models/feeModel');
 const Mass = require('../models/massModel');
 const ReceiverFee = require('../models/receiverFeeModel');
+const path = require('path')
 'use strict';
 
 const html = `
@@ -250,7 +251,7 @@ img{
             <div class="flex items-center px-4 border-b-2 border-gray-700">
               <div class=" headerr flex-auto flex items-center py-2">
                 <img src="data:image/jpeg;base64,${
-                  readFileSync('C:/Study/magic-post/src/app/utils/labelLogo.jpg').toString('base64')
+                  readFileSync(path.resolve(__dirname, './labelLogo.jpg')).toString('base64')
                   }" alt="alt text" />
                 <p class="inline-block text-lg text-gray-700 leading-tight">
                   Đồng hành cùng bạn trên mọi hành trình
