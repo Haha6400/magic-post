@@ -6,6 +6,7 @@ const { createCustomer,
     createMassModel,
     createReceiverFeeModel,
     createProcesses } = require('../utils/orderFunctions');
+const { printLabel } = require("../utils/createLabel");
 
 
 /*
@@ -41,7 +42,7 @@ const createOrder = asyncHandler(async (req, res) => {
     const receiver_fee = await createReceiverFeeModel(cod, rf_other_fee, rf_total)
     const processes = await createProcesses(branchName, status)
     const branch = await Branch.findOne({ name: branchName })
-    const orderCode = (Math.random() + 1).toString(36).substring(7).toUpperCase();
+    const orderCode = (Math.random() + 1).toString(36).substring(7).toUpperCase(); //random orderCode
 
     var order = await Order.create({
         type, note, special_service, instructions, sender_commitment,
@@ -116,11 +117,34 @@ const deleteOrder = asyncHandler(async (req, res) => {
 @route GET /api/orders/branch/:branchName
 @access staff
 */
-const getOrdersByBranchName = asyncHandler(async (req,res) => {
-    const branch = await Branch.findOne({'name': req.params.branchName})
-    const orders = await Order.find({'order_code': branch.postal_code})
+const getOrdersByBranchName = asyncHandler(async (req, res) => {
+    const branch = await Branch.findOne({ 'name': req.params.branchName })
+    const orders = await Order.find({ 'order_code': branch.postal_code })
     res.status(200).json(orders)
 })
-module.exports = { getAllOrders, getOrder, createOrder, updateOrder, deleteOrder, getOrdersByBranchName };
+
+/*
+@desc Get orders by order code
+@route GET /api/orders/code/:order_code
+@access staff
+*/
+const getOrderByCode = asyncHandler(async (req, res) => {
+    const order = await Order.findOne({ 'order_code': req.params.order_code })
+    res.status(200).json(order)
+})
+
+
+/*
+@desc print label for order
+@route GET /api/orders/label/:order_id
+@access staff
+*/
+const printOrderLabel = asyncHandler(async (req, res) => {
+    await printLabel(req, res);
+});
+module.exports = {
+    getAllOrders, getOrder, createOrder, updateOrder, deleteOrder,
+    getOrdersByBranchName, printOrderLabel, getOrderByCode
+};
 
 

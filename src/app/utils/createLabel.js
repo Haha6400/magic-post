@@ -1,6 +1,7 @@
 const puppeteer = require('puppeteer');
 // const blobStream = require('blob-stream');
 const fs = require('fs')
+const path = require('path');
 const { readFileSync } = require('fs');
 const mustache = require('mustache');
 const QRCode = require('qrcode');
@@ -10,7 +11,6 @@ const Branch = require('../models/branchModel');
 const Fee = require('../models/feeModel');
 const Mass = require('../models/massModel');
 const ReceiverFee = require('../models/receiverFeeModel');
-const path = require('path')
 'use strict';
 
 const html = `
@@ -260,7 +260,7 @@ img{
               <div
                 class="flex-none text-right leading-none border-l border-gray-600 pl-4 py-2"
               >
-                <strong>Order ID</strong>
+                <strong class="text-center">Order ID</strong>
                 <p class="text-2xl font-bold">{{order_code}}</p>
               </div>
             </div>
@@ -434,6 +434,7 @@ const printLabel = async(req, res) => {
   const qrcode= await QRCode.toDataURL('localhost:3000/api/orders/' + order_id);
   // console.log('localhost:3000/api/orders/' + order_id);
   // console.log(qrcode);
+  
 	const sender = await Customer.findById(order.sender_id);
   const senderBranch = await Branch.findById(sender.branch_id);
   const receiver = await Customer.findById(order.receiver_id);
@@ -443,7 +444,6 @@ const printLabel = async(req, res) => {
   const receiverFee = await ReceiverFee.findById(order.recerver_fee_id);
 
 	// Website URL to export as pdf
-	// const html = fs.readFileSync('C:/Study/magic-post/src/app/utils/labelTemplate.html', 'utf-8')
 	const filledHTML = mustache.render(html, {
     "order_code": order.order_code,
     "senderName": sender.fullname,
