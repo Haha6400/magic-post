@@ -6,6 +6,7 @@ const { createCustomer,
     createMassModel,
     createReceiverFeeModel,
     createProcesses } = require('../utils/orderFunctions');
+const {printLabel} = require("../utils/createLabel");
 
 
 /*
@@ -121,6 +122,15 @@ const getOrdersByBranchName = asyncHandler(async (req,res) => {
     const orders = await Order.find({'order_code': branch.postal_code})
     res.status(200).json(orders)
 })
-module.exports = { getAllOrders, getOrder, createOrder, updateOrder, deleteOrder, getOrdersByBranchName };
+
+/*
+@desc print label for order
+@route GET /api/orders/label/:order_id
+@access staff
+*/
+const printOrderLabel = asyncHandler(async (req,res) => {
+    await printLabel(req, res);
+});
+module.exports = { getAllOrders, getOrder, createOrder, updateOrder, deleteOrder, getOrdersByBranchName, printOrderLabel };
 
 
