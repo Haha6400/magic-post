@@ -2,8 +2,14 @@ const puppeteer = require('puppeteer');
 // const blobStream = require('blob-stream');
 const fs = require('fs')
 const { readFileSync } = require('fs');
-const label = require('../models/labelModel');
 const mustache = require('mustache');
+const QRCode = require('qrcode');
+const Order = require('../models/orderModel');
+const Customer = require('../models/customerModel');
+const Branch = require('../models/branchModel');
+const Fee = require('../models/feeModel');
+const Mass = require('../models/massModel');
+const ReceiverFee = require('../models/receiverFeeModel');
 'use strict';
 
 const html = `
@@ -56,6 +62,9 @@ th {
 }
 .wi-200{
   width: 160px;
+}
+.wi-250{
+  width: 200px;
 }
 
 
@@ -251,7 +260,7 @@ img{
                 class="flex-none text-right leading-none border-l border-gray-600 pl-4 py-2"
               >
                 <strong>Order ID</strong>
-                <p class="text-2xl font-bold">{{orderID}}</p>
+                <p class="text-2xl font-bold">{{order_code}}</p>
               </div>
             </div>
           </div>
@@ -343,7 +352,7 @@ img{
                 <p class="pt-1">
                   <strong
                     >Tổng thu:&nbsp;
-                    <span>{{total}}</span>
+                    <span>{{total_fee}}</span>
                   </strong>
                 </p>
                 <strong>9. Khối lượng:</strong>
@@ -364,11 +373,11 @@ img{
                   COD:&nbsp;
                   <span>{{COD}}</span>
                 </p>
-                <p class="pt-1">Thu khác:&nbsp;<span>{{other_fee}}</span></p>
+                <p class="pt-1">Thu khác:&nbsp;<span>{{orther_receiver_fee}}</span></p>
                 <p class="pt-1">
                   <strong
                     >Tổng thu:&nbsp;
-                    <span>{{total}}</span>
+                    <span>{{total_receiver}}</span>
                   </strong>
                 </p>
 
@@ -380,7 +389,7 @@ img{
             </div>
 
             <div class="flex -px-2 pb-4 flex-wrap items-center">
-              <div class="w-1/2 px-2 wi-200">
+              <div class="w-1/2 px-2 wi-250">
                 <strong>Ngày giờ gửi:</strong>
                 <span>{{orderCreatedAt}} </span>
                 <p class="pt-1">
@@ -388,7 +397,7 @@ img{
                   <span> </span>
                 </p>
               </div>
-              <div class="w-1/2 px-2 wi-200">
+              <div class="w-1/2 px-2 wi-250">
                 <strong>Ngày giờ nhận:</strong>
                 <span>{{lastUpdatedAt}} </span>
                 <p class="pt-1">
@@ -398,10 +407,7 @@ img{
               </div>
 
               <div class="w-1/2 px-2 wi-200">
-                <p class="font-bold text-lg">TRACKING CODE</p>
-                <img src="data:image/jpeg;base64,${
-                    readFileSync('C:/Study/magic-post/src/app/utils/qrcode.jpg').toString('base64')
-                    }" alt="alt text" />
+                <img src="{{qrcode}}" alt="alt text" />
               </div>
             </div>
           </div>
@@ -414,16 +420,66 @@ img{
 `
 
 
-const createLabel = async(req, res) => {
+const printLabel = async(req, res) => {
+  const order_id = req.params.order_id;
+  const order = await Order.findById(order_id);
+  console.log(order);
 	// Create a browser instance
 	// const browser = await puppeteer.launch();
 	const browser = await puppeteer.launch();
 	const [page] = await browser.pages();
-	
+
+  //Create QR Code 
+  const qrcode= await QRCode.toDataURL('localhost:3000/api/orders/' + order_id);
+  // console.log('localhost:3000/api/orders/' + order_id);
+  // console.log(qrcode);
+	const sender = await Customer.findById(order.sender_id);
+  const senderBranch = await Branch.findById(sender.branch_id);
+  const receiver = await Customer.findById(order.receiver_id);
+  const receiverBranch = await Branch.findById(receiver.branch_id);
+  const fee = await Fee.findById(order.fee_id);
+  const mass = await Mass.findById(order.mass_id);
+  const receiverFee = await ReceiverFee.findById(order.recerver_fee_id);
 
 	// Website URL to export as pdf
 	// const html = fs.readFileSync('C:/Study/magic-post/src/app/utils/labelTemplate.html', 'utf-8')
-	const filledHTML = mustache.render(html, {});
+	const filledHTML = mustache.render(html, {
+    "order_code": order.order_code,
+    "senderName": sender.fullname,
+    "senderAddress": sender.address,
+    "senderPhonenumber": sender.phoneNumber,
+    "senderId": sender._id,
+    "senderHubId": senderBranch.postal_code,
+
+    "receiverName": receiver.fullname,
+    "receiverAddress": receiver.address,
+    "receiverPhonenumber": receiver.phoneNumber,
+    // "senderId": sender._id,
+    "receiverHubId": receiverBranch.postal_code,
+
+    "orderType": order.type,
+    "special_service": order.special_service,
+    "instructions": order.instructions,
+    "charge": fee.charge,
+    "surcharge": fee.surcharge,
+    "VAT": fee.vat,
+    "other_fee": fee.other_fee,
+    "total_fee": fee.total,
+
+    "actual": mass.actual,
+    "converted": mass.converted,
+
+    "COD": receiverFee.cod,
+    "orther_receiver_fee": receiverFee.other_fee,
+    "total_receiver": receiverFee.total,
+
+    "note": order.note,
+
+    "orderCreatedAt": order.createdAt,
+    "lastUpdatedAt": order.updatedAt,
+
+    "qrcode": qrcode
+  });
 	
 	await page.setContent(filledHTML, { waitUntil: 'domcontentloaded' });
 	await page.emulateMediaType('screen');
@@ -446,4 +502,4 @@ const createLabel = async(req, res) => {
 	await browser.close();
 }
 
-module.exports = {createLabel}
+module.exports = {printLabel}

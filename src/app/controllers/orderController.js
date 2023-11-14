@@ -41,10 +41,11 @@ const createOrder = asyncHandler(async (req, res) => {
     const receiver_fee = await createReceiverFeeModel(cod, rf_other_fee, rf_total)
     const processes = await createProcesses(branchName, status)
     const branch = await Branch.findOne({ name: branchName })
+    const orderCode = (Math.random() + 1).toString(36).substring(7).toUpperCase();
 
     var order = await Order.create({
         type, note, special_service, instructions, sender_commitment,
-        'order_code': branch.postal_code,
+        'order_code': orderCode,
         'processes_id': processes,
         'sender_id': sender,
         'receiver_id': receiver,
