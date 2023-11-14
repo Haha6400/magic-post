@@ -1,6 +1,7 @@
 const puppeteer = require('puppeteer');
 // const blobStream = require('blob-stream');
 const fs = require('fs')
+const path = require('path');
 const { readFileSync } = require('fs');
 const mustache = require('mustache');
 const QRCode = require('qrcode');
@@ -10,6 +11,9 @@ const Branch = require('../models/branchModel');
 const Fee = require('../models/feeModel');
 const Mass = require('../models/massModel');
 const ReceiverFee = require('../models/receiverFeeModel');
+
+
+
 'use strict';
 
 const html = `
@@ -250,7 +254,7 @@ img{
             <div class="flex items-center px-4 border-b-2 border-gray-700">
               <div class=" headerr flex-auto flex items-center py-2">
                 <img src="data:image/jpeg;base64,${
-                  readFileSync('C:/Study/magic-post/src/app/utils/labelLogo.jpg').toString('base64')
+                  readFileSync(path.resolve(__dirname, './labelLogo.jpg')).toString('base64')
                   }" alt="alt text" />
                 <p class="inline-block text-lg text-gray-700 leading-tight">
                   Đồng hành cùng bạn trên mọi hành trình
@@ -433,6 +437,7 @@ const printLabel = async(req, res) => {
   const qrcode= await QRCode.toDataURL('localhost:3000/api/orders/' + order_id);
   // console.log('localhost:3000/api/orders/' + order_id);
   // console.log(qrcode);
+  
 	const sender = await Customer.findById(order.sender_id);
   const senderBranch = await Branch.findById(sender.branch_id);
   const receiver = await Customer.findById(order.receiver_id);
@@ -442,7 +447,6 @@ const printLabel = async(req, res) => {
   const receiverFee = await ReceiverFee.findById(order.recerver_fee_id);
 
 	// Website URL to export as pdf
-	// const html = fs.readFileSync('C:/Study/magic-post/src/app/utils/labelTemplate.html', 'utf-8')
 	const filledHTML = mustache.render(html, {
     "order_code": order.order_code,
     "senderName": sender.fullname,
