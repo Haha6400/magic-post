@@ -7,7 +7,7 @@ const orderSchema = mongoose.Schema({
     },
     note: {
         type: String,
-        required: [true, "Please add fullname"],//??
+        default: "................................................................................................................................"
     },
     special_service: {
         type: String,
