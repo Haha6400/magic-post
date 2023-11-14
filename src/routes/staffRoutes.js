@@ -13,14 +13,13 @@ const router = express.Router();
 const { getAllAccounts, createAccount, loginStaff, currentAccount, deleteAccount, getAccountById, getAccountByEmail, getAccountsByBranch, 
     getAccountsByEachBranch, getRoleOfCurrentAccount, updateAccount, passwordReset, resetPasswordEmail, forgotPasswordEmail, passwordForgot} = require("../app/controllers/staffController")
 const {staffAuth, roleCheck, accessAccountCheck} = require("../app/middleware/auth");
-const {createLabel} = require("../app/utils/createLabel");
+const {printLabel} = require("../app/utils/createLabel");
 
 
 //TEST
 router.post("/createe", createAccount);
-router.get("/label", createLabel);
+router.get("/label/:order_id", printLabel);
 router.get('/role', getRoleOfCurrentAccount);
-
 
 //@access PERSONAL
 router.get("/current", staffAuth, currentAccount);

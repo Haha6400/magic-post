@@ -7,13 +7,15 @@ const orderSchema = mongoose.Schema({
     },
     note: {
         type: String,
-        required: [true, "Please add fullname"],
+        required: [true, "Please add fullname"],//??
     },
     special_service: {
         type: String,
+        default: "................................................................................................................................"
     },
     instructions: {
-        type: String
+        type: String,
+        default: "................................................................................................................................"
     },
     sender_commitment: {
         type: String
@@ -44,7 +46,8 @@ const orderSchema = mongoose.Schema({
     },
     recerver_fee_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "recever_id"
+        ref: "Receiver_fee",
+        default: "65520429d999906be32cd9e1"
     }
 },
     {
