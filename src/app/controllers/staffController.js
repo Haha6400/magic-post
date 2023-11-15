@@ -28,8 +28,8 @@ require('dotenv').config();
 */
 const createAccount = asyncHandler(async (req, res) => {
     console.log(req.body);
-    const {userName, email, phoneNumber, password, branchName, role} = req.body;
-    if(!userName || !email || !phoneNumber || !password || !branchName|| !role) {
+    const {userName, email, phoneNumber, branchName, role} = req.body;
+    if(!userName || !email || !phoneNumber|| !branchName|| !role) {
         res.status(400);
         throw new Error(`Error creating account`);
     }
@@ -55,6 +55,7 @@ const createAccount = asyncHandler(async (req, res) => {
     }
 
     //Hash password
+    password = "123456";
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     const staffAccount = await staff.create({
@@ -104,9 +105,6 @@ const updateAccount = asyncHandler(async(req, res) => {
     }
     const {email, phoneNumber} = req.body;
     console.log("email new: ", email, "phone number: ", phoneNumber);
-    if(!email || !phoneNumber) {
-        throw new Error("Please provide all values");
-    }
     const updatedAccount = await staff.findByIdAndUpdate(staffAccount.id, req.body, {new: true});
     // res.status(200).json({updatedAccount});
 

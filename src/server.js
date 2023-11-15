@@ -17,6 +17,7 @@ app.use(cors())
 app.use("/api/accounts", require("./routes/staffRoutes"));
 app.use("/api/orders", require("./routes/orderRoutes"));
 app.use("/api/workplace", require("./routes/branchRoutes"));
+app.use("/api/hub", require("./routes/hubRoutes"));
 
 
 
