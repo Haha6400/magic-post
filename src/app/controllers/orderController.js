@@ -135,8 +135,6 @@ const getOrdersByBranchName = asyncHandler(async (req,res) => {
 const printOrderLabel = asyncHandler(async (req,res) => {
     await printLabel(req, res);
 });
-
-
-module.exports = { getAllOrders, getOrder, createOrder, updateOrder, deleteOrder, getOrdersByBranchName, printOrderLabel };
+module.exports = {getAllOrders, getOrder, createOrder, updateOrder, deleteOrder, getOrdersByBranchName, printOrderLabel, getOrderByCode};
 
 
