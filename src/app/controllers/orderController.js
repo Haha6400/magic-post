@@ -117,9 +117,10 @@ const deleteOrder = asyncHandler(async (req, res) => {
 @route GET /api/orders/branch/:branchName
 @access staff
 */
-const getOrdersByBranchName = asyncHandler(async (req, res) => {
-    const branch = await Branch.findOne({ 'name': req.params.branchName })
-    const orders = await Order.find({ 'order_code': branch.postal_code })
+const getOrdersByBranchName = asyncHandler(async (req,res) => {
+    const branch = await Branch.findOne({'name': req.params.branchName})
+    const proccesses = await Process.find({branch_id: branch})
+    const orders = await Order.find({processes_id: proccesses})
     res.status(200).json(orders)
 })
 
@@ -142,9 +143,6 @@ const getOrderByCode = asyncHandler(async (req, res) => {
 const printOrderLabel = asyncHandler(async (req, res) => {
     await printLabel(req, res);
 });
-module.exports = {
-    getAllOrders, getOrder, createOrder, updateOrder, deleteOrder,
-    getOrdersByBranchName, printOrderLabel, getOrderByCode
-};
+module.exports = {getAllOrders, getOrder, createOrder, updateOrder, deleteOrder, getOrdersByBranchName, printOrderLabel, getOrderByCode};
 
 
