@@ -121,7 +121,7 @@ const deleteOrder = asyncHandler(async (req, res) => {
 
 const getOrdersByBranchName = asyncHandler(async (req,res) => {
     const branch = await Branch.findOne({'name': req.params.branchName})
-    const orders = await Order.find({'order_code': branch.postal_code}) //TODO: fix cái này, order_code !== branch.portal_code
+    const orders = await Order.find({'order_code': branch.postal_code})
     res.status(200).json(orders)
 })
 
