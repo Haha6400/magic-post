@@ -1,10 +1,6 @@
 const mongoose = require('mongoose');
 
-const orderSchema = mongoose.Schema({
-    type: { // docs or goods
-        type: String,
-        required: [true, "Type of parcel"]
-    },
+const orderSchema = mongoose.Schema({ 
     note: {
         type: String,
         default: "................................................................................................................................"
@@ -32,6 +28,10 @@ const orderSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Customer',
     },
+    package_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Package'
+    },
     processes_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Processes'
@@ -39,10 +39,6 @@ const orderSchema = mongoose.Schema({
     fee_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Fee"
-    },
-    mass_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Mass"
     },
     recerver_fee_id: {
         type: mongoose.Schema.Types.ObjectId,
