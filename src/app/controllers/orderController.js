@@ -1,12 +1,14 @@
 const asyncHandler = require('express-async-handler');
 const Order = require("../models/orderModel");
 const Branch = require("../models/branchModel");
-const { createCustomer,
+const { printLabel } = require("../utils/createLabel");
+const {
+    createCustomer,
     createFeeModel,
     createMassModel,
     createReceiverFeeModel,
-    createProcesses } = require('../utils/orderFunctions');
-const { printLabel } = require("../utils/createLabel");
+    createProcesses,
+    createPackage } = require('../utils/orderFunctions');
 
 
 /*
@@ -26,12 +28,13 @@ const getAllOrders = asyncHandler(async (req, res) => {
 */
 const createOrder = asyncHandler(async (req, res) => {
     console.log(req.body);
-    const { type, note, special_service, instructions, sender_commitment, //order attributes
+    const { note, special_service, instructions, sender_commitment, //order attributes
         branchName, status, // process attrs
         senderName, senderAddress, senderPhone, // sender attrs
         receiverName, receiverAddress, receiverPhone, //receiver attrs
         charge, surcharge, vat, other_fee, total_fee, //transporting fee
         actual_mass, converted_mass, // mass attrs
+        type, amount, price,//package attrs
         cod, rf_other_fee, rf_total, // the fee receiver will pay
     } = req.body
 
@@ -43,9 +46,10 @@ const createOrder = asyncHandler(async (req, res) => {
     const processes = await createProcesses(branchName, status)
     const branch = await Branch.findOne({ name: branchName })
     const orderCode = (Math.random() + 1).toString(36).substring(7).toUpperCase(); //random orderCode
-
+    const package = await createPackage(type, amount, price, mass)
     var order = await Order.create({
-        type, note, special_service, instructions, sender_commitment,
+        note, special_service, instructions, sender_commitment,
+        'package_id': package,
         'order_code': orderCode,
         'processes_id': processes,
         'sender_id': sender,
