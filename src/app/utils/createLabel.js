@@ -11,9 +11,6 @@ const Branch = require('../models/branchModel');
 const Fee = require('../models/feeModel');
 const Mass = require('../models/massModel');
 const ReceiverFee = require('../models/receiverFeeModel');
-
-
-
 'use strict';
 
 const html = `
@@ -263,7 +260,7 @@ img{
               <div
                 class="flex-none text-right leading-none border-l border-gray-600 pl-4 py-2"
               >
-                <strong>Order ID</strong>
+                <strong class="text-center">Order ID</strong>
                 <p class="text-2xl font-bold">{{order_code}}</p>
               </div>
             </div>

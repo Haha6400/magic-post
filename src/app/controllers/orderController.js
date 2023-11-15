@@ -1,13 +1,14 @@
 const asyncHandler = require('express-async-handler');
 const Order = require("../models/orderModel");
 const Branch = require("../models/branchModel");
-const Process = require("../models/processesModel");
-const { createCustomer,
+const { printLabel } = require("../utils/createLabel");
+const {
+    createCustomer,
     createFeeModel,
     createMassModel,
     createReceiverFeeModel,
-    createProcesses } = require('../utils/orderFunctions');
-const {printLabel} = require("../utils/createLabel");
+    createProcesses,
+    createPackage } = require('../utils/orderFunctions');
 
 
 /*
@@ -27,27 +28,29 @@ const getAllOrders = asyncHandler(async (req, res) => {
 */
 const createOrder = asyncHandler(async (req, res) => {
     console.log(req.body);
-    const { type, note, special_service, instructions, sender_commitment, //order attributes
-        branchSenderName, branchReceiverName, status, // process attrs
+    const { note, special_service, instructions, sender_commitment, //order attributes
+        senderBranchName, status, // process attrs
         senderName, senderAddress, senderPhone, // sender attrs
         receiverName, receiverAddress, receiverPhone, //receiver attrs
-        charge, surcharge, vat, other_fee, total_fee, //transporting fee
+        charge, surcharge, vat, other_fee, total_fee, receiverBranchName,//transporting fee
         actual_mass, converted_mass, // mass attrs
+        type, amount, price,//package attrs
         cod, rf_other_fee, rf_total, // the fee receiver will pay
     } = req.body
 
-    const sender = await createCustomer(senderName, senderAddress, senderPhone, branchSenderName)
-    const receiver = await createCustomer(receiverName, receiverAddress, receiverPhone, branchReceiverName) 
+    const sender = await createCustomer(senderName, senderAddress, senderPhone, senderBranchName)
+    const receiver = await createCustomer(receiverName, receiverAddress, receiverPhone, receiverBranchName) 
     //TODO: mắc gì thằng sender và thằng receiver đều chung 1 branch z =)) Phải khác nhau chứ
     const mass = await createMassModel(actual_mass, converted_mass)
     const fee = await createFeeModel(charge, surcharge, vat, other_fee, total_fee)
     const receiver_fee = await createReceiverFeeModel(cod, rf_other_fee, rf_total)
     const processes = await createProcesses(branchName, status)
     const branch = await Branch.findOne({ name: branchName })
-    const orderCode = (Math.random() + 1).toString(36).substring(7).toUpperCase();
-
+    const orderCode = (Math.random() + 1).toString(36).substring(7).toUpperCase(); //random orderCode
+    const package = await createPackage(type, amount, price, mass)
     var order = await Order.create({
-        type, note, special_service, instructions, sender_commitment,
+        note, special_service, instructions, sender_commitment,
+        'package_id': package,
         'order_code': orderCode,
         'processes_id': processes,
         'sender_id': sender,
@@ -128,15 +131,24 @@ const getOrdersByBranchName = asyncHandler(async (req,res) => {
 })
 
 /*
+@desc Get orders by order code
+@route GET /api/orders/code/:order_code
+@access staff
+*/
+const getOrderByCode = asyncHandler(async (req, res) => {
+    const order = await Order.findOne({ 'order_code': req.params.order_code })
+    res.status(200).json(order)
+})
+
+
+/*
 @desc print label for order
 @route GET /api/orders/label/:order_id
 @access staff
 */
-const printOrderLabel = asyncHandler(async (req,res) => {
+const printOrderLabel = asyncHandler(async (req, res) => {
     await printLabel(req, res);
 });
-
-
-module.exports = { getAllOrders, getOrder, createOrder, updateOrder, deleteOrder, getOrdersByBranchName, printOrderLabel };
+module.exports = {getAllOrders, getOrder, createOrder, updateOrder, deleteOrder, getOrdersByBranchName, printOrderLabel, getOrderByCode};
 
 

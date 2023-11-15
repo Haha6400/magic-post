@@ -4,6 +4,7 @@ const ReceiverFee = require('../models/receiverFeeModel')
 const Mass = require('../models/massModel')
 const Process = require('../models/processesModel')
 const branch = require("../models/branchModel");
+const Package = require('../models/packageModel')
 
 //create customer
 async function createCustomer(fullname, address, phoneNumber, branchName) {
@@ -69,4 +70,16 @@ async function createProcesses(branchName, status) {
     return processes
 }
 
-module.exports = { createCustomer, createFeeModel, createMassModel, createReceiverFeeModel, createProcesses }
+async function createPackage(type, amount, price, mass) {
+
+    package = await Package.create({
+            'type': type, 
+            'amount': amount,
+            'price': price,
+            'mass_id': mass
+        })
+    return package
+}
+
+
+module.exports = { createCustomer, createFeeModel, createMassModel, createReceiverFeeModel, createProcesses, createPackage }
