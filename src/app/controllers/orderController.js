@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const Order = require("../models/orderModel");
 const Branch = require("../models/branchModel");
+const Process = require("../models/processesModel");
 const { createCustomer,
     createFeeModel,
     createMassModel,
@@ -121,7 +122,8 @@ const deleteOrder = asyncHandler(async (req, res) => {
 
 const getOrdersByBranchName = asyncHandler(async (req,res) => {
     const branch = await Branch.findOne({'name': req.params.branchName})
-    const orders = await Order.find({'order_code': branch.postal_code})
+    const proccesses = await Process.find({branch_id: branch})
+    const orders = await Order.find({processes_id: proccesses})
     res.status(200).json(orders)
 })
 
