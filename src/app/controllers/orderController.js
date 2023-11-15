@@ -29,17 +29,18 @@ const getAllOrders = asyncHandler(async (req, res) => {
 const createOrder = asyncHandler(async (req, res) => {
     console.log(req.body);
     const { note, special_service, instructions, sender_commitment, //order attributes
-        branchName, status, // process attrs
+        senderBranchName, status, // process attrs
         senderName, senderAddress, senderPhone, // sender attrs
         receiverName, receiverAddress, receiverPhone, //receiver attrs
-        charge, surcharge, vat, other_fee, total_fee, //transporting fee
+        charge, surcharge, vat, other_fee, total_fee, receiverBranchName,//transporting fee
         actual_mass, converted_mass, // mass attrs
         type, amount, price,//package attrs
         cod, rf_other_fee, rf_total, // the fee receiver will pay
     } = req.body
 
-    const sender = await createCustomer(senderName, senderAddress, senderPhone, branchName)
-    const receiver = await createCustomer(receiverName, receiverAddress, receiverPhone, branchName)
+    const sender = await createCustomer(senderName, senderAddress, senderPhone, senderBranchName)
+    const receiver = await createCustomer(receiverName, receiverAddress, receiverPhone, receiverBranchName) 
+    //TODO: mắc gì thằng sender và thằng receiver đều chung 1 branch z =)) Phải khác nhau chứ
     const mass = await createMassModel(actual_mass, converted_mass)
     const fee = await createFeeModel(charge, surcharge, vat, other_fee, total_fee)
     const receiver_fee = await createReceiverFeeModel(cod, rf_other_fee, rf_total)
@@ -121,9 +122,11 @@ const deleteOrder = asyncHandler(async (req, res) => {
 @route GET /api/orders/branch/:branchName
 @access staff
 */
-const getOrdersByBranchName = asyncHandler(async (req, res) => {
-    const branch = await Branch.findOne({ 'name': req.params.branchName })
-    const orders = await Order.find({ 'order_code': branch.postal_code })
+
+const getOrdersByBranchName = asyncHandler(async (req,res) => {
+    const branch = await Branch.findOne({'name': req.params.branchName})
+    const proccesses = await Process.find({branch_id: branch})
+    const orders = await Order.find({processes_id: proccesses})
     res.status(200).json(orders)
 })
 
@@ -146,9 +149,6 @@ const getOrderByCode = asyncHandler(async (req, res) => {
 const printOrderLabel = asyncHandler(async (req, res) => {
     await printLabel(req, res);
 });
-module.exports = {
-    getAllOrders, getOrder, createOrder, updateOrder, deleteOrder,
-    getOrdersByBranchName, printOrderLabel, getOrderByCode
-};
+module.exports = {getAllOrders, getOrder, createOrder, updateOrder, deleteOrder, getOrdersByBranchName, printOrderLabel, getOrderByCode};
 
 

@@ -6,7 +6,7 @@ require('dotenv').config();
 
 const createBranch = asyncHandler(async (req, res) => {
     console.log(req.body);
-    const {managerId, name} = req.body;
+    const {name, higherBranchName} = req.body;
     if(!name) {
         res.status(400);
         throw new Error(`Error creating branch`);
@@ -17,10 +17,12 @@ const createBranch = asyncHandler(async (req, res) => {
     }
     // const postalCode = (Math.random() + 1).toString(36).substring(7).toUpperCase();
     const postalCode = Math.random() * (99999 - 10000) + 10000;
+    const higherBranch_id = await branch.findOne({name: higherBranchName})
     const newBranch = await branch.create({
-        manager_id: await staff.findById(managerId),
+        // manager_id: await staff.findById(managerId),
         name: name,
-        higherBranch_id: await staff.findById(managerId).branch_id,
+        // higherBranch_id: await staff.findById(managerId).branch_id,
+        higherBranch_id: higherBranch_id,
         postal_code: postalCode
     });
     if(newBranch) res.status(200).json({_id: newBranch.id, name: newBranch.name});
