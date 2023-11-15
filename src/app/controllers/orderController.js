@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const Order = require("../models/orderModel");
 const Branch = require("../models/branchModel");
+const Process = require("../models/processesModel");
 const { createCustomer,
     createFeeModel,
     createMassModel,
@@ -27,7 +28,7 @@ const getAllOrders = asyncHandler(async (req, res) => {
 const createOrder = asyncHandler(async (req, res) => {
     console.log(req.body);
     const { type, note, special_service, instructions, sender_commitment, //order attributes
-        branchName, status, // process attrs
+        branchSenderName, branchReceiverName, status, // process attrs
         senderName, senderAddress, senderPhone, // sender attrs
         receiverName, receiverAddress, receiverPhone, //receiver attrs
         charge, surcharge, vat, other_fee, total_fee, //transporting fee
@@ -35,8 +36,9 @@ const createOrder = asyncHandler(async (req, res) => {
         cod, rf_other_fee, rf_total, // the fee receiver will pay
     } = req.body
 
-    const sender = await createCustomer(senderName, senderAddress, senderPhone, branchName)
-    const receiver = await createCustomer(receiverName, receiverAddress, receiverPhone, branchName)
+    const sender = await createCustomer(senderName, senderAddress, senderPhone, branchSenderName)
+    const receiver = await createCustomer(receiverName, receiverAddress, receiverPhone, branchReceiverName) 
+    //TODO: mắc gì thằng sender và thằng receiver đều chung 1 branch z =)) Phải khác nhau chứ
     const mass = await createMassModel(actual_mass, converted_mass)
     const fee = await createFeeModel(charge, surcharge, vat, other_fee, total_fee)
     const receiver_fee = await createReceiverFeeModel(cod, rf_other_fee, rf_total)
@@ -117,6 +119,7 @@ const deleteOrder = asyncHandler(async (req, res) => {
 @route GET /api/orders/branch/:branchName
 @access staff
 */
+
 const getOrdersByBranchName = asyncHandler(async (req,res) => {
     const branch = await Branch.findOne({'name': req.params.branchName})
     const proccesses = await Process.find({branch_id: branch})
