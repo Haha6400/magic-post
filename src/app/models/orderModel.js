@@ -44,6 +44,13 @@ const orderSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Receiver_fee",
         default: "65520429d999906be32cd9e1"
+    },
+    is_returned: {
+        type: Boolean,
+        default: false
+    },
+    endedAt: {
+        type: mongoose.Schema.Types.Date
     }
 },
     {

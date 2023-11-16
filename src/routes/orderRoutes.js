@@ -6,6 +6,7 @@ const { getAllOrders, getOrder, createOrder,
     printOrderLabel,
     getOrderByCode } = require("../app/controllers/orderController")
 // const {printLabel} = require("../app/utils/createLabel");
+const {staffAuth, roleCheck, accessAccountCheck} = require("../app/middleware/auth");
 
 //@Get method
 router.get('/all', getAllOrders)
@@ -16,7 +17,8 @@ router.get("/code/:order_code", getOrderByCode);
 
 
 //@Post method
-router.post('/create', createOrder)
+// router.post('/create', createOrder)
+router.post('/create', staffAuth, roleCheck(["hubStaff", "hubManager"]), createOrder)
 
 //@Put method
 router.put('/update/:id', updateOrder)
