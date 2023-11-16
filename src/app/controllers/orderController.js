@@ -1,3 +1,10 @@
+/*TODO: 
+- Viết thêm hàm Xác nhận hoàn trả hàng khi receiver từ chối nhận hàng:
++ Update is_returned: true
++ Đổi thông tin sender_id và receiver_id
+*/
+//TODO: Xác nhận lại với TĐ về mấy hàm tính toán giá tiền, cân nặng,... của đơn hàng
+
 const asyncHandler = require('express-async-handler');
 const Order = require("../models/orderModel");
 const Branch = require("../models/branchModel");
@@ -95,6 +102,7 @@ const updateOrder = asyncHandler(async (req, res) => {
         res.status(404)
         throw new Error("Order not found")
     }
+    //TODO: Khi status: "DELIVERED" => endedAt = updatedAt
     const updatedOrder = await Order.findByIdAndUpdate(
         req.params.id,
         req.body,
@@ -152,6 +160,7 @@ const getOrderByCode = asyncHandler(async (req, res) => {
 const printOrderLabel = asyncHandler(async (req, res) => {
     await printLabel(req, res);
 });
+
 module.exports = {getAllOrders, getOrder, createOrder, updateOrder, deleteOrder, getOrdersByBranchName, printOrderLabel, getOrderByCode};
 
 
