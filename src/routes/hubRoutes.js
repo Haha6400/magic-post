@@ -3,7 +3,7 @@ const router = express.Router();
 const {staffAuth, roleCheck, accessAccountCheck} = require("../app/middleware/auth");
 const {hub_fromAllWarehouse, hub_fromSender, hub_receiveAll, hub_fromWarehouseID, hub_fromAllWarehouse_Today, hub_fromAllWarehouse_ByDay,
     hub_fromSender_Today, hub_fromSender_ByDay, hub_receiveAll_Today, hub_receiveAll_ByDay} = require("../app/controllers/hubController");
-
+const {huhReceive_Manager , huhReceive_Supervisor} = require("../app/controllers/hub2Controller");
 /*
 @access hubManager
 */
@@ -21,4 +21,9 @@ router.get('/receive/all/today', staffAuth, roleCheck(["hubManager"]), hub_recei
 router.get('/receive/all/:fullyear/:month/:day', staffAuth, roleCheck(["hubManager"]), hub_receiveAll_ByDay);
 
 
+//@access hubManager
+router.get('/receive/fromWH', staffAuth, roleCheck(["hubManager"]), huhReceive_Manager);
+
+//@access supervisor
+router.get('/receive/fromWH/:branchName', staffAuth, roleCheck(["supervisor"]), huhReceive_Supervisor);
 module.exports = router; 

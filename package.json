@@ -24,6 +24,7 @@
     "joi": "^17.11.0",
     "jsonwebtoken": "^9.0.2",
     "mjml": "^4.14.1",
+    "moment": "^2.29.4",
     "mongodb": "^6.2.0",
     "mongoose": "^8.0.0",
     "mustache": "^4.2.0",
