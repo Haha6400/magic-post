@@ -11,8 +11,7 @@ Includes: Thống kế
 => Tổng hàng gửi (hub_sendTotal)
 => Tìm kiếm theo tên warehouse, theo ngày, tháng, năm
 @access hubManager
-*/
-
+*/ 
 const asyncHandler = require('express-async-handler');
 const moment = require('moment');
 const Order = require("../models/orderModel");
