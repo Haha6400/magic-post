@@ -107,7 +107,6 @@ const updateOrder = asyncHandler(async (req, res) => {
         res.status(404);
         throw new Error("Order not found")
     }
-    //TODO: Khi status: "DELIVERED" => endedAt = updatedAt
     const processes1 = await Process.findByIdAndUpdate(
         order.processes_id._id,
         { $push: { status: req.body.status } },

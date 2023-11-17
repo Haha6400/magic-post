@@ -31,7 +31,7 @@ async function createFeeModel(charge, surcharge, VAT, other_fee, total_fee) {
     fee = await Fee.create({
         'charge': charge,
         'surcharge': surcharge,
-        'VAT': VAT,
+        'vat': vat,
         'other_fee': other_fee,
         'total_fee': total_fee
     })
