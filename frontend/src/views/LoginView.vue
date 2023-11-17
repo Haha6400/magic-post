@@ -50,6 +50,7 @@
 <script>
 import axios from "axios";
 
+
 export default {
   name: "LoginView",
   data() {
@@ -67,6 +68,7 @@ export default {
         .then((response) => {
           console.log(response.data);
           localStorage.setItem("userData", JSON.stringify(response.data));
+          localStorage.setItem("token", response.data.accessToken);
           this.auth = true;
           this.$router.push({ path: "/" });
         })

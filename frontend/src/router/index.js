@@ -43,6 +43,11 @@ const router = createRouter({
       component: ()=>import('../views/HubManager/ManageOrders.vue')
     },
     {
+      path: "/hubManager/orderDetail?:id",
+      name: "orderDetail",
+      component: ()=>import('../views/HubManager/OrderDetail.vue')
+    },
+    {
       path: "/supervisor/manage-accounts",
       name: "manageAccounts",
       component: ()=>import('../views/Supervisor/ManageAccounts.vue')
