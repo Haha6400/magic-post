@@ -1,29 +1,35 @@
 const express = require("express");
 const router = express.Router();
 const {staffAuth, roleCheck, accessAccountCheck} = require("../app/middleware/auth");
-const {hub_fromAllWarehouse, hub_fromSender, hub_receiveAll, hub_fromWarehouseID, hub_fromAllWarehouse_Today, hub_fromAllWarehouse_ByDay,
-    hub_fromSender_Today, hub_fromSender_ByDay, hub_receiveAll_Today, hub_receiveAll_ByDay} = require("../app/controllers/hubController");
-const {huhReceive_Manager , huhReceive_Supervisor} = require("../app/controllers/hub2Controller");
-/*
-@access hubManager
-*/
-router.get('/fromwarehouse/all', staffAuth, roleCheck(["hubManager"]), hub_fromAllWarehouse);
-router.get('/fromwarehouse/all/today', staffAuth, roleCheck(["hubManager"]), hub_fromAllWarehouse_Today);
-router.get('/fromwarehouse/all/:fullyear/:month/:day', staffAuth, roleCheck(["hubManager"]), hub_fromAllWarehouse_ByDay);
-router.get('/fromwarehouse/:warehouse_id', staffAuth, roleCheck(["hubManager"]), hub_fromWarehouseID);
+const {allHubReceive_Manager , allHubReceive_Supervisor, allHubSend_Manager, allHubSend_Supervisor,
+    allHubReceiveByWH_Manager, allHubReceivByWH_Supervisor, allHubSendByWH_Manager, allHubSendByWH_Supervisor,
+    availableHubReceive_Manager , availableHubReceive_Supervisor, availableHubSend_Manager, availableHubSend_Supervisor,
+    availableHubReceiveByWH_Manager, availableHubReceivByWH_Supervisor, availableHubSendByWH_Manager, availableHubSendByWH_Supervisor } = require("../app/controllers/hubController");
 
-router.get('/fromcustomer/all', staffAuth, roleCheck(["hubManager"]), hub_fromSender);
-router.get('/fromcustomer/all/today', staffAuth, roleCheck(["hubManager"]), hub_fromSender_Today);
-router.get('/fromcustomer/all/:fullyear/:month/:day', staffAuth, roleCheck(["hubManager"]), hub_fromSender_ByDay);
-
-router.get('/receive/all', staffAuth, roleCheck(["hubManager"]), hub_receiveAll);
-router.get('/receive/all/today', staffAuth, roleCheck(["hubManager"]), hub_receiveAll_Today);
-router.get('/receive/all/:fullyear/:month/:day', staffAuth, roleCheck(["hubManager"]), hub_receiveAll_ByDay);
-
-
+/*-------------------------------------------------------ALL ORDERS-------------------------------------------------------*/
 //@access hubManager
-router.get('/receive/fromWH', staffAuth, roleCheck(["hubManager"]), huhReceive_Manager);
+router.get('/receive/all', staffAuth, roleCheck(["hubManager"]), allHubReceive_Manager);
+router.get('/receive/all/:branch_id', staffAuth, roleCheck(["hubManager"]), allHubReceiveByWH_Manager);
+router.get('/send/all', staffAuth, roleCheck(["hubManager"]), allHubSend_Manager);
+router.get('/send/all/:branch_id', staffAuth, roleCheck(["hubManager"]), allHubSendByWH_Manager);
 
 //@access supervisor
-router.get('/receive/fromWH/:branchName', staffAuth, roleCheck(["supervisor"]), huhReceive_Supervisor);
+router.get('/receive/all/:branchName', staffAuth, roleCheck(["supervisor"]), allHubReceive_Supervisor);
+router.get('/receive/all/:branchName/:branch_id', staffAuth, roleCheck(["supervisor"]), allHubReceivByWH_Supervisor);
+router.get('/send/all/:branchName', staffAuth, roleCheck(["supervisor"]), allHubSend_Supervisor);
+router.get('/send/all/:branchName/:branch_id', staffAuth, roleCheck(["supervisor"]), allHubSendByWH_Supervisor);
+
+/*-------------------------------------------------------ORDERS ARE AVAILABLE AT HUB-------------------------------------------------------*/
+//@access hubManager
+router.get('/receive/available', staffAuth, roleCheck(["hubManager"]), availableHubReceive_Manager);
+router.get('/receive/available/:branch_id', staffAuth, roleCheck(["hubManager"]), availableHubReceiveByWH_Manager);
+router.get('/send/available', staffAuth, roleCheck(["hubManager"]), availableHubSend_Manager);
+router.get('/send/available/:branch_id', staffAuth, roleCheck(["hubManager"]), availableHubSendByWH_Manager);
+
+//@access supervisor
+router.get('/receive/available/:branchName', staffAuth, roleCheck(["supervisor"]), availableHubReceive_Supervisor);
+router.get('/receive/available/:branchName/:branch_id', staffAuth, roleCheck(["supervisor"]), availableHubReceivByWH_Supervisor);
+router.get('/send/available/:branchName', staffAuth, roleCheck(["supervisor"]), availableHubSend_Supervisor);
+router.get('/send/available/:branchName/:branch_id', staffAuth, roleCheck(["supervisor"]), availableHubSendByWH_Supervisor);
+
 module.exports = router; 
