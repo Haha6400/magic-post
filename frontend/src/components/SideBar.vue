@@ -41,19 +41,36 @@
               stroke="currentColor"
               class="w-6 h-6 icon"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M12 4.5v15m7.5-7.5h-15"
-              />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
             </svg>
 
             Tạo đơn hàng
           </router-link>
         </li>
 
+        <li v-if="supervisor">
+          <router-link to="/hubManager/manage-orders">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6 icon"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z"
+              />
+            </svg>
+
+            Quản lý đơn hàng
+          </router-link>
+        </li>
+
         <li>
-          <router-link to="/">
+          <router-link to="/orderStatus">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -201,12 +218,7 @@
             {{ userName }}
           </router-link> -->
           <router-link to="/">
-            <img
-              class="avatar"
-              v-if="!this.avatar"
-              src="@/assets/Sidebar/star.jpg"
-              alt="ava"
-            />
+            <img class="avatar" v-if="!this.avatar" src="@/assets/Sidebar/star.jpg" alt="ava" />
             {{ userName }}
           </router-link>
         </li>
@@ -218,39 +230,39 @@
 <script>
 // import axios from "axios";
 export default {
-  name: "SideBar",
+  name: 'SideBar',
   props: {},
 
   data() {
     return {
       isLogin: false,
       supervisor: false,
-      userName: "",
-      avatar: null,
-    };
+      userName: '',
+      avatar: null
+    }
   },
 
   async created() {
-    if (localStorage.getItem("userData")) {
-      console.log("check login");
-      let user = localStorage.getItem("userData");
-      let jsonUser = JSON.parse(user);
-      console.log(jsonUser);
-      this.userName = jsonUser.account.userName;
-      this.isLogin = true;
-      this.supervisor = true;
+    if (localStorage.getItem('userData')) {
+      console.log('check login')
+      let user = localStorage.getItem('userData')
+      let jsonUser = JSON.parse(user)
+      console.log(jsonUser)
+      this.userName = jsonUser.account.userName
+      this.isLogin = true
+      this.supervisor = true
     }
   },
 
   methods: {
     logout() {
-      localStorage.clear();
-      this.isLogin = false;
-      this.supervisor = false;
-      this.userName = "";
-    },
-  },
-};
+      localStorage.clear()
+      this.isLogin = false
+      this.supervisor = false
+      this.userName = ''
+    }
+  }
+}
 </script>
 
 <style scoped>
@@ -342,7 +354,7 @@ li {
   border-radius: 10px;
   margin: 4px 0;
   white-space: nowrap;
-  font-family: "Nunito Sans", sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
 }
 
 #sidebar .side-menu a p {
@@ -357,7 +369,7 @@ li {
   border-radius: 10px;
   margin: 4px 0;
   white-space: nowrap;
-  font-family: "Nunito Sans", sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
 }
 
 #sidebar .side-menu > li > a:hover {

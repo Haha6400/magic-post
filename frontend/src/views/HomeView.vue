@@ -47,7 +47,7 @@
                 </svg>
               </button>
             </form>
-            <router-link class="searchButton" type="button" to="/about"
+            <router-link class="searchButton" type="button" to="/orderStatus"
               >Tra cứu</router-link
             >
           </div>
@@ -334,6 +334,17 @@ export default {
   text-align: center;
 }
 
+.searchButton:hover{
+  background-color: #f7b85e;
+  text-decoration: none;
+  border-radius: 30px;
+  width: 40%;
+  height: 25px;
+  font-family: "Nunito Sans", sans-serif;
+  color: #000000;
+  text-align: center;
+}
+
 .exam-container {
   display: flex;
   flex-direction: row;
@@ -355,7 +366,12 @@ export default {
   color: #000000;
   text-decoration: none;
 }
+
 .card-title:hover {
+  color: #f7b85e;
+}
+
+.card-header:hover{
   color: #f7b85e;
 }
 
