@@ -8,6 +8,7 @@
 const asyncHandler = require('express-async-handler');
 const Order = require("../models/orderModel");
 const Branch = require("../models/branchModel");
+const Process = require('../models/processesModel')
 const { printLabel } = require("../utils/createLabel");
 const {
     createCustomer,
@@ -15,7 +16,8 @@ const {
     createMassModel,
     createReceiverFeeModel,
     createProcesses,
-    createPackage } = require('../utils/orderFunctions');
+    createPackage,
+    getOrder } = require('../utils/orderFunctions');
 
 
 /*
@@ -24,8 +26,12 @@ const {
 @access supervisor
 */
 const getAllOrders = asyncHandler(async (req, res) => {
-    const orders = await Order.find()
-    res.status(200).json(orders)
+    const orders = await Order.find({})
+    const result = []
+    for (var i in orders) {
+        result.push(await getOrder(orders[i]._id))
+    }
+    res.status(200).json(result)
 })
 
 /*
@@ -49,13 +55,11 @@ const createOrder = asyncHandler(async (req, res) => {
     console.log(currentBranch.name)
 
     const sender = await createCustomer(senderName, senderAddress, senderPhone, currentBranch.name)
-    const receiver = await createCustomer(receiverName, receiverAddress, receiverPhone, receiverBranchName) 
-    //TODO: mắc gì thằng sender và thằng receiver đều chung 1 branch z =)) Phải khác nhau chứ
+    const receiver = await createCustomer(receiverName, receiverAddress, receiverPhone, receiverBranchName)
     const mass = await createMassModel(actual_mass, converted_mass)
     const fee = await createFeeModel(charge, surcharge, vat, other_fee, total_fee)
     const receiver_fee = await createReceiverFeeModel(cod, rf_other_fee, rf_total)
     const processes = await createProcesses(currentBranch, status)
-    const branch = await Branch.findOne({ name: currentBranch })
     const orderCode = (Math.random() + 1).toString(36).substring(7).toUpperCase(); //random orderCode
     const package = await createPackage(type, amount, price, mass)
     var order = await Order.create({
@@ -82,12 +86,13 @@ const createOrder = asyncHandler(async (req, res) => {
 @route GET /api/orders/:id
 @access staff
 */
-const getOrder = asyncHandler(async (req, res) => {
-    const order = await Order.findById(req.params.id)
+const getOrderById = asyncHandler(async (req, res) => {
+    const order = await getOrder(req.params.id)
     if (!order) {
         res.status(404)
         throw new Error("Order not found")
     }
+    console.log(order)
     res.status(200).json(order)
 })
 
@@ -99,13 +104,24 @@ const getOrder = asyncHandler(async (req, res) => {
 const updateOrder = asyncHandler(async (req, res) => {
     const order = await Order.findById(req.params.id)
     if (!order) {
-        res.status(404)
+        res.status(404);
         throw new Error("Order not found")
     }
     //TODO: Khi status: "DELIVERED" => endedAt = updatedAt
-    const updatedOrder = await Order.findByIdAndUpdate(
+    const processes1 = await Process.findByIdAndUpdate(
+        order.processes_id._id,
+        { $push: { status: req.body.status } },
+        { new: true }
+    )
+
+    const end = (req.body.status == 'DELIVERED') ? processes1.updatedAt : order.endedAt
+    console.log(end)
+    var updatedOrder = await Order.findByIdAndUpdate(
         req.params.id,
-        req.body,
+        {
+            ...req.body,
+            'endedAt': end
+        },
         { new: true }
     )
     res.status(200).json(updatedOrder)
@@ -134,10 +150,10 @@ const deleteOrder = asyncHandler(async (req, res) => {
 @access staff
 */
 
-const getOrdersByBranchName = asyncHandler(async (req,res) => {
-    const branch = await Branch.findOne({'name': req.params.branchName})
-    const proccesses = await Process.find({branch_id: branch})
-    const orders = await Order.find({processes_id: proccesses})
+const getOrdersByBranchName = asyncHandler(async (req, res) => {
+    const branch = await Branch.findOne({ 'name': req.params.branchName })
+    const proccesses = await Process.find({ branch_id: branch })
+    const orders = await Order.find({ processes_id: proccesses })
     res.status(200).json(orders)
 })
 
@@ -161,6 +177,10 @@ const printOrderLabel = asyncHandler(async (req, res) => {
     await printLabel(req, res);
 });
 
-module.exports = {getAllOrders, getOrder, createOrder, updateOrder, deleteOrder, getOrdersByBranchName, printOrderLabel, getOrderByCode};
+
+module.exports = {
+    getAllOrders, getOrderById, createOrder, updateOrder, deleteOrder,
+    getOrdersByBranchName, printOrderLabel, getOrderByCode,
+};
 
 
