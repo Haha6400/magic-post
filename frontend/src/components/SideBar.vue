@@ -5,6 +5,10 @@
         <img class="logo" src="@/assets/logo.png" alt="logo" />
       </router-link>
 
+      <!-- <div class="message" v-if="supervisor" style="margin-top: 5px">
+        Welcome, {{ userName }}
+      </div> -->
+
       <ul class="side-menu">
         <li>
           <router-link to="/">
@@ -26,6 +30,28 @@
             Trang chủ
           </router-link>
         </li>
+
+        <li v-if="supervisor">
+          <router-link to="/hubManager/newOrder">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6 icon"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 4.5v15m7.5-7.5h-15"
+              />
+            </svg>
+
+            Tạo đơn hàng
+          </router-link>
+        </li>
+
         <li>
           <router-link to="/">
             <svg
@@ -108,6 +134,7 @@
         </li>
       </ul>
     </div>
+
     <div v-if="!isLogin" class="signinButton">
       <ul class="side-menu">
         <li>
@@ -133,8 +160,8 @@
       </ul>
     </div>
 
-    <div v-if="isLogin" class="signinButton">
-      <ul class="side-menu">
+    <div v-if="isLogin" class="">
+      <ul class="side-menu bottom">
         <li>
           <router-link to="/" @click="logout()">
             <svg
@@ -151,8 +178,36 @@
                 d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"
               />
             </svg>
-
             Đăng xuất
+          </router-link>
+        </li>
+        <li class="account">
+          <!-- <router-link to="/">
+            <svg
+              v-if="!this.avatar"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6 icon"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+            </svg>
+            {{ userName }}
+          </router-link> -->
+          <router-link to="/">
+            <img
+              class="avatar"
+              v-if="!this.avatar"
+              src="@/assets/Sidebar/star.jpg"
+              alt="ava"
+            />
+            {{ userName }}
           </router-link>
         </li>
       </ul>
@@ -162,7 +217,6 @@
 
 <script>
 // import axios from "axios";
-
 export default {
   name: "SideBar",
   props: {},
@@ -170,21 +224,30 @@ export default {
   data() {
     return {
       isLogin: false,
+      supervisor: false,
+      userName: "",
+      avatar: null,
     };
   },
 
   async created() {
-    if (localStorage.getItem("token")) {
+    if (localStorage.getItem("userData")) {
+      console.log("check login");
+      let user = localStorage.getItem("userData");
+      let jsonUser = JSON.parse(user);
+      console.log(jsonUser);
+      this.userName = jsonUser.account.userName;
       this.isLogin = true;
-      // this.$forceUpdate()
+      this.supervisor = true;
     }
-    console.log("localstorage");
   },
 
   methods: {
     logout() {
       localStorage.clear();
       this.isLogin = false;
+      this.supervisor = false;
+      this.userName = "";
     },
   },
 };
@@ -323,6 +386,26 @@ li {
   margin: 4px 0;
 }
 
+.avatar {
+  min-width: 42px;
+  width: 18px;
+  /* height: 25px; */
+  display: flex;
+  justify-content: center;
+  align-items: left;
+  margin-left: 5px;
+  margin-right: 6px;
+  border-radius: 100%;
+}
+
+.account {
+  background-color: #ffffff;
+}
+
+.bottom {
+  color: #f8b760;
+}
+
 @media (max-width: 1200px) {
   #sidebar {
     width: 60px;
@@ -355,6 +438,10 @@ li {
 
   .topPart a img {
     width: 40px;
+  }
+
+  .message {
+    visibility: hidden;
   }
 }
 </style>

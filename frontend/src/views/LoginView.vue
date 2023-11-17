@@ -9,7 +9,6 @@
           >
           <!-- type="email" -->
           <input
-            
             class="form-control"
             id="exampleInputEmail1"
             aria-describedby="emailHelp"
@@ -27,7 +26,14 @@
             required
           />
         </div>
-        <button v-if="!auth" type="submit" class="btn btn-primary" v-on:click="Login()">Đăng nhập</button>
+        <button
+          v-if="!auth"
+          type="submit"
+          class="btn btn-primary"
+          v-on:click="Login()"
+        >
+          Đăng nhập
+        </button>
 
         <hr />
         <div class="forgotPass">
@@ -60,11 +66,9 @@ export default {
         .post(url, { email: this.email, password: this.password })
         .then((response) => {
           console.log(response.data);
-          localStorage.setItem("token", response.data.accessToken);
+          localStorage.setItem("userData", JSON.stringify(response.data));
           this.auth = true;
-          // window. location. reload();
           this.$router.push({ path: "/" });
-          
         })
         .catch((error) => {
           console.log(error);
@@ -115,7 +119,7 @@ export default {
   font-family: "Nunito Sans", sans-serif;
   font-weight: 600;
   font-size: 30px;
-  color: #FFA500;
+  color: #ffa500;
   line-height: 28px;
   text-align: center;
   margin-bottom: 20px;
