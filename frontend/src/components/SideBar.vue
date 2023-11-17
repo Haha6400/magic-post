@@ -237,6 +237,7 @@ export default {
     return {
       isLogin: false,
       supervisor: false,
+      hubManager: false,
       userName: '',
       avatar: null
     }
@@ -250,7 +251,14 @@ export default {
       console.log(jsonUser)
       this.userName = jsonUser.account.userName
       this.isLogin = true
-      this.supervisor = true
+      if (jsonUser.account.role == "supervisor") {
+        this.supervisor = true
+      }
+
+      if (jsonUser.account.role == "hubManager") {
+        this.hubManager = true
+      }
+      
     }
   },
 

@@ -50,6 +50,7 @@
 <script>
 import axios from "axios";
 
+
 export default {
   name: "LoginView",
   data() {
@@ -67,15 +68,16 @@ export default {
         .then((response) => {
           console.log(response.data);
           localStorage.setItem("userData", JSON.stringify(response.data));
+          localStorage.setItem("token", response.data.accessToken);
           this.auth = true;
           this.$router.push({ path: "/" });
         })
         .catch((error) => {
           console.log(error);
-          toast.error("Wrong user", { position: toast.POSITION.BOTTOM_RIGHT }),
-            {
-              autoClose: 1000,
-            };
+          // toast.error("Wrong user", { position: toast.POSITION.BOTTOM_RIGHT }),
+          //   {
+          //     autoClose: 1000,
+          //   };
           if (error.response) {
             // The server responded with an error status code
             console.log(error.response.data);

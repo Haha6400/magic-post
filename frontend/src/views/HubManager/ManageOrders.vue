@@ -50,22 +50,25 @@
             </svg>
           </button>
 
-          <router-link :to="{ name: 'orderDetail', params: { id: item._id } }">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.2"
-              stroke="black"
-              class="w-6 h-6 icon"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-              />
-            </svg>
-          </router-link>
+          <button>
+            <router-link :to="{ name: 'orderDetail', params: { id: item._id } }">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.2"
+                stroke="black"
+                class="w-6 h-6 icon"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                />
+              </svg>
+            </router-link>
+          </button>
+
         </template>
 
         <template v-slot:bottom>
@@ -110,14 +113,15 @@ export default {
     }
   },
 
-  created() {
+  async created() {
     let url = 'http://localhost:3000/api/orders/all'
-    axios
+    await axios
       .get(url)
       .then((response) => {
         console.log(response.data)
         this.dataList = response.data
         this.loading = false
+        
       })
       .catch((error) => {
         console.log(error)
@@ -142,12 +146,15 @@ export default {
     //     })
     // }
     deleteOrder(id) {
-    let url = "http://localhost:3000/api/orders/delete/" + id
+      this.loading = true
+      let url = 'http://localhost:3000/api/orders/delete/' + id
       axios
         .delete(url)
         .then((response) => {
           console.log(response.data)
-          // this.getExams()
+          console.log('delete')
+          this.getList()
+          this.loading = true
           // toast.success('Deleted successfully', { position: toast.POSITION.BOTTOM_RIGHT }),
           //   {
           //     autoClose: 1000
@@ -158,6 +165,24 @@ export default {
           // toast.error("Delete failed", { position: toast.POSITION.BOTTOM_RIGHT }), {
           //   autoClose: 1000,
           // }
+        })
+    },
+
+    getList() {
+      let url = 'http://localhost:3000/api/orders/all'
+      axios
+        .get(url)
+        .then((response) => {
+          console.log(response.data)
+          this.dataList = response.data
+          this.loading = false
+        })
+        .catch((error) => {
+          console.log(error)
+          toast.error('???', { position: toast.POSITION.BOTTOM_RIGHT }),
+            {
+              autoClose: 1000
+            }
         })
     }
   }
@@ -213,7 +238,9 @@ export default {
   background-color: #ffe4b2;
   /* border-radius: 30px; */
   border: 0px;
-  width: 50%;
+  /* border-color: #ffe4b2; */
+  width: 100%;
+
 }
 
 .v-text-field:hover {
@@ -315,6 +342,10 @@ export default {
   border-radius: 10px;
 
   color: #000000;
+}
+
+button {
+  margin: 2px;
 }
 /* .v-data-table > .v-data-table__wrapper > table > thead > tr > th,
 td {
