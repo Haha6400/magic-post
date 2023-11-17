@@ -21,6 +21,9 @@ import SideBar from "@/components/SideBar.vue";
   color: #2c3e50;
   display:flex;
   flex-direction: row;
+  padding: 0;
+  margin: 0;
+  max-width: none;
 }
 
 * {
@@ -45,6 +48,7 @@ nav a.router-link-exact-active {
 }
 body {
   background-color: #FFE4B2;
+  width: 100%;
 }
 
 .main {
@@ -64,6 +68,7 @@ body {
     @media (max-width: 1024px) {
       padding-left: 6rem;
     }
+
   }
 
 }
