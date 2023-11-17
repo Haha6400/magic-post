@@ -1,9 +1,9 @@
 /*
 @desc Functions for hub management.
-Includes: Thống kế
+Includes: Thống kê
 - Hàng nhận:
-+ Nhận từ warehouse (hub_fromWarehouse)
-+ Nhận từ sender (hub_fromSender)
++ Nhận từ warehouse, cần gửi tới receiver (hub_fromWarehouse) //TODO: Này gọi là hàng nhận như trong đề bài của thầy??
++ Nhận từ sender, cần gửi tới warehouse (hub_fromSender) //TODO: Này gọi là hàng gửi đi như trong đề bài của thầy??
 => Tổng hàng nhận (hub_receiveTotal)
 - Hàng gửi:
 + Cần gửi tới warehouse (hub_toWarehouse)
@@ -20,12 +20,10 @@ const Customer = require("../models/customerModel");
 
 const {getCurrentBranch} = require("../middleware/branch");
 
-/*-------------------------------------------------------RECEIVE-------------------------------------------------------*/
-
+/*-------------------------------------------------------RECEIVE FROM WAREHOUSE, SENT TO RECEIVER-------------------------------------------------------*/
+// a.k.a the orders have receiver that has branch_id === currentHub
 
 /*
-@des Statistics of the orders received by hub received from all warehouse 
-a.k.a the orders have receiver that has branch_id === currentHub
 @range all
 @route GET /api/hub/fromwarehouse/all
 */
@@ -57,8 +55,6 @@ async function fromAllWarehouseByDayFunction(req, res, fullyear, month, day){
     return orders;
 }
 /*
-@des Statistics of the orders received by hub received from all warehouse 
-a.k.a the orders have receiver that has branch_id === currentHub
 @range all
 @date today
 @route GET /api/hub/fromwarehouse/all/today
@@ -71,8 +67,6 @@ const hub_fromAllWarehouse_Today = asyncHandler(async(req, res) => {
 })
 
 /*
-@des Statistics of the orders received by hub received from all warehouse 
-a.k.a the orders have receiver that has branch_id === currentHub
 @range all
 @date YYYY-MM-DD
 @route GET /api/hub/fromwarehouse/all/:fullyear/:month/:day
@@ -87,9 +81,7 @@ const hub_fromAllWarehouse_ByDay = asyncHandler(async(req, res) => {
 })
 
 /*
-@des Statistics of the orders received by hub received from a warehouse (using warehouse_id)
-a.k.a the orders have receiver that has branch_id === currentHub
-@range all
+@range using warehouse_id
 @route GET /api/hub/fromwarehouse/:warehouse_id
 */
 async function fromWarehouseFunction(req, res){
@@ -110,9 +102,10 @@ const hub_fromWarehouseID = asyncHandler(async (req, res) =>{
     res.status(200).json({orders, count: orders.length});
 });
 
+/*-------------------------------------------------------RECEIVE FROM SENDER, SENT TO WAREHOUSE-------------------------------------------------------*/
+//a.k.a the orders have receiver that has branch_id === currentHub
+
 /*
-@des Statistics of the orders received by hub received from customer 
-a.k.a the orders have sender that has branch_id === currentHub
 @range all
 @route GET /api/hub/fromwarehouse/all
 */
@@ -143,8 +136,6 @@ async function fromSenderByDayFunction(req, res, fullyear, month, day){
     return orders;
 }
 /*
-@des Statistics of the orders received by hub received from all customer today 
-a.k.a the orders have receiver that has branch_id === currentHub
 @range all
 @date today
 @route GET /api/hub/fromcustomer/all/today
@@ -157,8 +148,6 @@ const hub_fromSender_Today = asyncHandler(async(req, res) => {
 })
 
 /*
-@des Statistics of the orders received by hub received from all customer  
-a.k.a the orders have receiver that has branch_id === currentHub
 @range all
 @date YYYY-MM-DD
 @route GET /api/hub/fromsender/all/:fullyear/:month/:day

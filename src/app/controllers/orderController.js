@@ -29,7 +29,7 @@ const getAllOrders = asyncHandler(async (req, res) => {
 const createOrder = asyncHandler(async (req, res) => {
     console.log(req.body);
     const { note, special_service, instructions, sender_commitment, //order attributes
-        senderBranchName, status, // process attrs
+        status, // process attrs
         senderName, senderAddress, senderPhone, // sender attrs
         receiverName, receiverAddress, receiverPhone, //receiver attrs
         charge, surcharge, vat, other_fee, total_fee, receiverBranchName,//transporting fee
@@ -37,9 +37,11 @@ const createOrder = asyncHandler(async (req, res) => {
         type, amount, price,//package attrs
         cod, rf_other_fee, rf_total, // the fee receiver will pay
     } = req.body
-    const currentAccount = req.currentAccount
-    const currentBranch = currentAccount.branch_id
-    const sender = await createCustomer(senderName, senderAddress, senderPhone, currentBranch)
+    const currentAccount = req.currentAccount;
+    const currentBranch = currentAccount.branch_id;
+    console.log(currentBranch.name)
+
+    const sender = await createCustomer(senderName, senderAddress, senderPhone, currentBranch.name)
     const receiver = await createCustomer(receiverName, receiverAddress, receiverPhone, receiverBranchName) 
     //TODO: mắc gì thằng sender và thằng receiver đều chung 1 branch z =)) Phải khác nhau chứ
     const mass = await createMassModel(actual_mass, converted_mass)
