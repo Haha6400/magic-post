@@ -13,8 +13,13 @@
         + Tạo đơn hàng</router-link
       >
     </div>
+    
+    <div class="loading">
+      <v-progress-circular v-if="loading" color="#ffa500" align-items="center" indeterminate :size="34"></v-progress-circular>
+    </div>
+    
 
-    <v-card flat title="">
+    <v-card  flat title="">
       <v-data-table
         v-model:page="page"
         :headers="headers"
@@ -22,8 +27,9 @@
         :items="dataList"
         :search="search"
       >
+
+      
         <template v-slot:item.action="{ item }">
-          <div.editCol>
                 <router-link to="/">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -41,7 +47,7 @@
                   </svg>
                 </router-link>
 
-                <router-link to="/">
+                <router-link :to="{ name: 'orderDetail', params: { id: item._id } }">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -57,7 +63,6 @@
                     />
                   </svg>
                 </router-link>
-              </div.editCol>
         </template>
 
         <template v-slot:bottom>
@@ -65,6 +70,8 @@
             <v-pagination v-model="page" :length="pageCount"></v-pagination>
           </div>
         </template>
+
+        
       </v-data-table>
     </v-card>
   </div>
@@ -76,6 +83,7 @@ import axios from 'axios'
 export default {
   data() {
     return {
+      loading: true,
       dataList: [],
       page: 1,
       itemsPerPage: 6,
@@ -108,25 +116,30 @@ export default {
       .then((response) => {
         console.log(response.data)
         this.dataList = response.data
+        this.loading = false
       })
       .catch((error) => {
         console.log(error)
+        toast.error("???", { position: toast.POSITION.BOTTOM_RIGHT }),
+            {
+              autoClose: 1000,
+            };
       })
   },
 
   methods: {
-    beforeMount() {
-      let url = 'http://localhost:3000/api/orders/all'
-      axios
-        .get(url)
-        .then((response) => {
-          console.log(response.data)
-          this.dataList = response.data
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    }
+    // beforeMount() {
+    //   let url = 'http://localhost:3000/api/orders/all'
+    //   axios
+    //     .get(url)
+    //     .then((response) => {
+    //       console.log(response.data)
+    //       this.dataList = response.data
+    //     })
+    //     .catch((error) => {
+    //       console.log(error)
+    //     })
+    // }
   }
 }
 </script>
@@ -145,6 +158,12 @@ export default {
 
 ::-webkit-scrollbar {
   display: none;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .loginHeader {

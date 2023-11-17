@@ -72,10 +72,10 @@ export default {
         })
         .catch((error) => {
           console.log(error);
-          // toast.error("Wrong user", { position: toast.POSITION.BOTTOM_RIGHT }),
-          //   {
-          //     autoClose: 1000,
-          //   };
+          toast.error("Wrong user", { position: toast.POSITION.BOTTOM_RIGHT }),
+            {
+              autoClose: 1000,
+            };
           if (error.response) {
             // The server responded with an error status code
             console.log(error.response.data);
