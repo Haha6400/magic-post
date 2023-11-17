@@ -1,16 +1,135 @@
 <template>
   <div class="container">
-    <v-data-table-server
-      v-model:items-per-page="itemsPerPage"
-      :headers="headers"
-      :items-length="totalItems"
-      :items="serverItems"
-      :loading="loading"
-      item-value="name"
-      @update:options="loadItems"
-    ></v-data-table-server>
+    <h1 class="loginHeader">Quản lý đơn hàng</h1>
+    <div class="buttonList">
+      <form class="search-bar">
+        <input class="search-box" type="text" placeholder="Tìm kiếm đơn hàng" v-model="search" />
+        <button type="submit">
+          <img src="@/assets/logo.png" />
+        </button>
+      </form>
+
+      <router-link class="signup" type="button" to="/hubManager/newOrder">
+        + Tạo đơn hàng</router-link
+      >
+    </div>
+
+    <v-card flat title="">
+      <v-data-table
+        v-model:page="page"
+        :headers="headers"
+        :items-per-page="itemsPerPage"
+        :items="dataList"
+        :search="search"
+      >
+        <template v-slot:item.action="{ item }">
+          <div.editCol>
+                <router-link to="/">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.2"
+                    stroke="black"
+                    class="w-6 h-6 icon"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                    />
+                  </svg>
+                </router-link>
+
+                <router-link to="/">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.2"
+                    stroke="black"
+                    class="w-6 h-6 icon"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                    />
+                  </svg>
+                </router-link>
+              </div.editCol>
+        </template>
+
+        <template v-slot:bottom>
+          <div class="text-center pt-2">
+            <v-pagination v-model="page" :length="pageCount"></v-pagination>
+          </div>
+        </template>
+      </v-data-table>
+    </v-card>
   </div>
 </template>
+
+<script>
+import axios from 'axios'
+
+export default {
+  data() {
+    return {
+      dataList: [],
+      page: 1,
+      itemsPerPage: 6,
+      search: '',
+      headers: [
+        {
+          align: 'center',
+          key: 'order_code',
+          title: 'Order Code'
+        },
+        { key: 'sender_id', title: 'Người nhận', align: 'center' },
+        { key: 'calories', title: 'Chi phí', align: 'center' },
+        { key: 'calories', title: 'Phí người nhận phải trả', align: 'center' },
+        { key: 'calories', title: 'Trạng thái đơn hàng', align: 'center' },
+        { title: 'Chi tiết', sortable: false, align: 'center', text: "Chi tiết", value: "action" }
+      ]
+    }
+  },
+
+  computed: {
+    pageCount() {
+      return Math.ceil(this.dataList.length / this.itemsPerPage)
+    }
+  },
+
+  created() {
+    let url = 'http://localhost:3000/api/orders/all'
+    axios
+      .get(url)
+      .then((response) => {
+        console.log(response.data)
+        this.dataList = response.data
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  },
+
+  methods: {
+    beforeMount() {
+      let url = 'http://localhost:3000/api/orders/all'
+      axios
+        .get(url)
+        .then((response) => {
+          console.log(response.data)
+          this.dataList = response.data
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    }
+  }
+}
+</script>
 
 <style>
 .container {
@@ -20,149 +139,147 @@
   justify-content: center;
   min-width: 300px;
   background-color: #ffffff;
-  gap: 30px;
+  gap: 10px;
+  overflow-y: scroll;
 }
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+.loginHeader {
+  font-family: 'Nunito Sans', sans-serif;
+  font-weight: 600;
+  font-size: 30px;
+  color: #ffa500;
+  line-height: 28px;
+  text-align: center;
+  margin-top: 32px;
+}
+
+.v-card {
+  margin-right: 7%;
+  margin-left: 7%;
+  height: 70%;
+  /* max-height: 65%; */
+  overflow-y: scroll;
+  /* min-height: 70%; */
+}
+
+.v-card-text {
+  padding: 0;
+}
+
+.v-text-field {
+  background-color: #ffe4b2;
+  /* border-radius: 30px; */
+  border: 0px;
+  width: 50%;
+}
+
+.v-text-field:hover {
+  background-color: #ffe4b2;
+  /* border-radius: 30px; */
+  border: 0px;
+}
+.buttonList {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  grid-gap: 30px;
+
+  padding-bottom: 2%;
+  gap: 20px;
+
+  margin-right: 7%;
+}
+.search-bar {
+  box-sizing: border-box;
+  /*width: 15%;*/
+  min-width: 140px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  background: #ffe4b2;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 30px;
+}
+.search-bar input {
+  background: transparent;
+  flex: 1;
+  border: 0;
+  outline: none;
+  padding: 2% 3%;
+  font-family: 'Nunito Sans', sans-serif;
+}
+.search-bar button img {
+  width: 45px;
+  padding-right: 15px;
+}
+.search-bar button {
+  border: none;
+  background: none;
+}
+
+.editCol {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  margin: 3px;
+}
+
+.searchButton {
+  background-color: #f7b85e;
+  text-decoration: none;
+  border-radius: 30px;
+  width: 80%;
+  height: 25px;
+  font-family: 'Nunito Sans', sans-serif;
+  color: #000000;
+  text-align: center;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+.searchButton:hover {
+  background-color: #f7b85e;
+  text-decoration: none;
+  border-radius: 30px;
+  width: 80%;
+  height: 25px;
+  font-family: 'Nunito Sans', sans-serif;
+  color: #000000;
+  text-align: center;
+}
+
+.signup {
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  background-color: #f7b85e;
+
+  font-family: "Nunito Sans", sans-serif;
+  font-weight: regular;
+  width: 12%;
+  min-width: 140px;
+  height: 40px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  color: #000000;
+}
+/* .v-data-table > .v-data-table__wrapper > table > thead > tr > th,
+td {
+  min-width: 200px !important;
+} */
 </style>
-
-<script>
-  const desserts = [
-    {
-      name: 'Frozen Yogurt',
-      calories: 159,
-      fat: 6.0,
-      carbs: 24,
-      protein: 4.0,
-      iron: '1',
-    },
-    {
-      name: 'Jelly bean',
-      calories: 375,
-      fat: 0.0,
-      carbs: 94,
-      protein: 0.0,
-      iron: '0',
-    },
-    {
-      name: 'KitKat',
-      calories: 518,
-      fat: 26.0,
-      carbs: 65,
-      protein: 7,
-      iron: '6',
-    },
-    {
-      name: 'Eclair',
-      calories: 262,
-      fat: 16.0,
-      carbs: 23,
-      protein: 6.0,
-      iron: '7',
-    },
-    {
-      name: 'Gingerbread',
-      calories: 356,
-      fat: 16.0,
-      carbs: 49,
-      protein: 3.9,
-      iron: '16',
-    },
-    {
-      name: 'Ice cream sandwich',
-      calories: 237,
-      fat: 9.0,
-      carbs: 37,
-      protein: 4.3,
-      iron: '1',
-    },
-    {
-      name: 'Lollipop',
-      calories: 392,
-      fat: 0.2,
-      carbs: 98,
-      protein: 0,
-      iron: '2',
-    },
-    {
-      name: 'Cupcake',
-      calories: 305,
-      fat: 3.7,
-      carbs: 67,
-      protein: 4.3,
-      iron: '8',
-    },
-    {
-      name: 'Honeycomb',
-      calories: 408,
-      fat: 3.2,
-      carbs: 87,
-      protein: 6.5,
-      iron: '45',
-    },
-    {
-      name: 'Donut',
-      calories: 452,
-      fat: 25.0,
-      carbs: 51,
-      protein: 4.9,
-      iron: '22',
-    },
-  ]
-
-  const FakeAPI = {
-    async fetch ({ page, itemsPerPage, sortBy }) {
-      return new Promise(resolve => {
-        setTimeout(() => {
-          const start = (page - 1) * itemsPerPage
-          const end = start + itemsPerPage
-          const items = desserts.slice()
-
-          if (sortBy.length) {
-            const sortKey = sortBy[0].key
-            const sortOrder = sortBy[0].order
-            items.sort((a, b) => {
-              const aValue = a[sortKey]
-              const bValue = b[sortKey]
-              return sortOrder === 'desc' ? bValue - aValue : aValue - bValue
-            })
-          }
-
-          const paginated = items.slice(start, end)
-
-          resolve({ items: paginated, total: items.length })
-        }, 500)
-      })
-    },
-  }
-
-  export default {
-    data: () => ({
-      itemsPerPage: 5,
-      headers: [
-        {
-          title: 'Dessert (100g serving)',
-          align: 'start',
-          sortable: false,
-          key: 'name',
-        },
-        { title: 'Calories', key: 'calories', align: 'end' },
-        { title: 'Fat (g)', key: 'fat', align: 'end' },
-        { title: 'Carbs (g)', key: 'carbs', align: 'end' },
-        { title: 'Protein (g)', key: 'protein', align: 'end' },
-        { title: 'Iron (%)', key: 'iron', align: 'end' },
-      ],
-      serverItems: [],
-      loading: true,
-      totalItems: 0,
-    }),
-    methods: {
-      loadItems ({ page, itemsPerPage, sortBy }) {
-        this.loading = true
-        FakeAPI.fetch({ page, itemsPerPage, sortBy }).then(({ items, total }) => {
-          this.serverItems = items
-          this.totalItems = total
-          this.loading = false
-        })
-      },
-    },
-  }
-</script>
