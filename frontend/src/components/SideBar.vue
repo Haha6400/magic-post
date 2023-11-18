@@ -5,11 +5,12 @@
         <img class="logo" src="@/assets/logo.png" alt="logo" />
       </router-link>
 
-      <!-- <div class="message" v-if="supervisor" style="margin-top: 5px">
-        Welcome, {{ userName }}
-      </div> -->
+      <div class="message" v-if="isLogin" style="margin-top: 5px">
+        Welcome, <br>{{ userName }} - {{ role }}
+      </div>
 
       <ul class="side-menu">
+        <!-- Trang chủ -->
         <li>
           <router-link to="/">
             <svg
@@ -31,8 +32,12 @@
           </router-link>
         </li>
 
-        <li v-if="supervisor">
-          <router-link to="/hubManager/newOrder">
+
+        <!-- supervisor -->
+
+        <!-- Tạo tài khoản -->
+        <li v-if="role == 'supervisor'">
+          <router-link to="/createAccount">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -48,7 +53,8 @@
           </router-link>
         </li>
 
-        <li v-if="supervisor">
+        <!-- Quản lý tài khoản -->
+        <li v-if="role == 'supervisor'">
           <router-link to="/supervisor/manage-accounts">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -69,7 +75,11 @@
           </router-link>
         </li>
 
-        <li v-if="supervisor">
+
+
+        <!-- hubStaff -->
+        <!-- Tạo đơn hàng -->
+        <li v-if="role == 'hubStaff'">
           <router-link to="/hubManager/newOrder">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -86,7 +96,9 @@
           </router-link>
         </li>
 
-        <li v-if="supervisor">
+
+        <!-- Quản lý đơn hàng - Full All branch - Chưa biết nhét zô đâu -->
+        <li v-if="role == ''">
           <router-link to="/hubManager/manage-orders">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -107,7 +119,10 @@
           </router-link>
         </li>
 
-        <li>
+
+        <!-- customer -->
+        <!-- Tra cứu đơn hàng -->
+        <li v-if="!role">
           <router-link to="/orderStatus">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -127,7 +142,9 @@
             Tra cứu đơn hàng</router-link
           >
         </li>
-        <li>
+
+        <!-- Dịch vụ -->
+        <li v-if="!role">
           <router-link to="/">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -147,7 +164,9 @@
             Dịch vụ</router-link
           >
         </li>
-        <li>
+
+        <!-- Tin tức -->
+        <li v-if="!role">
           <router-link to="/">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -167,7 +186,9 @@
             Tin tức</router-link
           >
         </li>
-        <li>
+
+        <!-- About us -->
+        <li v-if="!role">
           <router-link to="/about">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -190,6 +211,7 @@
       </ul>
     </div>
 
+    <!-- Đăng nhập -->
     <div v-if="!isLogin" class="signinButton">
       <ul class="side-menu">
         <li>
@@ -215,6 +237,7 @@
       </ul>
     </div>
 
+    <!-- Đăng xuất -->
     <div v-if="isLogin" class="">
       <ul class="side-menu bottom">
         <li>
@@ -274,8 +297,7 @@ export default {
   data() {
     return {
       isLogin: false,
-      supervisor: false,
-      hubManager: false,
+      role: '',
       userName: '',
       avatar: null
     }
@@ -289,13 +311,14 @@ export default {
       console.log(jsonUser)
       this.userName = jsonUser.account.userName
       this.isLogin = true
-      if (jsonUser.account.role == "supervisor") {
-        this.supervisor = true
-      }
+      this.role = jsonUser.account.role
+      // if (jsonUser.account.role == "supervisor") {
+      //   this.supervisor = true
+      // }
 
-      if (jsonUser.account.role == "hubManager") {
-        this.hubManager = true
-      }
+      // if (jsonUser.account.role == "hubManager") {
+      //   this.hubManager = true
+      // }
       
     }
   },
@@ -304,8 +327,9 @@ export default {
     logout() {
       localStorage.clear()
       this.isLogin = false
-      this.supervisor = false
       this.userName = ''
+      this.role = null
+      this.avatar = null
     }
   }
 }

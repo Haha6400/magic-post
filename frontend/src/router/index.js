@@ -33,6 +33,11 @@ const router = createRouter({
       component: ()=>import('../views/OrderStatus.vue')
     },
     {
+      path: "/createAccount",
+      name: "createAccount",
+      component: ()=>import('../views/CreateAccount.vue')
+    },
+    {
       path: "/hubManager/newOrder",
       name: "newOrder",
       component: ()=>import('../views/HubManager/NewOrders.vue')

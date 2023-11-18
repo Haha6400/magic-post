@@ -192,14 +192,14 @@
       <div class="controls">
         <button class="btn" @click="step--" :disabled="step == 1">Quay lại</button>
 
-        <button
-          v-if="step != 4"
+        <button v-if="step != 4"
           class="btn btn--green-1"
           @click="step++"
           :disabled="step == numStep"
         >
           Tiếp
         </button>
+        <!-- v-if="step != 4" -->
 
         <button
           v-if="step == 4"
@@ -211,6 +211,7 @@
 
         
       </div>
+      <p>{{ step }}</p>
     </div>
   </div>
 </template>
