@@ -29,7 +29,6 @@ const Customer = require("../models/customerModel");
 const Process = require("../models/processesModel");
 
 const { getCurrentBranch } = require("../middleware/branch");
-const { roleCheck } = require('../middleware/auth');
 
 /*
 @desc Orders are received from warehouse, send to receiver
