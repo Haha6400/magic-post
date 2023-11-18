@@ -1,6 +1,7 @@
 <template>
   <section id="sidebar">
     <div class="topPart">
+      <!-- Logo -->
       <router-link to="/" class="brand">
         <img class="logo" src="@/assets/logo.png" alt="logo" />
       </router-link>
@@ -37,7 +38,7 @@
 
         <!-- Tạo tài khoản -->
         <li v-if="role == 'supervisor'">
-          <router-link to="/createAccount">
+          <router-link to="/supervisor/createAccount">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -80,7 +81,7 @@
         <!-- hubStaff -->
         <!-- Tạo đơn hàng -->
         <li v-if="role == 'hubStaff'">
-          <router-link to="/hubManager/newOrder">
+          <router-link to="/HubStaff/newOrder">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
