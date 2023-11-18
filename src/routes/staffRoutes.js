@@ -10,9 +10,9 @@ Includes:
 
 const express = require("express");
 const router = express.Router();
-const { getAllAccounts, createAccount, loginStaff, currentAccount, deleteAccount, getAccountById, getAccountByEmail, getAccountsByBranch, 
-    getAccountsByEachBranch, getRoleOfCurrentAccount, updateAccount, passwordReset, resetPasswordEmail, forgotPasswordEmail, passwordForgot} = require("../app/controllers/staffController")
-const {staffAuth, roleCheck, accessAccountCheck} = require("../app/middleware/auth");
+const { getAllAccounts, createAccount, loginStaff, currentAccount, deleteAccount, getAccountById, getAccountByEmail, getAccountsByBranch,
+    getAccountsByEachBranch, getRoleOfCurrentAccount, updateAccount, passwordReset, resetPasswordEmail, forgotPasswordEmail, passwordForgot } = require("../app/controllers/staffController")
+const { staffAuth, roleCheck, accessAccountCheck } = require("../app/middleware/auth");
 
 
 //TEST
@@ -37,9 +37,9 @@ router.get("/wp/:branchName", staffAuth, roleCheck(["supervisor"]), getAccountsB
 
 
 //@access HUBMANAGER, WAREHOUSEMANEGER, SUPERVISOR
-router.post("/create",staffAuth, roleCheck(["hubManager", "warehouseManager", "supervisor"]), createAccount);
-router.delete("/:id",staffAuth, roleCheck(["hubManager", "warehouseManager", "supervisor"]), accessAccountCheck, deleteAccount);
-router.get("/i/:id",staffAuth, roleCheck(["hubManager", "warehouseManager", "supervisor"]), accessAccountCheck, getAccountById);
+router.post("/create", staffAuth, roleCheck(["hubManager", "warehouseManager", "supervisor"]), createAccount);
+router.delete("/:id", staffAuth, roleCheck(["hubManager", "warehouseManager", "supervisor"]), accessAccountCheck, deleteAccount);
+router.get("/i/:id", staffAuth, roleCheck(["hubManager", "warehouseManager", "supervisor"]), accessAccountCheck, getAccountById);
 router.get("/e/:email", staffAuth, roleCheck(["hubManager", "warehouseManager", "supervisor"]), getAccountByEmail);
 
 //@access HUBMANAGER, WAREHOUSEMANEGER
