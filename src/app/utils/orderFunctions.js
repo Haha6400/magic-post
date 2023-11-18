@@ -26,7 +26,7 @@ async function createCustomer(fullname, address, phoneNumber, branchName) {
 }
 
 //create fee
-async function createFeeModel(charge, surcharge, VAT, other_fee, total_fee) {
+async function createFeeModel(charge, surcharge, vat, other_fee, total_fee) {
 
     fee = await Fee.create({
         'charge': charge,
@@ -60,12 +60,10 @@ async function createMassModel(actual_mass, converted_mass) {
 }
 
 //create process
-async function createProcesses(branchName, status) {
+async function createProcesses(branch, status) {
 
     processes = await Process.create({
-        'branch_id': await branch.findOne({
-            'name': branchName
-        }),
+        'branch_id': branch,
         'status': status,
     })
     return processes
@@ -82,6 +80,7 @@ async function createPackage(type, amount, price, mass) {
     return package
 }
 
+//Formatted response
 async function getOrder(order_id) {
     const order = await Order.findById(order_id)
     const sender = await Customer.findById(order.sender_id)
@@ -100,6 +99,20 @@ async function getOrder(order_id) {
     })
 }
 
+//Formatted response
+async function getOrders(orders) {
+    const result = []
+    for (var i in orders) {
+        console.log(orders[i]._id)
+        result.push(await getOrder(orders[i]._id))
+    }
+    return result
+}
 
 
-module.exports = { createCustomer, createFeeModel, createMassModel, createReceiverFeeModel, createProcesses, createPackage, getOrder }
+
+module.exports = {
+    createCustomer, createFeeModel, createMassModel,
+    createReceiverFeeModel, createProcesses, createPackage,
+    getOrder, getOrders
+}

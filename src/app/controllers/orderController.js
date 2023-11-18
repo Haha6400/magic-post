@@ -2,8 +2,11 @@
 - Viết thêm hàm Xác nhận hoàn trả hàng khi receiver từ chối nhận hàng:
 + Update is_returned: true
 + Đổi thông tin sender_id và receiver_id
+
+=> Xong ui
 */
 //TODO: Xác nhận lại với TĐ về mấy hàm tính toán giá tiền, cân nặng,... của đơn hàng
+//=> Minh tu tinh
 
 const asyncHandler = require('express-async-handler');
 const Order = require("../models/orderModel");
@@ -17,7 +20,8 @@ const {
     createReceiverFeeModel,
     createProcesses,
     createPackage,
-    getOrder } = require('../utils/orderFunctions');
+    getOrder,
+    getOrders } = require('../utils/orderFunctions');
 
 
 /*
@@ -27,10 +31,7 @@ const {
 */
 const getAllOrders = asyncHandler(async (req, res) => {
     const orders = await Order.find({})
-    const result = []
-    for (var i in orders) {
-        result.push(await getOrder(orders[i]._id))
-    }
+    const result = await getOrders(orders)
     res.status(200).json(result)
 })
 
@@ -113,12 +114,25 @@ const updateOrder = asyncHandler(async (req, res) => {
         { new: true }
     )
 
+    //End date
     const end = (req.body.status == 'DELIVERED') ? processes1.updatedAt : order.endedAt
-    console.log(end)
+
+    //Check if the order is refused by the receiver?
+    const returnConfirmation = (req.body.status == ('RETURN' || 'PRE-RETURN') ? true : false)
+    if (returnConfirmation) {
+        const temp = order.sender_id
+        order.sender_id = order.receiver_id
+        order.receiver_id = temp
+    }
+
+
     var updatedOrder = await Order.findByIdAndUpdate(
         req.params.id,
         {
             ...req.body,
+            'sender_id': order.sender_id,
+            'receiver_id': order.receiver_id,
+            'is_returned': returnConfirmation,
             'endedAt': end
         },
         { new: true }
