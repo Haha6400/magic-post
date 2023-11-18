@@ -57,6 +57,21 @@ const router = createRouter({
       name: "createAccount",
       component: ()=>import('../views/Supervisor/CreateAccount.vue')
     },
+    {
+      path: "/supervisor/accountDetail?:id",
+      name: "accountDetail",
+      component: ()=>import('../views/Supervisor/AccountDetail.vue')
+    },
+    {
+      path: "/supervisor/manage-hubs",
+      name: "manageHubs",
+      component: ()=>import('../views/Supervisor/ManageHub.vue')
+    },
+    {
+      path: "/manager/createAccount",
+      name: "createAccountByManager",
+      component: ()=>import('../views/Manager/CreateAccountByManager.vue')
+    },
     
   ]
 })

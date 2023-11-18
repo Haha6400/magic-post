@@ -7,7 +7,7 @@
       </router-link>
 
       <div class="message" v-if="isLogin" style="margin-top: 5px">
-        Welcome, <br>{{ userName }} - {{ role }}
+        Welcome, <br />{{ userName }} - {{ role }}
       </div>
 
       <ul class="side-menu">
@@ -32,7 +32,6 @@
             Trang chủ
           </router-link>
         </li>
-
 
         <!-- supervisor -->
 
@@ -76,7 +75,27 @@
           </router-link>
         </li>
 
+        <!-- Điểm giao dịch -->
+        <li v-if="role == 'supervisor'">
+          <router-link to="/supervisor/manage-hubs">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6 icon"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
+              />
+            </svg>
 
+            Điểm giao dịch
+          </router-link>
+        </li>
 
         <!-- hubStaff -->
         <!-- Tạo đơn hàng -->
@@ -97,10 +116,9 @@
           </router-link>
         </li>
 
-
         <!-- Quản lý đơn hàng - Full All branch - Chưa biết nhét zô đâu -->
         <li v-if="role == ''">
-          <router-link to="/hubManager/manage-orders">
+          <router-link to="/hubStaff/manage-orders">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -120,6 +138,27 @@
           </router-link>
         </li>
 
+        <!-- Tạo tài khoản by Manager -->
+        <li v-if="role == 'hubManager' || role == 'warehouseManager'">
+          <router-link to="/manager/createAccount">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6 icon"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z"
+              />
+            </svg>
+
+            Tạo tài khoản
+          </router-link>
+        </li>
 
         <!-- customer -->
         <!-- Tra cứu đơn hàng -->
@@ -320,7 +359,6 @@ export default {
       // if (jsonUser.account.role == "hubManager") {
       //   this.hubManager = true
       // }
-      
     }
   },
 

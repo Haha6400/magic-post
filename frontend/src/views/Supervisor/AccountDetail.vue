@@ -1,73 +1,69 @@
 <template>
-    
-    <div class="container">
-      <div class="header">
-        <h1 class="loginHeader">Tạo tài khoản</h1>
-        <p class="discription">Hoàn thiện đầy đủ thông tin để tạo tài khoản mới</p>
-      </div>
-
-      <div class="form-container">
-        <div class="row-container">
-          <div class="input-container">
-            <label for="exampleInputEmail1" class="form-label">Họ và tên</label>
-            <input class="form-control" id="exampleInputEmail1" v-model="name" required />
-          </div>
-          <div class="input-container">
-            <label for="exampleInputEmail1" class="form-label">Email</label>
-            <input class="form-control" id="exampleInputEmail1" v-model="email" required />
-          </div>
-        </div>
-
-        <div class="row-container">
-          <div class="input-container">
-            <label for="exampleInputEmail1" class="form-label">Số điện thoại</label>
-            <input class="form-control" id="exampleInputEmail1" v-model="phoneNumber" required />
-          </div>
-
-          <div class="input-container">
-            <label for="inputState">Vai trò</label>
-            <select id="inputState" class="form-control" v-model="role">
-              <option selected>staff</option>
-              <option>supervisor</option>
-              <option>hubManager</option>
-              <option>warehouseManager</option>
-              <option>hubStaff</option>
-            </select>
-          </div>
-
-          <div v-if="role == 'hubManager' || role == 'hubStaff'" class="input-container">
-            <label for="inputState">Chi nhánh</label>
-            <select id="inputState" class="form-control" v-model="branch">
-              <option v-for="item in hubList" :value="item._id" :key="item._id">
-                {{ item.name }}
-              </option>
-            </select>
-          </div>
-
-          <div v-if="role == 'warehouseManager' || role == 'staff'" class="input-container">
-            <label for="inputState">Chi nhánh</label>
-            <select id="inputState" class="form-control" v-model="branch">
-              <option v-for="item in warehouseList" :value="item._id" :key="item._id">
-                {{ item.name }}
-              </option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <div class="bottomButton">
-        <button v-on:click="createAccount()" class="btn btn--green-1" style="width: fit-content">
-          Tạo tài khoản
-        </button>
-      </div>
-
-      <div class="image-bottom">
-        <img alt="logo" src="@/assets/createAcc.png" />
-      </div>
-      
+  <div class="container">
+    <div class="header">
+      <h1 class="loginHeader">Tài khoản {{ $route.params.id }}</h1>
+      <!-- <p class="discription">Hoàn thiện đầy đủ thông tin để tạo tài khoản mới</p> -->
     </div>
 
-    
+    <div class="form-container">
+      <div class="row-container">
+        <div class="input-container">
+          <label for="exampleInputEmail1" class="form-label">Họ và tên</label>
+          <input class="form-control" id="exampleInputEmail1" v-model="name" required readonly />
+        </div>
+        <div class="input-container">
+          <label for="exampleInputEmail1" class="form-label">Email</label>
+          <input class="form-control" id="exampleInputEmail1" v-model="email" required readonly />
+        </div>
+      </div>
+
+      <div class="row-container">
+        <div class="input-container">
+          <label for="exampleInputEmail1" class="form-label">Số điện thoại</label>
+          <input class="form-control" id="exampleInputEmail1" v-model="phoneNumber" required />
+        </div>
+
+        <div class="input-container">
+          <label for="inputState">Vai trò</label>
+          <select id="inputState" class="form-control" v-model="role">
+            <option selected>staff</option>
+            <option>supervisor</option>
+            <option>hubManager</option>
+            <option>warehouseManager</option>
+            <option>hubStaff</option>
+          </select>
+        </div>
+
+        <div v-if="role == 'hubManager' || role == 'hubStaff'" class="input-container">
+          <label for="inputState">Chi nhánh</label>
+          <select id="inputState" class="form-control" v-model="branch">
+            <option v-for="item in hubList" :value="item._id" :key="item._id">
+              {{ item.name }}
+            </option>
+          </select>
+        </div>
+
+        <div v-if="role == 'warehouseManager' || role == 'staff'" class="input-container">
+          <label for="inputState">Chi nhánh</label>
+          <select id="inputState" class="form-control" v-model="branch">
+            <option v-for="item in warehouseList" :value="item._id" :key="item._id">
+              {{ item.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottomButton">
+      <button v-on:click="updateAccount()" class="btn btn--green-1" style="width: fit-content">
+        Lưu
+      </button>
+    </div>
+
+    <div class="image-bottom">
+      <img alt="logo" src="@/assets/createAcc.png" />
+    </div>
+  </div>
 </template>
 
 <script>
@@ -87,7 +83,23 @@ export default {
   },
 
   async created() {
-    let url = 'http://localhost:3000/api/workplace/all/hub'
+    let url = 'http://localhost:3000/api/accounts/i/' + this.$route.params.id
+    axios
+      .get(url)
+      .then((response) => {
+        console.log(response.data)
+
+        this.name = response.data.name
+        this.email = response.data.email
+        this.phoneNumber = response.data.phoneNumber
+        this.role = response.data.role
+        this.branch = response.data.branch
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+
+    url = 'http://localhost:3000/api/workplace/all/hub'
     console.log('check role')
     await axios
       .get(url)
@@ -112,10 +124,12 @@ export default {
   },
 
   methods: {
-    async createAccount() {
-      let url = ''
+    async updateAccount() {
+      let url = 'http://localhost:3000/api/accounts/update/' + this.$route.params.id
       await axios
-        .post(url, { email: this.email, password: this.password })
+        .put(url, { 
+            // todo 
+        })
         .then((response) => {
           console.log(response.data)
         })

@@ -1,17 +1,17 @@
 <template>
   <div class="container">
-    <h1 class="loginHeader">Quản lý tài khoản</h1>
+    <h1 class="loginHeader">Quản lý điểm giao dịch</h1>
 
     <div class="buttonList">
-
       <form class="search-bar">
-        <input class="search-box" type="text" placeholder="Tìm kiếm tài khoản" v-model="search" />
+        <input class="search-box" type="text" placeholder="Tìm kiếm" v-model="search" />
         <button type="submit">
           <img src="@/assets/logo.png" />
         </button>
       </form>
 
-      <router-link class="signup" type="button" to="/admin/addExam"> + Tạo tài khoản</router-link>
+      <!-- <router-link class="signup" type="button" to="/admin/addExam" @click="dialog = true"> + Tạo điểm mới</router-link> -->
+      <button class="signup" type="button" @click="dialog = true">+ Tạo điểm mới</button>
     </div>
 
     <div class="loading">
@@ -32,8 +32,12 @@
         :items="dataList"
         :search="search"
       >
+        <template v-slot:item.num="{ index }">
+          {{ index + 1 }}
+        </template>
+
         <template v-slot:item.action="{ item }">
-          <button v-on:click="deleteAccount(item._id)">
+          <!-- <button v-on:click="deleteAccount(item._id)">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -48,7 +52,7 @@
                 d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
               />
             </svg>
-          </button>
+          </button> -->
 
           <button>
             <router-link :to="{ name: 'accountDetail', params: { id: item._id } }">
@@ -77,6 +81,40 @@
         </template>
       </v-data-table>
     </v-card>
+
+    <v-dialog v-model="dialog" persistent width="1024">
+      <v-card>
+        <!-- <h5 class="loginHeader">Tạo điểm giao dịch mới</h5> -->
+        <div class="popupHeader">Tạo điểm giao dịch mới</div>
+        <v-sheet width="300" class="mx-auto">
+          <v-form @submit.prevent>
+            <v-text-field
+              v-model="firstName"
+              :rules="rules"
+              label="Tên điểm giao dịch"
+            ></v-text-field>
+            <v-select
+              v-model="select.value.value"
+              :items="dataList"
+              :error-messages="select.errorMessage.value"
+              label="Tên điểm tập kết cha"
+            ></v-select>
+            <v-btn type="submit" block class="mt-2">Submit</v-btn>
+          </v-form>
+        </v-sheet>
+
+        <!-- <div class="form-container">
+          <div class="input-container">
+            <label for="exampleInputEmail1" class="form-label">Họ và tên</label>
+            <input class="form-control" id="exampleInputEmail1" v-model="name" required />
+          </div>
+          <div class="input-container">
+            <label for="exampleInputEmail1" class="form-label">Email</label>
+            <input class="form-control" id="exampleInputEmail1" v-model="email" required />
+          </div>
+        </div> -->
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -87,21 +125,16 @@ axios.defaults.headers.common.authorization = localStorage.getItem('token')
 export default {
   data() {
     return {
+      dialog: false,
       loading: true,
       dataList: [],
       page: 1,
       itemsPerPage: 6,
       search: '',
       headers: [
-        {
-          align: 'center',
-          key: 'userName',
-          title: 'Username'
-        },
-        { key: 'email', title: 'Email', align: 'center' },
-        { key: 'phoneNumber', title: 'SĐT', align: 'center' },
-        { key: 'role', title: 'Chức vụ', align: 'center' },
-        { key: 'workplace', title: 'Nơi làm việc', align: 'center' },
+        { text: '1', value: 'num', title: 'Số thứ tự', sortable: false },
+        { key: 'name', title: 'Tên điểm giao dịch', align: 'center' },
+        { key: 'higherBranch_id', title: 'Tên điểm tập kết', align: 'center' },
         { title: 'Chi tiết', sortable: false, align: 'center', text: 'Chi tiết', value: 'action' }
       ]
     }
@@ -114,20 +147,17 @@ export default {
   },
 
   async created() {
-    let url = 'http://localhost:3000/api/accounts/all'
+    // this.dialog = false
+    let url = 'http://localhost:3000/api/workplace/all/hub'
     await axios
       .get(url)
       .then((response) => {
-        console.log(response.data.staffAccounts)
-        this.dataList = response.data.staffAccounts
+        console.log(response.data)
+        this.dataList = response.data.hub
         this.loading = false
       })
       .catch((error) => {
         console.log(error)
-        // toast.error('???', { position: toast.POSITION.BOTTOM_RIGHT }),
-        //   {
-        //     autoClose: 1000
-        //   }
       })
   },
 
@@ -208,6 +238,16 @@ export default {
   margin-top: 32px;
 }
 
+.popupHeader {
+  font-family: 'Nunito Sans', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  color: #ffa500;
+  line-height: 28px;
+  text-align: center;
+  margin-top: 10px;
+}
+
 .v-card {
   margin-right: 7%;
   margin-left: 7%;
@@ -222,17 +262,17 @@ export default {
 }
 
 /* .v-text-field {
-  background-color: #ffe4b2;
-  border-radius: 30px;
-  border: 0px;
-  width: 10%;
-}  */
+    background-color: #ffe4b2;
+    border-radius: 30px;
+    border: 0px;
+    width: 10%;
+  }  */
 
 /* .v-text-field:hover {
-  background-color: #ffe4b2;
-  border-radius: 30px;
-  border: 0px;
-}  */
+    background-color: #ffe4b2;
+    border-radius: 30px;
+    border: 0px;
+  }  */
 .buttonList {
   display: flex;
   flex-wrap: wrap;
@@ -336,15 +376,50 @@ button {
   margin: 2px;
 }
 /* .v-data-table > .v-data-table__wrapper > table > thead > tr > th,
-td {
-  min-width: 200px !important;
-} */
+  td {
+    min-width: 200px !important;
+  } */
 
 /* .v-select .v-select__selections input {
-    display: none;
-} */
+      display: none;
+  } */
 
 .form-control {
   width: 15%;
+}
+
+.v-card {
+  border-radius: 30px;
+}
+.form-container {
+  margin-left: 20%;
+  margin-right: 20%;
+  text-align: left;
+  font-family: 'Nunito Sans', sans-serif;
+  margin-bottom: 10px;
+  display: flex;
+  width: 60%;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-label {
+  margin-bottom: 5px;
+}
+
+label {
+  margin-bottom: 5px;
+  align-items: left;
+}
+
+.row-container {
+  display: flex;
+  flex-direction: row;
+  gap: 5%;
+}
+
+.input-container {
+  width: 100%;
+  align-items: left;
 }
 </style>
