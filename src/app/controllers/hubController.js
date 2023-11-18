@@ -21,7 +21,6 @@ Hàng gửi tới nơi khác:
 => Tìm kiếm theo tên warehouse, theo ngày, tháng, năm
 => Chia hubManager, supervisor
 */
-
 const asyncHandler = require('express-async-handler');
 const Order = require("../models/orderModel");
 const Branch = require("../models/branchModel");
@@ -29,7 +28,6 @@ const Customer = require("../models/customerModel");
 const Process = require("../models/processesModel");
 
 const { getCurrentBranch } = require("../middleware/branch");
-const { roleCheck } = require('../middleware/auth');
 
 /*
 @desc Orders are received from warehouse, send to receiver
@@ -53,7 +51,8 @@ async function hubReceive_Function(req, res, currentHub, warehouse, statusArray)
         })
         if (!orders) {
             res.status(404);
-            throw new Error("orders not found");
+            throw new Error("orders not found"); //hubA -> WHA-> WHB -> hubB -> receiver
+            //huba -> WHa -> WHB -> hubB -> receiver
         }
         return orders;
     } else { //Orders from a warehouse in request
@@ -99,6 +98,7 @@ async function hubSend_Function(req, res, currentHub, warehouse, statusArray) {
     }
     else { //All orders to a warehouse in request
         const toHub = await Branch.find({ higherBranch_id: warehouse }).sort('createdAt');
+        console.log(toHub);
         const receivers = await Customer.find({ branch_id: toHub }).sort('createdAt');
         const orders = await Order.find({
             createdAt: { $gt: new Date(start), $lt: new Date(end) },
@@ -141,11 +141,14 @@ const allHubReceive_Manager = asyncHandler(async (req, res) => {
 /*
 @desc All orders are received a warehouse in request, send to receiver
 @access hubManager
-@path GET /api/hub/receive/all/:h_id
+@path GET /api/hub/receive/all/:warehouse_id
+Quản lý truy cập vào hub của mình
+=> Tìm hàng tới từ warehouse_id
 */
 const allHubReceiveByWH_Manager = asyncHandler(async (req, res) => {
     const currentHub = await getCurrentBranch(req, res);
     const warehouse = await Branch.findById(req.params.branch_id);
+    console.log("warehouse:", warehouse);
     const orders = await allHubReceive_Function(req, res, currentHub, warehouse);
     res.status(200).json({ orders, count: orders.length });
 })
@@ -153,10 +156,10 @@ const allHubReceiveByWH_Manager = asyncHandler(async (req, res) => {
 /*
 @desc All orders are received from warehouse, send to receiver
 @access supervisor
-@path GET /api/hub/receive/all/:branchName
+@path GET /api/hub/receive/all/:hub_id
 */
 const allHubReceive_Supervisor = asyncHandler(async (req, res) => {
-    const currentHub = await Branch.findOne({ name: req.params.BranchName });
+    const currentHub = await Branch.findById(req.params.hub_id);
     const orders = await allHubReceive_Function(req, res, currentHub, null);
     res.status(200).json({ orders, count: orders.length });
 })
@@ -164,15 +167,14 @@ const allHubReceive_Supervisor = asyncHandler(async (req, res) => {
 /*
 @desc All orders are received from warehouse, send to receiver
 @access supervisor
-@path GET /api/hub/receive/all/:branchName/:branch_id
+@path GET /api/hub/receive/all/:hub_id/:warehouse_id
 */
 const allHubReceivByWH_Supervisor = asyncHandler(async (req, res) => {
-    const currentHub = await Branch.findOne({ name: req.params.BranchName });
-    const warehouse = await Branch.findById(req.params.branch_id);
+    const currentHub = await Branch.findById(req.params.hub_id);
+    const warehouse = await Branch.findById(req.params.warehouse_id);
     const orders = await allHubReceive_Function(req, res, currentHub, warehouse);
     res.status(200).json({ orders, count: orders.length });
 })
-
 
 
 /*
@@ -209,21 +211,21 @@ const allHubSendByWH_Manager = asyncHandler(async (req, res) => {
 /*
 @desc All orders are received from sender, send to warehouse.
 @access supervisor
-@path GET /api/hub/send/all/:branchName
+@path GET /api/hub/send/all/:hub_id
 */
 const allHubSend_Supervisor = asyncHandler(async (req, res) => {
-    const currentHub = await Branch.findOne({ name: req.body.BranchName });
+    const currentHub = await Branch.findById(req.params.hub_id)
     const orders = await allHubSend_Function(req, res, currentHub, null);
     res.status(200).json({ orders, count: orders.length });
 })
 /*
 @desc All orders are received from sender, send to  warehouse in request.
 @access supervisor
-@path GET /api/hub/send/all/:branchName/:branch_id
+@path GET /api/hub/send/all/:hub_id/:warehouse_id
 */
 const allHubSendByWH_Supervisor = asyncHandler(async (req, res) => {
-    const currentHub = await Branch.findOne({ name: req.body.BranchName });
-    const warehouse = await Branch.findById(req.params.branch_id)
+    const currentHub = await Branch.findById(req.params.hub_id)
+    const warehouse = await Branch.findById(req.params.warehouse_id)
     const orders = await allHubSend_Function(req, res, currentHub, warehouse);
     res.status(200).json({ orders, count: orders.length });
 })
@@ -265,10 +267,10 @@ const availableHubReceiveByWH_Manager = asyncHandler(async (req, res) => {
 /*
 @desc All orders are received from warehouse, send to receiver
 @access supervisor
-@path GET /api/hub/receive/available/:branchName
+@path GET /api/hub/receive/available/:hub_id
 */
 const availableHubReceive_Supervisor = asyncHandler(async (req, res) => {
-    const currentHub = await Branch.findOne({ name: req.params.BranchName });
+    const currentHub = await Branch.findById(req.params.hub_id)
     const orders = await availableHubReceive_Function(req, res, currentHub, null);
     res.status(200).json({ orders, count: orders.length });
 })
@@ -276,11 +278,11 @@ const availableHubReceive_Supervisor = asyncHandler(async (req, res) => {
 /*
 @desc All orders are received from warehouse, send to receiver
 @access supervisor
-@path GET /api/hub/receive/available/:branchName/:branch_id
+@path GET /api/hub/receive/available/:hub_id/:warehouse_id
 */
 const availableHubReceivByWH_Supervisor = asyncHandler(async (req, res) => {
-    const currentHub = await Branch.findOne({ name: req.params.BranchName });
-    const warehouse = await Branch.findById(req.params.branch_id);
+    const currentHub = await Branch.findById(req.params.hub_id)
+    const warehouse = await Branch.findById(req.params.warehouse_id);
     const orders = await availableHubReceive_Function(req, res, currentHub, warehouse);
     res.status(200).json({ orders, count: orders.length });
 })
@@ -319,21 +321,21 @@ const availableHubSendByWH_Manager = asyncHandler(async (req, res) => {
 /*
 @desc All orders are received from sender, send to warehouse.
 @access supervisor
-@path GET /api/hub/send/available/:branchName
+@path GET /api/hub/send/available/:hub_id
 */
 const availableHubSend_Supervisor = asyncHandler(async (req, res) => {
-    const currentHub = await Branch.findOne({ name: req.body.BranchName });
+    const currentHub = await Branch.findById(req.params.hub_id);
     const orders = await availableHubSend_Function(req, res, currentHub, null);
     res.status(200).json({ orders, count: orders.length });
 })
 /*
 @desc All orders are received from sender, send to  warehouse in request.
 @access supervisor
-@path GET /api/hub/send/available/:branchName/:branch_id
+@path GET /api/hub/send/available/:hub_id/:warehouse_id
 */
 const availableHubSendByWH_Supervisor = asyncHandler(async (req, res) => {
-    const currentHub = await Branch.findOne({ name: req.body.BranchName });
-    const warehouse = await Branch.findById(req.params.branch_id)
+    const currentHub = await Branch.findById(req.params.hub_id);
+    const warehouse = await Branch.findById(req.params.warehouse_id)
     const orders = await availableHubSend_Function(req, res, currentHub, warehouse);
     res.status(200).json({ orders, count: orders.length });
 })
@@ -342,5 +344,4 @@ module.exports = {
     allHubReceive_Manager, allHubReceive_Supervisor, allHubSend_Manager, allHubSend_Supervisor,
     allHubReceiveByWH_Manager, allHubReceivByWH_Supervisor, allHubSendByWH_Manager, allHubSendByWH_Supervisor,
     availableHubReceive_Manager, availableHubReceive_Supervisor, availableHubSend_Manager, availableHubSend_Supervisor,
-    availableHubReceiveByWH_Manager, availableHubReceivByWH_Supervisor, availableHubSendByWH_Manager, availableHubSendByWH_Supervisor
-}
+    availableHubReceiveByWH_Manager, availableHubReceivByWH_Supervisor, availableHubSendByWH_Manager, availableHubSendByWH_Supervisor}
