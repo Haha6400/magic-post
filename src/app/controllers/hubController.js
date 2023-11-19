@@ -91,8 +91,7 @@ async function hubSend_Function(req, res, currentHub, warehouse, statusArray) {
             sender_id: senders
         })
         if (!orders) {
-            res.status(404);
-            throw new Error("orders not found");
+            console.log("No orders");
         }
         return orders;
     }
@@ -106,8 +105,7 @@ async function hubSend_Function(req, res, currentHub, warehouse, statusArray) {
             receiver_id: receivers
         })
         if (!orders) {
-            res.status(404);
-            throw new Error("orders not found");
+            console.log("No orders");
         }
         return orders;
     }
@@ -344,4 +342,5 @@ module.exports = {
     allHubReceive_Manager, allHubReceive_Supervisor, allHubSend_Manager, allHubSend_Supervisor,
     allHubReceiveByWH_Manager, allHubReceivByWH_Supervisor, allHubSendByWH_Manager, allHubSendByWH_Supervisor,
     availableHubReceive_Manager, availableHubReceive_Supervisor, availableHubSend_Manager, availableHubSend_Supervisor,
-    availableHubReceiveByWH_Manager, availableHubReceivByWH_Supervisor, availableHubSendByWH_Manager, availableHubSendByWH_Supervisor}
+    availableHubReceiveByWH_Manager, availableHubReceivByWH_Supervisor, availableHubSendByWH_Manager, availableHubSendByWH_Supervisor
+}
