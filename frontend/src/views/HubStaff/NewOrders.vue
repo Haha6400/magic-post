@@ -324,6 +324,14 @@ $transiton: all 500ms ease;
   min-width: 300px;
   background-color: #ffffff;
   gap: 30px;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 2.5vh;
+  margin-bottom: 2.5vh;
+  overflow-y: scroll;
+  height: 95vh;
+  border-radius: 12px;
+  transition: all 0.3s ease;
 }
 
 .header {

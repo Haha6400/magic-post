@@ -149,7 +149,7 @@
                 <input
                   class="form-control"
                   id="exampleInputEmail1"
-                  v-model="special_service"
+                  v-model="orderData.special_service"
                   required
                 />
               </div>
@@ -243,7 +243,7 @@ export default {
   },
 
   created() {
-    let url = 'http://localhost:3000/api/orders/' + this.$route.params.id
+    let url = 'http://localhost:3000/api/orders/code/' + this.$route.params.id
     axios
       .get(url)
       .then((response) => {

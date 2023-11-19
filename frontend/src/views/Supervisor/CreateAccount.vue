@@ -1,73 +1,69 @@
 <template>
-    
-    <div class="container">
-      <div class="header">
-        <h1 class="loginHeader">Tạo tài khoản</h1>
-        <p class="discription">Hoàn thiện đầy đủ thông tin để tạo tài khoản mới</p>
-      </div>
-
-      <div class="form-container">
-        <div class="row-container">
-          <div class="input-container">
-            <label for="exampleInputEmail1" class="form-label">Họ và tên</label>
-            <input class="form-control" id="exampleInputEmail1" v-model="name" required />
-          </div>
-          <div class="input-container">
-            <label for="exampleInputEmail1" class="form-label">Email</label>
-            <input class="form-control" id="exampleInputEmail1" v-model="email" required />
-          </div>
-        </div>
-
-        <div class="row-container">
-          <div class="input-container">
-            <label for="exampleInputEmail1" class="form-label">Số điện thoại</label>
-            <input class="form-control" id="exampleInputEmail1" v-model="phoneNumber" required />
-          </div>
-
-          <div class="input-container">
-            <label for="inputState">Vai trò</label>
-            <select id="inputState" class="form-control" v-model="role">
-              <option selected>staff</option>
-              <option>supervisor</option>
-              <option>hubManager</option>
-              <option>warehouseManager</option>
-              <option>hubStaff</option>
-            </select>
-          </div>
-
-          <div v-if="role == 'hubManager' || role == 'hubStaff'" class="input-container">
-            <label for="inputState">Chi nhánh</label>
-            <select id="inputState" class="form-control" v-model="branch">
-              <option v-for="item in hubList" :value="item._id" :key="item._id">
-                {{ item.name }}
-              </option>
-            </select>
-          </div>
-
-          <div v-if="role == 'warehouseManager' || role == 'staff'" class="input-container">
-            <label for="inputState">Chi nhánh</label>
-            <select id="inputState" class="form-control" v-model="branch">
-              <option v-for="item in warehouseList" :value="item._id" :key="item._id">
-                {{ item.name }}
-              </option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <div class="bottomButton">
-        <button v-on:click="createAccount()" class="btn btn--green-1" style="width: fit-content">
-          Tạo tài khoản
-        </button>
-      </div>
-
-      <div class="image-bottom">
-        <img alt="logo" src="@/assets/createAcc.png" />
-      </div>
-      
+  <div class="container">
+    <div class="header">
+      <h1 class="loginHeader">Tạo tài khoản</h1>
+      <p class="discription">Hoàn thiện đầy đủ thông tin để tạo tài khoản mới</p>
     </div>
 
-    
+    <div class="form-container">
+      <div class="row-container">
+        <div class="input-container">
+          <label for="exampleInputEmail1" class="form-label">Họ và tên</label>
+          <input class="form-control" id="exampleInputEmail1" v-model="userName" required />
+        </div>
+        <div class="input-container">
+          <label for="exampleInputEmail1" class="form-label">Email</label>
+          <input class="form-control" id="exampleInputEmail1" v-model="email" required />
+        </div>
+      </div>
+
+      <div class="row-container">
+        <div class="input-container">
+          <label for="exampleInputEmail1" class="form-label">Số điện thoại</label>
+          <input class="form-control" id="exampleInputEmail1" v-model="phoneNumber" required />
+        </div>
+
+        <div class="input-container">
+          <label for="inputState">Vai trò</label>
+          <select id="inputState" class="form-control" v-model="role">
+            <option selected>staff</option>
+            <option>supervisor</option>
+            <option>hubManager</option>
+            <option>warehouseManager</option>
+            <option>hubStaff</option>
+          </select>
+        </div>
+
+        <div v-if="role == 'hubManager' || role == 'hubStaff'" class="input-container">
+          <label for="inputState">Chi nhánh</label>
+          <select id="inputState" class="form-control" v-model="branchName">
+            <option v-for="item in hubList" :value="item.name" :key="item._id">
+              {{ item.name }}
+            </option>
+          </select>
+        </div>
+
+        <div v-if="role == 'warehouseManager' || role == 'staff'" class="input-container">
+          <label for="inputState">Chi nhánh</label>
+          <select id="inputState" class="form-control" v-model="branchName">
+            <option v-for="item in warehouseList" :value="item.name" :key="item._id">
+              {{ item.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottomButton">
+      <button v-on:click="createAccount()" class="btn btn--green-1" style="width: fit-content">
+        Tạo tài khoản
+      </button>
+    </div>
+
+    <div class="image-bottom">
+      <img alt="logo" src="@/assets/createAcc.png" />
+    </div>
+  </div>
 </template>
 
 <script>
@@ -76,7 +72,7 @@ import axios from 'axios'
 export default {
   data() {
     return {
-      name: '',
+      userName: '',
       email: '',
       phoneNumber: '',
       role: '',
@@ -104,7 +100,7 @@ export default {
       .get(url)
       .then((response) => {
         console.log(response.data)
-        this.warehouseList = response.data.warehouse
+        this.warehouseList = response.data.warehouse.allWarehouse
       })
       .catch((error) => {
         console.log(error)
@@ -113,11 +109,18 @@ export default {
 
   methods: {
     async createAccount() {
-      let url = ''
+      let url = 'http://localhost:3000/api/accounts/create'
       await axios
-        .post(url, { email: this.email, password: this.password })
+        .post(url, {
+          userName: this.userName,
+          email: this.email,
+          phoneNumber: this.phoneNumber,
+          branchName: this.branchName,
+          role: this.role,
+        })
         .then((response) => {
           console.log(response.data)
+          console.log("success")
         })
         .catch((error) => {
           console.log(error)
@@ -141,6 +144,14 @@ $transiton: all 500ms ease;
   background-color: #ffffff;
   gap: 30px;
   align-items: center;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 2.5vh;
+  margin-bottom: 2.5vh;
+  overflow-y: scroll;
+  height: 95vh;
+  border-radius: 12px;
+  transition: all 0.3s ease;
 }
 
 .header {

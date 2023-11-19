@@ -205,7 +205,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .container {
   display: flex;
   flex-direction: column;
@@ -215,6 +215,13 @@ export default {
   background-color: #ffffff;
   gap: 10px;
   overflow-y: scroll;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 2.5vh;
+  margin-bottom: 2.5vh;
+  height: 95vh;
+  border-radius: 12px;
+  transition: all 0.3s ease;
 }
 
 ::-webkit-scrollbar {

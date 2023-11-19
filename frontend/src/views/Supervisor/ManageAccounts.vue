@@ -11,7 +11,7 @@
         </button>
       </form>
 
-      <router-link class="signup" type="button" to="/admin/addExam"> + Tạo tài khoản</router-link>
+      <router-link class="signup" type="button" to="/supervisor/createAccount"> + Tạo tài khoản</router-link>
     </div>
 
     <div class="loading">
@@ -176,7 +176,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .container {
   display: flex;
   flex-direction: column;
@@ -185,7 +185,14 @@ export default {
   min-width: 300px;
   background-color: #ffffff;
   gap: 10px;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 2.5vh;
+  margin-bottom: 2.5vh;
   overflow-y: scroll;
+  height: 95vh;
+  border-radius: 12px;
+  transition: all 0.3s ease;
 }
 
 ::-webkit-scrollbar {
