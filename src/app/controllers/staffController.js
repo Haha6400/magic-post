@@ -43,10 +43,9 @@ const createAccount = asyncHandler(async (req, res) => {
     - If the user is warehouseManager, they can only create accounts for warehouseStaff.
     */
     // const currentAccount = req.currentAccount;
-    // if((currentAccount.role === "supervisor" && (role !== "hubManager" && role !== "warehouseManager")) ||
+    // if ((currentAccount.role === "supervisor" && (role !== "hubManager" && role !== "warehouseManager")) ||
     //     (currentAccount.role === "hubManager" && (role !== "hubStaff")) ||
-    //     (currentAccount.role === "warehouseManager" && (role !== "warehouseStaff"))) 
-    // {
+    //     (currentAccount.role === "warehouseManager" && (role !== "warehouseStaff"))) {
     //     res.status(400);
     //     throw new Error(`Select correct staff's role that you want to create account for`);
     // }
