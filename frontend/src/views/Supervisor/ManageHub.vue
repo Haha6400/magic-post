@@ -86,33 +86,30 @@
       <v-card>
         <!-- <h5 class="loginHeader">Tạo điểm giao dịch mới</h5> -->
         <div class="popupHeader">Tạo điểm giao dịch mới</div>
-        <v-sheet width="300" class="mx-auto">
-          <v-form @submit.prevent>
-            <v-text-field
-              v-model="firstName"
-              :rules="rules"
-              label="Tên điểm giao dịch"
-            ></v-text-field>
-            <v-select
-              v-model="select.value.value"
-              :items="dataList"
-              :error-messages="select.errorMessage.value"
-              label="Tên điểm tập kết cha"
-            ></v-select>
-            <v-btn type="submit" block class="mt-2">Submit</v-btn>
-          </v-form>
-        </v-sheet>
+        <!-- <v-sheet width="300" class="mx-auto"> -->
+        <div class="input-container">
+          <label for="inputState">Tên điểm thập kết cha</label>
+          <select id="inputState" class="form-control" v-model="higherBranchName">
+            <option v-for="item in warehouseList" :value="item.name" :key="item._id">
+              {{ item.name }}
+            </option>
+          </select>
+        </div>
 
-        <!-- <div class="form-container">
-          <div class="input-container">
-            <label for="exampleInputEmail1" class="form-label">Họ và tên</label>
-            <input class="form-control" id="exampleInputEmail1" v-model="name" required />
-          </div>
-          <div class="input-container">
-            <label for="exampleInputEmail1" class="form-label">Email</label>
-            <input class="form-control" id="exampleInputEmail1" v-model="email" required />
-          </div>
-        </div> -->
+        <div class="input-container">
+          <label for="exampleInputEmail1" class="form-label">Tên điểm giao dịch</label>
+          <input class="form-control" id="exampleInputEmail1" v-model="name" required />
+        </div>
+
+        <div class="bottomButton">
+          <button @click="dialog = false" class="btn btn--green-1" style="width: fit-content">
+            Đóng
+          </button>
+
+          <button v-on:click="createHub()" class="btn btn--green-1" style="width: fit-content">
+            Lưu
+          </button>
+        </div>
       </v-card>
     </v-dialog>
   </div>
@@ -128,15 +125,18 @@ export default {
       dialog: false,
       loading: true,
       dataList: [],
+      warehouseList: [],
       page: 1,
       itemsPerPage: 6,
       search: '',
       headers: [
         { text: '1', value: 'num', title: 'Số thứ tự', sortable: false },
         { key: 'name', title: 'Tên điểm giao dịch', align: 'center' },
-        { key: 'higherBranch_id', title: 'Tên điểm tập kết', align: 'center' },
+        { key: 'higherBranchName', title: 'Tên điểm tập kết', align: 'center' },
         { title: 'Chi tiết', sortable: false, align: 'center', text: 'Chi tiết', value: 'action' }
-      ]
+      ],
+      higherBranchName: '',
+      name: ''
     }
   },
 
@@ -159,47 +159,46 @@ export default {
       .catch((error) => {
         console.log(error)
       })
+
+    url = 'http://localhost:3000/api/workplace/all/warehouse'
+    await axios
+      .get(url)
+      .then((response) => {
+        console.log(response.data)
+        this.warehouseList = response.data.warehouse.allWarehouse
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   },
 
   methods: {
-    deleteAccount(id) {
-      this.loading = true
-      let url = 'http://localhost:3000/api/accounts/' + id
-      axios
-        .delete(url)
+    async createHub() {
+      let url = 'http://localhost:3000/api/workplace/create/hub'
+      console.log(this.higherBranchName)
+      await axios
+        .post(url, { name: this.name, higherBranchName: this.higherBranchName })
         .then((response) => {
           console.log(response.data)
-          console.log('delete')
+          this.dialog = false
           this.getList()
-          this.loading = true
-          // toast.success('Deleted successfully', { position: toast.POSITION.BOTTOM_RIGHT }),
-          //   {
-          //     autoClose: 1000
-          //   }
         })
         .catch((error) => {
           console.log(error)
-          // toast.error("Delete failed", { position: toast.POSITION.BOTTOM_RIGHT }), {
-          //   autoClose: 1000,
-          // }
         })
     },
 
-    getList() {
-      let url = 'http://localhost:3000/api/accounts/all'
-      axios
+    async getList() {
+      let url = 'http://localhost:3000/api/workplace/all/hub'
+      await axios
         .get(url)
         .then((response) => {
           console.log(response.data)
-          this.dataList = response.data.staffAccounts
+          this.dataList = response.data.hub
           this.loading = false
         })
         .catch((error) => {
           console.log(error)
-          // toast.error('???', { position: toast.POSITION.BOTTOM_RIGHT }),
-          //   {
-          //     autoClose: 1000
-          //   }
         })
     }
   }
@@ -246,6 +245,8 @@ export default {
   line-height: 28px;
   text-align: center;
   margin-top: 10px;
+  margin-left: 10%;
+  margin-right: 10%;
 }
 
 .v-card {
@@ -255,6 +256,11 @@ export default {
   /* max-height: 65%; */
   overflow-y: scroll;
   /* min-height: 70%; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  border-radius: 30px;
 }
 
 .v-card-text {
@@ -384,23 +390,8 @@ button {
       display: none;
   } */
 
-.form-control {
-  width: 15%;
-}
-
 .v-card {
   border-radius: 30px;
-}
-.form-container {
-  margin-left: 20%;
-  margin-right: 20%;
-  text-align: left;
-  font-family: 'Nunito Sans', sans-serif;
-  margin-bottom: 10px;
-  display: flex;
-  width: 60%;
-  flex-direction: column;
-  gap: 15px;
 }
 
 .form-label {
@@ -419,7 +410,66 @@ label {
 }
 
 .input-container {
-  width: 100%;
+  width: 50%;
   align-items: left;
+}
+
+.form-control {
+  /* background-color: white; */
+  border-radius: 18px;
+  width: 100%;
+  height: 50px;
+  background-color: #ffe4b2;
+  /* margin-right: 10%;
+  margin-left: 10%; */
+}
+
+.btn {
+  font-family: 'Nunito Sans', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 6px 16px;
+  border: 1px solid;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  line-height: 1.5;
+  transition: all 150ms;
+  border-radius: 30px;
+  width: 100px;
+  height: 40px;
+  font-size: 14px;
+  color: #333;
+  background-color: #ffe4b2;
+  border: 0;
+
+  &:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    font-family: 'Nunito Sans', sans-serif;
+    border: 0;
+    background-color: #ffe4b2;
+  }
+
+  &--green-1 {
+    background-color: #ffe4b2;
+    border: 0;
+    color: #000;
+    margin-left: auto;
+    font-family: 'Nunito Sans', sans-serif;
+  }
+}
+
+.bottomButton {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.bottomButton button:hover {
+  background-color: #ffe4b2;
 }
 </style>
