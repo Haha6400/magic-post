@@ -8,12 +8,12 @@ const branch = require('../models/branchModel')
 const staffAuth = async (req, res, next) => {
     const authHeader = req.headers['authorization']
     console.log(process.env.ACCESS_TOKEN_SECRET);
-    if(!authHeader) return res.sendStatus(403);
+    if (!authHeader) return res.sendStatus(403);
     console.log(authHeader); //Bearer token
     const token = authHeader.split(' ')[0];
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
         console.log("verifying");
-        if(err) {
+        if (err) {
             res.status(403)
             throw new Error(`invalid token`);
         }
@@ -26,12 +26,12 @@ const staffAuth = async (req, res, next) => {
 /*
 @desc check role Middleware but dont using id
 */
-const roleCheck = (roles) => async (req, res, next) =>{
+const roleCheck = (roles) => async (req, res, next) => {
     console.log("roleCheck");
     const currentAccount = req.currentAccount;
     console.log(currentAccount);
     console.log(currentAccount.role);
-    if(!roles.includes(currentAccount.role)){
+    if (!roles.includes(currentAccount.role)) {
         res.status(401).json("SOrry u dont not have access");
     }
     next();
@@ -46,21 +46,21 @@ const roleCheck = (roles) => async (req, res, next) =>{
 const accessAccountCheck = async (req, res, next) => {
     const currentAccount = req.currentAccount;
     const staffAccount = await staff.findById(req.params.id);
-    if(!staffAccount){
+    if (!staffAccount) {
         res.status(404);
         throw new Error("Account not found");
     }
     // console.log(currentAccount.email);
 
     //Access own account
-    if((currentAccount.role == staffAccount.role) && (currentAccount.email !== staffAccount.email)){
+    if ((currentAccount.role == staffAccount.role) && (currentAccount.email !== staffAccount.email)) {
         res.status(401);
         throw new Error("SOrry u dont have access");
     }
 
     //If currentAccount is supervisor: access manager account
-    if(currentAccount.role === "supervisor" && 
-    (staffAccount.role === "hubStaff" && staffAccount.role !== "warehouseStaff")){
+    if (currentAccount.role === "supervisor" &&
+        (staffAccount.role === "hubStaff" || staffAccount.role === "warehouseStaff")) {
         res.status(401);
         throw new Error("SOrry u dont have access");
     }
@@ -71,8 +71,8 @@ const accessAccountCheck = async (req, res, next) => {
     // console.log("currentBranch:", currentBranch._id.toString());
     // console.log(currentBranch._id.toString() === staffBranch._id.toString());
     //If currentAccount is manager: access same branch accounts
-    if((currentAccount.role === "hubManager" || currentAccount.role == "warehouseManager") && 
-    (currentBranch._id.toString() !== staffBranch._id.toString())){
+    if ((currentAccount.role === "hubManager" || currentAccount.role == "warehouseManager") &&
+        (currentBranch._id.toString() !== staffBranch._id.toString())) {
         res.status(401);
         throw new Error("SOrry u dont have access");
     }
@@ -80,4 +80,4 @@ const accessAccountCheck = async (req, res, next) => {
     next();
 }
 
-module.exports = {staffAuth, roleCheck, accessAccountCheck}
+module.exports = { staffAuth, roleCheck, accessAccountCheck }

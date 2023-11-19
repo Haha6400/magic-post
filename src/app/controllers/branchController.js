@@ -31,18 +31,19 @@ async function createBranch(req, res, name, higherBranchName, lowerBranchName) {
 
 const createHub = asyncHandler(async (req, res) => {
     const hub = await createBranch(req, res, req.body.name, req.body.higherBranchName, null);
-    if (hub) res.status(200).json({ _id: hub.id, name: hub.name });
+
+    if (hub) {
+        const updateWH = await branch.findByIdAndUpdate(
+            hub.higherBranch_id,
+            { $push: { lowerBranchName: hub.name } },
+            { new: true });
+        res.status(200).json({ hub, updateWH });
+    }
     else {
         res.status(400);
         throw new Error(`Invalid`);
     }
 });
-
-// async function getLowerBranchNameFunc(req, res) {
-//     const lowerBranch = await branch.find({ higherBranchName: req.body.name });
-//     const lowerBranchName = lowerBranch.name;
-//     return lowerBranchName;
-// }
 
 
 const createWarehouse = asyncHandler(async (req, res) => {
@@ -84,11 +85,11 @@ const getAllWarehouse = asyncHandler(async (req, res) => {
 */
 
 const getAllHub = asyncHandler(async (req, res) => {
-    const warehouse = await allWarehouse(req, res);
-    if (!warehouse) {
+    const allWarehouse = await branch.find({ higherBranch_id: "6554dd73872582fea16dd837" });
+    if (!allWarehouse) {
         console.log("Dont have any warehouse");
     }
-    const hub = await branch.find({ higherBranch_id: warehouse });
+    const hub = await branch.find({ higherBranch_id: allWarehouse });
     if (!hub) {
         console.log("Dont have any hub");
     }

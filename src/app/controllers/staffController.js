@@ -184,6 +184,17 @@ const getAllAccounts = asyncHandler(async (req, res) => {
 });
 
 /*
+@des Get all manager accounts
+@route GET /api/accounts/all/managers
+@access supervisor
+*/
+const getAllManagerAccounts = asyncHandler(async (req, res) => {
+    console.log("OK");
+    const staffAccounts = await staff.find({ role: { $in: ['hubManager', 'warehouseManager'] } }).sort('createdAt');
+    res.status(200).json({ staffAccounts, count: staffAccounts.length });
+});
+
+/*
 @des Get accounts by branch
 @route GET /api/accounts/wp
 @access hubManager, warehouseManager
@@ -347,5 +358,5 @@ module.exports = {
     getAllAccounts, createAccount, loginStaff, currentAccount, deleteAccount,
     getAccountById, getAccountByEmail, getAccountsByBranch, getAccountsByEachBranch,
     updateAccount, passwordReset, resetPasswordEmail, forgotPasswordEmail, passwordForgot,
-    getRoleOfCurrentAccount
+    getRoleOfCurrentAccount, getAllManagerAccounts
 };

@@ -11,7 +11,7 @@ Includes:
 const express = require("express");
 const router = express.Router();
 const { getAllAccounts, createAccount, loginStaff, currentAccount, deleteAccount, getAccountById, getAccountByEmail, getAccountsByBranch,
-    getAccountsByEachBranch, getRoleOfCurrentAccount, updateAccount, passwordReset, resetPasswordEmail, forgotPasswordEmail, passwordForgot } = require("../app/controllers/staffController")
+    getAccountsByEachBranch, getRoleOfCurrentAccount, updateAccount, passwordReset, resetPasswordEmail, forgotPasswordEmail, passwordForgot, getAllManagerAccounts } = require("../app/controllers/staffController")
 const { staffAuth, roleCheck, accessAccountCheck } = require("../app/middleware/auth");
 
 
@@ -33,6 +33,7 @@ router.post("/login", loginStaff);
 
 //@access SUPERVISOR
 router.get("/all", staffAuth, roleCheck(["supervisor"]), getAllAccounts);
+router.get("/all/managers", staffAuth, roleCheck(["supervisor"]), getAllManagerAccounts)
 router.get("/wp/:branchName", staffAuth, roleCheck(["supervisor"]), getAccountsByEachBranch);
 
 
