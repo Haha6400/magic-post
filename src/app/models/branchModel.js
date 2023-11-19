@@ -16,6 +16,9 @@ const branchSchema = mongoose.Schema({
     higherBranchName: {
         type: String
     },
+    lowerBranchName: {
+        type: Array
+    },
     postal_code: {
         type: String
     }

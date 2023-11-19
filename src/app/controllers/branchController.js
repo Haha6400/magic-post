@@ -4,7 +4,7 @@ const branch = require("../models/branchModel");
 
 require('dotenv').config();
 
-async function createBranch(req, res, name, higherBranchName) {
+async function createBranch(req, res, name, higherBranchName, lowerBranchName) {
     if (!name) {
         res.status(400);
         throw new Error(`Error creating branch`);
@@ -23,13 +23,14 @@ async function createBranch(req, res, name, higherBranchName) {
         name: name,
         higherBranch_id: higherBranch_id,
         higherBranchName: higherBranchName,
+        lowerBranchName: lowerBranchName,
         postal_code: postalCode
     });
     return newBranch;
 }
 
 const createHub = asyncHandler(async (req, res) => {
-    const hub = await createBranch(req, res, req.body.name, req.body.higherBranchName);
+    const hub = await createBranch(req, res, req.body.name, req.body.higherBranchName, null);
     if (hub) res.status(200).json({ _id: hub.id, name: hub.name });
     else {
         res.status(400);
@@ -37,8 +38,20 @@ const createHub = asyncHandler(async (req, res) => {
     }
 });
 
+// async function getLowerBranchNameFunc(req, res) {
+//     const lowerBranch = await branch.find({ higherBranchName: req.body.name });
+//     const lowerBranchName = lowerBranch.name;
+//     return lowerBranchName;
+// }
+
+
 const createWarehouse = asyncHandler(async (req, res) => {
-    const warehouse = await createBranch(req, res, req.body.name, "company");
+    const lowerBranch = await branch.find({ higherBranchName: req.body.name });
+    var lowerBranchName = [];
+    for (i in lowerBranch) {
+        lowerBranchName.push(lowerBranch[i].name);
+    }
+    const warehouse = await createBranch(req, res, req.body.name, "company", lowerBranchName);
     if (warehouse) res.status(200).json({ _id: warehouse.id, name: warehouse.name });
     else {
         res.status(400);
@@ -48,7 +61,7 @@ const createWarehouse = asyncHandler(async (req, res) => {
 
 async function allWarehouse(req, res) {
     const allWarehouse = await branch.find({ higherBranch_id: "6554dd73872582fea16dd837" });
-    return allWarehouse;
+    return { allWarehouse };
 }
 
 /*
