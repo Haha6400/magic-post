@@ -5,6 +5,7 @@ const Mass = require('../models/massModel')
 const Process = require('../models/processesModel')
 const branch = require("../models/branchModel");
 const Package = require('../models/packageModel')
+const Order = require('../models/orderModel.js')
 
 //create customer
 async function createCustomer(fullname, address, phoneNumber, branchName) {
@@ -25,12 +26,12 @@ async function createCustomer(fullname, address, phoneNumber, branchName) {
 }
 
 //create fee
-async function createFeeModel(charge, surcharge, VAT, other_fee, total_fee) {
+async function createFeeModel(charge, surcharge, vat, other_fee, total_fee) {
 
     fee = await Fee.create({
         'charge': charge,
         'surcharge': surcharge,
-        'VAT': VAT,
+        'vat': vat,
         'other_fee': other_fee,
         'total_fee': total_fee
     })
@@ -59,12 +60,10 @@ async function createMassModel(actual_mass, converted_mass) {
 }
 
 //create process
-async function createProcesses(branchName, status) {
+async function createProcesses(branch, status) {
 
     processes = await Process.create({
-        'branch_id': await branch.findOne({
-            'name': branchName
-        }),
+        'branch_id': branch,
         'status': status,
     })
     return processes
@@ -73,13 +72,47 @@ async function createProcesses(branchName, status) {
 async function createPackage(type, amount, price, mass) {
 
     package = await Package.create({
-            'type': type, 
-            'amount': amount,
-            'price': price,
-            'mass_id': mass
-        })
+        'type': type,
+        'amount': amount,
+        'price': price,
+        'mass_id': mass
+    })
     return package
 }
 
+//Formatted response
+async function getOrder(order_id) {
+    const order = await Order.findById(order_id)
+    const sender = await Customer.findById(order.sender_id)
+    const receiver = await Customer.findById(order.receiver_id)
+    const fee = await Fee.findById(order.fee_id)
 
-module.exports = { createCustomer, createFeeModel, createMassModel, createReceiverFeeModel, createProcesses, createPackage }
+    const receiver_fee = await ReceiverFee.findById(order.receiver_fee_id)
+    const processes = await Process.findById(order.processes_id)
+    return ({
+        'order_code': order.order_code,
+        'senderName': sender.fullname,
+        'receiverName': receiver.fullname,
+        'fee': fee.total,
+        'receiver_fee': receiver_fee.total,
+        'status': processes.status
+    })
+}
+
+//Formatted response
+async function getOrders(orders) {
+    const result = []
+    for (var i in orders) {
+        console.log(orders[i]._id)
+        result.push(await getOrder(orders[i]._id))
+    }
+    return result
+}
+
+
+
+module.exports = {
+    createCustomer, createFeeModel, createMassModel,
+    createReceiverFeeModel, createProcesses, createPackage,
+    getOrder, getOrders
+}

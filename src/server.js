@@ -18,7 +18,7 @@ app.use("/api/accounts", require("./routes/staffRoutes"));
 app.use("/api/orders", require("./routes/orderRoutes"));
 app.use("/api/workplace", require("./routes/branchRoutes"));
 app.use("/api/hub", require("./routes/hubRoutes"));
-
+app.use('/api/warehouse', require('./routes/warehouseRoutes.js'))
 
 
 // create a server to listen at port 3000
