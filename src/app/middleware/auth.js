@@ -31,7 +31,9 @@ const roleCheck = (roles) => async (req, res, next) => {
     const currentAccount = req.currentAccount;
     console.log(currentAccount);
     console.log(currentAccount.role);
+    console.log(roles);
     if (!roles.includes(currentAccount.role)) {
+        console.log("Role does not exist")
         res.status(401).json("SOrry u dont not have access");
     }
     next();
