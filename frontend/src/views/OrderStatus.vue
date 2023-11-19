@@ -3,33 +3,25 @@
     <h1 class="loginHeader">Tra cứu đơn hàng</h1>
 
     <div class="search-side">
-      <form class="search-bar">
-        <input class="search-box" type="text" placeholder="Tìm kiếm đơn hàng" v-model="search" />
-        <button type="submit">
+      <form class="search-bar" @submit.prevent="orderStatus()">
+        <input
+          class="search-box"
+          type="text"
+          placeholder="Tìm kiếm đơn hàng"
+          v-model="order_code"
+        />
+        <button type="submit" v-on:click="orderStatus()">
           <img src="@/assets/logo.png" />
         </button>
-        <!-- <button type="submit">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="black"
-            class="w-6 h-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-            />
-          </svg>
-        </button> -->
       </form>
-      <!-- <router-link class="searchButton" type="button" to="/orderStatus">Tra cứu</router-link> -->
     </div>
 
-    <div class="responseData">
-      a
+    <div class="responseData" v-if="auth">
+      <p>Mã vận đơn: {{ this.order_status.order_code }} <br /></p>
+      <p>
+        Trạng thái đơn hàng: <span v-if="this.order_status.is_returned">Đã đến nơi</span>
+        <span v-if="!this.order_status.is_returned">Đã vận chuyển</span><br />
+      </p>
     </div>
 
     <img alt="logo" src="../assets/home/header.jpg" />
@@ -37,14 +29,40 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   data() {
-    order_code: ''
+    return {
+      order_code: '',
+      order_status: '',
+      auth: false
+    }
+  },
+
+  methods: {
+    async orderStatus() {
+      let url = 'http://localhost:3000/api/orders/code/' + this.order_code
+      await axios
+        .get(url)
+        .then((response) => {
+          console.log(response.data)
+          this.order_status = response.data
+          this.auth = true
+          // this.loading = false
+        })
+        .catch((error) => {
+          console.log(error)
+          // toast.error('???', { position: toast.POSITION.BOTTOM_RIGHT }),
+          //   {
+          //     autoClose: 1000
+          //   }
+        })
+    }
   }
 }
 </script>
 
-<style>
+<style scoped>
 .container {
   display: flex;
   flex-direction: column;
@@ -53,6 +71,14 @@ export default {
   min-width: 300px;
   background-color: #ffffff;
   gap: 30px;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 2.5vh;
+  margin-bottom: 2.5vh;
+  overflow-y: scroll;
+  height: 95vh;
+  border-radius: 12px;
+  transition: all 0.3s ease;
 }
 
 .loginHeader {
@@ -131,6 +157,10 @@ export default {
   background-color: #ffe4b2;
   border-radius: 18px;
   align-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 img {

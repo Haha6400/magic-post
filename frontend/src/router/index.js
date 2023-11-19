@@ -33,24 +33,49 @@ const router = createRouter({
       component: ()=>import('../views/OrderStatus.vue')
     },
     {
-      path: "/hubManager/newOrder",
+      path: "/hubStaff/newOrder",
       name: "newOrder",
-      component: ()=>import('../views/HubManager/NewOrders.vue')
+      component: ()=>import('../views/HubStaff/NewOrders.vue')
     },
     {
-      path: "/hubManager/manage-orders",
+      path: "/hubStaff/manage-orders",
       name: "manageOrders",
-      component: ()=>import('../views/HubManager/ManageOrders.vue')
+      component: ()=>import('../views/HubStaff/ManageOrders.vue')
     },
     {
-      path: "/hubManager/orderDetail?:id",
+      path: "/hubStaff/orderDetail?:id",
       name: "orderDetail",
-      component: ()=>import('../views/HubManager/OrderDetail.vue')
+      component: ()=>import('../views/HubStaff/OrderDetail.vue')
     },
     {
       path: "/supervisor/manage-accounts",
       name: "manageAccounts",
       component: ()=>import('../views/Supervisor/ManageAccounts.vue')
+    },
+    {
+      path: "/supervisor/createAccount",
+      name: "createAccount",
+      component: ()=>import('../views/Supervisor/CreateAccount.vue')
+    },
+    {
+      path: "/supervisor/accountDetail?:id",
+      name: "accountDetail",
+      component: ()=>import('../views/Supervisor/AccountDetail.vue')
+    },
+    {
+      path: "/supervisor/manage-hubs",
+      name: "manageHubs",
+      component: ()=>import('../views/Supervisor/ManageHub.vue')
+    },
+    {
+      path: "/supervisor/manage-warehouses",
+      name: "manageWarehouses",
+      component: ()=>import('../views/Supervisor/ManageWarehouse.vue')
+    },
+    {
+      path: "/manager/createAccount",
+      name: "createAccountByManager",
+      component: ()=>import('../views/Manager/CreateAccountByManager.vue')
     },
     
   ]
