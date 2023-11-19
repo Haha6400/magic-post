@@ -42,13 +42,13 @@ const createAccount = asyncHandler(async (req, res) => {
     - If the user is hubManager, they can only create accounts for hubStaff.
     - If the user is warehouseManager, they can only create accounts for warehouseStaff.
     */
-    const currentAccount = req.currentAccount;
-    if ((currentAccount.role === "supervisor" && (role !== "hubManager" && role !== "warehouseManager")) ||
-        (currentAccount.role === "hubManager" && (role !== "hubStaff")) ||
-        (currentAccount.role === "warehouseManager" && (role !== "warehouseStaff"))) {
-        res.status(400);
-        throw new Error(`Select correct staff's role that you want to create account for`);
-    }
+    // const currentAccount = req.currentAccount;
+    // if ((currentAccount.role === "supervisor" && (role !== "hubManager" && role !== "warehouseManager")) ||
+    //     (currentAccount.role === "hubManager" && (role !== "hubStaff")) ||
+    //     (currentAccount.role === "warehouseManager" && (role !== "warehouseStaff"))) {
+    //     res.status(400);
+    //     throw new Error(`Select correct staff's role that you want to create account for`);
+    // }
 
     //Check if the staff account already exists
     if (await staff.findOne({ email })) {
