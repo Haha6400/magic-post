@@ -22,6 +22,7 @@ async function createBranch(req, res, name, higherBranchName) {
     const newBranch = await branch.create({
         name: name,
         higherBranch_id: higherBranch_id,
+        higherBranchName: higherBranchName,
         postal_code: postalCode
     });
     return newBranch;

@@ -1,19 +1,22 @@
 const mongoose = require('mongoose');
 
 const branchSchema = mongoose.Schema({
-    manager_id:{
+    manager_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "staff"
     },
-    name:{
+    name: {
         type: String,
         required: true
     },
-    higherBranch_id:{
+    higherBranch_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "branch"
     },
-    postal_code:{
+    higherBranchName: {
+        type: String
+    },
+    postal_code: {
         type: String
     }
 });
