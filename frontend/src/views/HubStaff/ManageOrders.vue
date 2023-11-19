@@ -9,7 +9,7 @@
         </button>
       </form>
 
-      <router-link class="signup" type="button" to="/hubManager/newOrder">
+      <router-link class="signup" type="button" to="/hubStaff/newOrder">
         + Tạo đơn hàng</router-link
       >
     </div>

@@ -34,27 +34,27 @@ const router = createRouter({
     },
     {
       path: "/hubStaff/newOrder",
-      name: "newOrder",
+      name: "newOrderbyHubStaff",
       component: ()=>import('../views/HubStaff/NewOrders.vue')
     },
     {
       path: "/hubStaff/manage-orders",
-      name: "manageOrders",
+      name: "manageOrdersbyHubStaff",
       component: ()=>import('../views/HubStaff/ManageOrders.vue')
     },
     {
       path: "/hubStaff/orderDetail?:id",
-      name: "orderDetail",
+      name: "orderDetailbyHubStaff",
       component: ()=>import('../views/HubStaff/OrderDetail.vue')
     },
     {
       path: "/supervisor/manage-accounts",
-      name: "manageAccounts",
+      name: "manageAccountsbySupervisor",
       component: ()=>import('../views/Supervisor/ManageAccounts.vue')
     },
     {
       path: "/supervisor/createAccount",
-      name: "createAccount",
+      name: "createAccountbySupervisor",
       component: ()=>import('../views/Supervisor/CreateAccount.vue')
     },
     {
@@ -64,18 +64,28 @@ const router = createRouter({
     },
     {
       path: "/supervisor/manage-hubs",
-      name: "manageHubs",
+      name: "manageHubsbySupervisor",
       component: ()=>import('../views/Supervisor/ManageHub.vue')
     },
     {
       path: "/supervisor/manage-warehouses",
-      name: "manageWarehouses",
+      name: "manageWarehousesbySupervisor",
       component: ()=>import('../views/Supervisor/ManageWarehouse.vue')
     },
     {
+      path: "/supervisor/manage-orders",
+      name: "manageOrdersbySupervisor",
+      component: ()=>import('../views/Supervisor/ManageOrders.vue')
+    },
+    {
       path: "/manager/createAccount",
-      name: "createAccountByManager",
-      component: ()=>import('../views/Manager/CreateAccountByManager.vue')
+      name: "createAccountsByManager",
+      component: ()=>import('../views/Manager/CreateAccountsByManager.vue')
+    },
+    {
+      path: "/manager/manage-accounts",
+      name: "manageAccountsByManager",
+      component: ()=>import('../views/Manager/ManageAccountsByManager.vue')
     },
     
   ]
