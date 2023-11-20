@@ -1,17 +1,57 @@
 <template>
   <div class="container">
-    <h1 class="loginHeader">Quản lý điểm giao dịch</h1>
-
+    <h1 class="loginHeader">Đơn hàng đến</h1>
     <div class="buttonList">
-      <form class="search-bar">
-        <input class="search-box" type="text" placeholder="Tìm kiếm" v-model="search" />
-        <button type="submit">
-          <img src="@/assets/logo.png" />
-        </button>
-      </form>
+      <ChipCard v-if="senderName" :title="'Đến từ'" :content="senderName"></ChipCard>
+      <ChipCard v-if="start" :title="'Bắt đầu'" :content="start"></ChipCard>
+      <ChipCard v-if="end" :title="'Kết thúc'" :content="end"></ChipCard>
+      <button class="signup" type="button" @click="dialog = true">
+        Bộ lọc
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-6 h-6 icon"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z"
+          />
+        </svg>
+      </button>
+      <!-- <div class="filter">
+        <div v-if="role == 'hubManager' || role == 'hubStaff'" class="input-container">
+          <label for="inputState">Chi nhánh</label>
+          <select id="inputState" class="form-control" v-model="senderBranch">
+            <option selected>All</option>
+            <option v-for="item in hubList" :value="item.name" :key="item._id">
+              {{ item.name }}
+            </option>
+          </select>
+        </div>
 
-      <!-- <router-link class="signup" type="button" to="/admin/addExam" @click="dialog = true"> + Tạo điểm mới</router-link> -->
-      <button class="signup" type="button" @click="dialog = true">+ Tạo điểm mới</button>
+        <div v-if="role == 'warehouseManager' || role == 'staff'" class="input-container">
+          <label for="inputState">Chi nhánh</label>
+          <select id="inputState" class="form-control" v-model="branchName">
+            <option v-for="item in warehouseList" :value="item.name" :key="item._id">
+              {{ item.name }}
+            </option>
+          </select>
+        </div>
+      </div> -->
+
+      <!-- <div>
+        <label for="inputState">Tìm kiếm đơn hàng</label>
+        <form id="inputState" class="search-bar">
+          <input class="search-box" type="text" placeholder="Tìm kiếm đơn hàng" v-model="search" />
+          <button type="submit">
+            <img src="@/assets/logo.png" />
+          </button>
+        </form>
+      </div> -->
     </div>
 
     <div class="loading">
@@ -32,12 +72,8 @@
         :items="dataList"
         :search="search"
       >
-        <template v-slot:item.num="{ index }">
-          {{ index + 1 }}
-        </template>
-
-        <!-- <template v-slot:item.action="{ item }">
-          <button v-on:click="deleteAccount(item._id)">
+        <template v-slot:item.action="{ item }">
+          <button v-on:click="deleteOrder(item.order_code)">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -55,7 +91,7 @@
           </button>
 
           <button>
-            <router-link :to="{ name: 'accountDetail', params: { id: item._id } }">
+            <router-link :to="{ name: 'orderDetailbyHubStaff', params: { id: item.order_code } }">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -72,7 +108,7 @@
               </svg>
             </router-link>
           </button>
-        </template> -->
+        </template>
 
         <template v-slot:bottom>
           <div class="text-center pt-2">
@@ -84,12 +120,10 @@
 
     <v-dialog v-model="dialog" persistent width="1024">
       <v-card>
-        <!-- <h5 class="loginHeader">Tạo điểm giao dịch mới</h5> -->
-        <div class="popupHeader">Tạo điểm giao dịch mới</div>
-        <!-- <v-sheet width="300" class="mx-auto"> -->
+        <div class="popupHeader">Bộ lọc</div>
         <div class="input-container">
-          <label for="inputState">Tên điểm thập kết cha</label>
-          <select id="inputState" class="form-control" v-model="higherBranchName">
+          <label for="inputState">Nơi gửi</label>
+          <select id="inputState" class="form-control" v-model="senderName">
             <option v-for="item in warehouseList" :value="item.name" :key="item._id">
               {{ item.name }}
             </option>
@@ -97,8 +131,13 @@
         </div>
 
         <div class="input-container">
-          <label for="exampleInputEmail1" class="form-label">Tên điểm giao dịch</label>
-          <input class="form-control" id="exampleInputEmail1" v-model="name" required />
+          <label for="startDate">Ngày bắt đầu</label>
+          <input id="startDate" class="form-control" type="date" v-model="start" />
+        </div>
+
+        <div class="input-container">
+          <label for="startDate">Ngày kết thúc</label>
+          <input id="startDate" class="form-control" type="date" v-model="end" />
         </div>
 
         <div class="bottomButton">
@@ -106,8 +145,8 @@
             Đóng
           </button>
 
-          <button v-on:click="createHub()" class="btn btn--green-1" style="width: fit-content">
-            Lưu
+          <button v-on:click="deleterFilter()" class="btn btn--green-1" style="width: fit-content">
+            Xóa bộ lọc
           </button>
         </div>
       </v-card>
@@ -117,91 +156,94 @@
 
 <script>
 import axios from 'axios'
-axios.defaults.headers.common.authorization = localStorage.getItem('token')
+import ChipCard from '../../components/ChipCard.vue'
 
 export default {
   data() {
     return {
-      dialog: false,
       loading: true,
+      //dialog
+      dialog: false,
+      senderName: '',
+      start: null,
+      end: null,
+      //table
       dataList: [],
-      warehouseList: [],
       page: 1,
       itemsPerPage: 6,
       search: '',
+      role: '',
+      senderBranch: '',
       headers: [
-        { text: '1', value: 'num', title: 'Số thứ tự', sortable: false },
-        { key: 'name', title: 'Tên điểm giao dịch', align: 'center' },
-        { key: 'higherBranchName', title: 'Tên điểm tập kết', align: 'center' },
-        // { title: 'Chi tiết', sortable: false, align: 'center', text: 'Chi tiết', value: 'action' }
-      ],
-      higherBranchName: '',
-      name: ''
+        {
+          align: 'center',
+          key: 'order_code',
+          title: 'Order Code'
+        },
+        { key: 'receiverName', title: 'Người nhận', align: 'center' },
+        { key: 'fee', title: 'Chi phí', align: 'center' },
+        { key: 'receiver_fee', title: 'Phí người nhận phải trả', align: 'center' },
+        { key: 'status', title: 'Trạng thái đơn hàng', align: 'center' },
+        { title: 'Chi tiết', sortable: false, align: 'center', text: 'Chi tiết', value: 'action' }
+      ]
     }
   },
-
   computed: {
     pageCount() {
       return Math.ceil(this.dataList.length / this.itemsPerPage)
     }
   },
-
   async created() {
-    // this.dialog = false
-    let url = 'http://localhost:3000/api/workplace/all/hub'
-    await axios
-      .get(url)
-      .then((response) => {
-        console.log(response.data)
-        this.dataList = response.data.hub
-        this.loading = false
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-
-    url = 'http://localhost:3000/api/workplace/all/warehouse'
-    await axios
-      .get(url)
-      .then((response) => {
-        console.log(response.data)
-        this.warehouseList = response.data.warehouse.allWarehouse
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    let user = localStorage.getItem('userData')
+    let jsonUser = JSON.parse(user)
+    this.role = jsonUser.account.role
+    // this.senderBranch = 'All'
+    // let url = 'http://localhost:3000/api/workplace/all/hub'
+    // console.log('check role')
+    // await axios
+    //   .get(url)
+    //   .then((response) => {
+    //     console.log(response.data)
+    //     this.hubList = response.data.hub
+    //   })
+    //   .catch((error) => {
+    //     console.log(error)
+    //   })
+    // url = 'http://localhost:3000/api/workplace/all/warehouse'
+    // await axios
+    //   .get(url)
+    //   .then((response) => {
+    //     console.log(response.data)
+    //     this.warehouseList = response.data.warehouse.allWarehouse
+    //   })
+    //   .catch((error) => {
+    //     console.log(error)
+    //   })
+    //   let url = 'http://localhost:3000/api/orders/all'
+    //   await axios
+    //     .get(url)
+    //     .then((response) => {
+    //       console.log(response.data)
+    //       this.dataList = response.data
+    //       this.loading = false
+    //     })
+    //     .catch((error) => {
+    //       console.log(error)
+    //       toast.error('???', { position: toast.POSITION.BOTTOM_RIGHT }),
+    //         {
+    //           autoClose: 1000
+    //         }
+    //     })
   },
-
   methods: {
-    async createHub() {
-      let url = 'http://localhost:3000/api/workplace/create/hub'
-      console.log(this.higherBranchName)
-      await axios
-        .post(url, { name: this.name, higherBranchName: this.higherBranchName })
-        .then((response) => {
-          console.log(response.data)
-          this.dialog = false
-          this.getList()
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    },
-
-    async getList() {
-      let url = 'http://localhost:3000/api/workplace/all/hub'
-      await axios
-        .get(url)
-        .then((response) => {
-          console.log(response.data)
-          this.dataList = response.data.hub
-          this.loading = false
-        })
-        .catch((error) => {
-          console.log(error)
-        })
+    deleterFilter() {
+      this.senderName = null
+      this.start = null
+      this.end = null
+      this.dialog = false
     }
-  }
+  },
+  components: { ChipCard }
 }
 </script>
 
@@ -244,48 +286,28 @@ export default {
   margin-top: 32px;
 }
 
-.popupHeader {
-  font-family: 'Nunito Sans', sans-serif;
-  font-weight: 600;
-  font-size: 20px;
-  color: #ffa500;
-  line-height: 28px;
-  text-align: center;
-  margin-top: 10px;
-  margin-left: 10%;
-  margin-right: 10%;
-}
-
 .v-card {
   margin-right: 7%;
   margin-left: 7%;
   height: 70%;
-  /* max-height: 65%; */
   overflow-y: scroll;
-  /* min-height: 70%; */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  border-radius: 30px;
 }
 
 .v-card-text {
   padding: 0;
 }
 
-/* .v-text-field {
-    background-color: #ffe4b2;
-    border-radius: 30px;
-    border: 0px;
-    width: 10%;
-  }  */
+.v-text-field {
+  background-color: #ffe4b2;
+  border: 0px;
+  width: 100%;
+}
 
-/* .v-text-field:hover {
-    background-color: #ffe4b2;
-    border-radius: 30px;
-    border: 0px;
-  }  */
+.v-text-field:hover {
+  background-color: #ffe4b2;
+  /* border-radius: 30px; */
+  border: 0px;
+}
 .buttonList {
   display: flex;
   flex-wrap: wrap;
@@ -294,7 +316,7 @@ export default {
   grid-gap: 30px;
 
   padding-bottom: 2%;
-  gap: 20px;
+  gap: 10px;
 
   margin-right: 7%;
   margin-left: 7%;
@@ -304,8 +326,6 @@ export default {
   /*width: 15%;*/
   min-width: 140px;
   height: 40px;
-  /* height: 56px; */
-
   display: flex;
   align-items: center;
   padding: 5px 10px;
@@ -341,7 +361,7 @@ export default {
   height: 20px;
 }
 
-.searchButton {
+/* .searchButton {
   background-color: #f7b85e;
   text-decoration: none;
   border-radius: 30px;
@@ -363,7 +383,7 @@ export default {
   font-family: 'Nunito Sans', sans-serif;
   color: #000000;
   text-align: center;
-}
+} */
 
 .signup {
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -371,8 +391,8 @@ export default {
 
   font-family: 'Nunito Sans', sans-serif;
   font-weight: regular;
-  width: 12%;
-  min-width: 140px;
+  width: 10%;
+  min-width: 90px;
   height: 40px;
 
   display: flex;
@@ -383,22 +403,16 @@ export default {
   border-radius: 10px;
 
   color: #000000;
+
+  gap: 10px;
 }
 
-button {
-  margin: 2px;
-}
-/* .v-data-table > .v-data-table__wrapper > table > thead > tr > th,
-  td {
-    min-width: 200px !important;
-  } */
 
-/* .v-select .v-select__selections input {
-      display: none;
-  } */
-
-.form-label {
-  margin-bottom: 5px;
+.form-control {
+  border-radius: 18px;
+  width: 100%;
+  height: 50px;
+  background-color: #ffe4b2;
 }
 
 label {
@@ -406,25 +420,21 @@ label {
   align-items: left;
 }
 
-.row-container {
-  display: flex;
-  flex-direction: row;
-  gap: 5%;
+.popupHeader {
+  font-family: 'Nunito Sans', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  color: #ffa500;
+  line-height: 28px;
+  text-align: center;
+  margin-top: 10px;
+  margin-left: 10%;
+  margin-right: 10%;
 }
 
 .input-container {
   width: 50%;
   align-items: left;
-}
-
-.form-control {
-  /* background-color: white; */
-  border-radius: 18px;
-  width: 100%;
-  height: 50px;
-  background-color: #ffe4b2;
-  /* margin-right: 10%;
-  margin-left: 10%; */
 }
 
 .btn {
@@ -464,6 +474,20 @@ label {
   }
 }
 
+.v-card {
+  margin-right: 7%;
+  margin-left: 7%;
+  height: 70%;
+  /* max-height: 65%; */
+  overflow-y: scroll;
+  /* min-height: 70%; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  border-radius: 30px;
+}
+
 .bottomButton {
   display: flex;
   flex-direction: row;
@@ -475,4 +499,9 @@ label {
 .bottomButton button:hover {
   background-color: #ffe4b2;
 }
+
+/* .v-data-table > .v-data-table__wrapper > table > thead > tr > th,
+  td {
+    min-width: 200px !important;
+  } */
 </style>

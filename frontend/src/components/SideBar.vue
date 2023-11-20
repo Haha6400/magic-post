@@ -144,7 +144,7 @@
         <!-- hubStaff -->
         <!-- Tạo đơn hàng -->
         <li v-if="role == 'hubStaff'">
-          <router-link to="/HubStaff/newOrder">
+          <router-link to="/hubStaff/newOrder">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -157,6 +157,23 @@
             </svg>
 
             Tạo đơn hàng
+          </router-link>
+        </li>
+
+        <li v-if="role == 'hubStaff'">
+          <router-link to="/staff/recieved-orders">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6 icon"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+
+            Đơn hàng đến
           </router-link>
         </li>
 
@@ -313,6 +330,8 @@
             Về Magic Post</router-link
           >
         </li>
+
+        
       </ul>
     </div>
 
@@ -590,6 +609,11 @@ li {
 
 .bottom {
   color: #f8b760;
+}
+
+#sidebar .icon-right {
+	margin-left: auto;
+	transition: all .3s ease;
 }
 
 @media (max-width: 1200px) {

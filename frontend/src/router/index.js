@@ -35,17 +35,22 @@ const router = createRouter({
     {
       path: "/hubStaff/newOrder",
       name: "newOrderbyHubStaff",
-      component: ()=>import('../views/HubStaff/NewOrders.vue')
+      component: ()=>import('../views/Staff/NewOrders.vue')
     },
     {
-      path: "/hubStaff/manage-orders",
+      path: "/staff/manage-orders",
       name: "manageOrdersbyHubStaff",
-      component: ()=>import('../views/HubStaff/ManageOrders.vue')
+      component: ()=>import('../views/Staff/ManageOrders.vue')
     },
     {
-      path: "/hubStaff/orderDetail?:id",
+      path: "/staff/recieved-orders",
+      name: "recieveOrdersbyStaff",
+      component: ()=>import('../views/Staff/RecievedOrders.vue')
+    },
+    {
+      path: "/staff/orderDetail?:id",
       name: "orderDetailbyHubStaff",
-      component: ()=>import('../views/HubStaff/OrderDetail.vue')
+      component: ()=>import('../views/Staff/OrderDetail.vue')
     },
     {
       path: "/supervisor/manage-accounts",

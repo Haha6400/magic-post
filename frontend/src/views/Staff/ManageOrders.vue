@@ -51,7 +51,7 @@
           </button>
 
           <button>
-            <router-link :to="{ name: 'orderDetail', params: { id: item.order_code } }">
+            <router-link :to="{ name: 'orderDetailbyHubStaff', params: { id: item.order_code } }">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
