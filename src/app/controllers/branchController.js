@@ -66,24 +66,29 @@ const createWarehouse = asyncHandler(async (req, res) => {
   }
 });
 
-async function allWarehouse(req, res) {
-  const allWarehouse = await branch.find({
-    higherBranch_id: "6554dd73872582fea16dd837",
-  });
-  return { allWarehouse };
-}
-
 /*
 @desc get all warehouse
 @access supervisor
 @path GET /api/workplace/all/warehouse
 */
 const getAllWarehouse = asyncHandler(async (req, res) => {
-  const warehouse = await allWarehouse(req, res);
-  if (!warehouse) {
-    console.log("Dont have any warehouse");
-  }
-  res.status(200).json({ warehouse });
+    const allWarehouse = await branch.find({ higherBranch_id: "6554dd73872582fea16dd837" });
+    if (!allWarehouse) {
+        res.status(404).json("Dont have any warehouse");
+    }
+    res.status(200).json({ allWarehouse });
+})
+
+const getAllWarehouseName = asyncHandler(async (req, res) => {
+    const allWarehouse = await branch.find({ higherBranch_id: "6554dd73872582fea16dd837" });
+    if (!allWarehouse) {
+        res.status(404).json("Dont have any warehouse");
+    }
+    var warehouseName = [];
+    for (i in allWarehouse) {
+        warehouseName.push(allWarehouse[i].name);
+    }
+    res.status(200).json({ warehouseName });
 });
 
 /*
@@ -113,10 +118,5 @@ const getAllHub = asyncHandler(async (req, res) => {
 // }
 // res.status(200).json({ hub });
 
-module.exports = {
-  createBranch,
-  getAllWarehouse,
-  getAllHub,
-  createHub,
-  createWarehouse,
-};
+
+module.exports = { createBranch, getAllWarehouse, getAllHub, createHub, createWarehouse, getAllWarehouseName }
