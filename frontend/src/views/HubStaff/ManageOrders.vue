@@ -33,7 +33,7 @@
         :search="search"
       >
         <template v-slot:item.action="{ item }">
-          <button v-on:click="deleteOrder(item._id)">
+          <button v-on:click="deleteOrder(item.order_code)">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -51,7 +51,7 @@
           </button>
 
           <button>
-            <router-link :to="{ name: 'orderDetail', params: { id: item._id } }">
+            <router-link :to="{ name: 'orderDetail', params: { id: item.order_code } }">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -98,10 +98,10 @@ export default {
           key: 'order_code',
           title: 'Order Code'
         },
-        { key: 'sender_id', title: 'Người nhận', align: 'center' },
-        { key: 'calories', title: 'Chi phí', align: 'center' },
-        { key: 'calories', title: 'Phí người nhận phải trả', align: 'center' },
-        { key: 'calories', title: 'Trạng thái đơn hàng', align: 'center' },
+        { key: 'receiverName', title: 'Người nhận', align: 'center' },
+        { key: 'fee', title: 'Chi phí', align: 'center' },
+        { key: 'receiver_fee', title: 'Phí người nhận phải trả', align: 'center' },
+        { key: 'status', title: 'Trạng thái đơn hàng', align: 'center' },
         { title: 'Chi tiết', sortable: false, align: 'center', text: 'Chi tiết', value: 'action' }
       ]
     }
@@ -189,7 +189,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .container {
   display: flex;
   flex-direction: column;
@@ -199,6 +199,13 @@ export default {
   background-color: #ffffff;
   gap: 10px;
   overflow-y: scroll;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 2.5vh;
+  margin-bottom: 2.5vh;
+  height: 95vh;
+  border-radius: 12px;
+  transition: all 0.3s ease;
 }
 
 ::-webkit-scrollbar {
