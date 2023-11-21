@@ -4,9 +4,7 @@
       <form @submit.prevent="Login()">
         <h1 class="loginHeader">Đăng nhập</h1>
         <div class="mb-3">
-          <label for="exampleInputEmail1" class="form-label"
-            >Tên đăng nhập</label
-          >
+          <label for="exampleInputEmail1" class="form-label">Tên đăng nhập</label>
           <!-- type="email" -->
           <input
             class="form-control"
@@ -26,21 +24,15 @@
             required
           />
         </div>
-        <button
-          v-if="!auth"
-          type="submit"
-          class="btn btn-primary"
-          v-on:click="Login()"
-        >
+        <button v-if="!auth" type="submit" class="btn btn-primary" >
           Đăng nhập
+          <!-- v-on:click="Login()" -->
         </button>
 
         <hr />
         <div class="forgotPass">
           <p class="forgotPass-p">Quên mật khẩu?</p>
-          <router-link to="/forgotPassword" class="forgot">
-            Click here
-          </router-link>
+          <router-link to="/forgotPassword" class="forgot"> Click here </router-link>
         </div>
       </form>
     </div>
@@ -48,52 +40,41 @@
 </template>
 
 <script>
-import axios from "axios";
-
+import axios from 'axios'
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
 
 export default {
-  name: "LoginView",
+  name: 'LoginView',
   data() {
     return {
-      email: "",
-      password: "",
-      auth: false,
-    };
+      email: '',
+      password: '',
+      auth: false
+    }
   },
   methods: {
     async Login() {
-      let url = "http://localhost:3000/api/accounts/login";
+      let url = 'http://localhost:3000/api/accounts/login'
       await axios
         .post(url, { email: this.email, password: this.password })
         .then((response) => {
-          console.log(response.data);
-          localStorage.setItem("userData", JSON.stringify(response.data));
-          localStorage.setItem("token", response.data.accessToken);
-          this.auth = true;
-          this.$router.push({ path: "/" });
+          console.log(response.data)
+          localStorage.setItem('userData', JSON.stringify(response.data))
+          localStorage.setItem('token', response.data.accessToken)
+          this.auth = true
+          this.$router.push({ path: '/' })
         })
         .catch((error) => {
-          console.log(error);
-          // toast.error("Wrong user", { position: toast.POSITION.BOTTOM_RIGHT }),
-          //   {
-          //     autoClose: 1000,
-          //   };
-          if (error.response) {
-            // The server responded with an error status code
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
-          } else if (error.request) {
-            // The request was made but no response was received
-            console.log(error.request);
-          } else {
-            // Something happened in setting up the request that triggered an Error
-            console.log("Error", error.message);
-          }
-        });
-    },
-  },
-};
+          console.log(error)
+          toast.error('Wrong user', { position: toast.POSITION.BOTTOM_RIGHT }),
+            {
+              autoClose: 1000
+            }
+        })
+    }
+  }
+}
 </script>
 
 <style scoped>
@@ -118,7 +99,7 @@ export default {
   margin-bottom: 10px;
 }
 .loginHeader {
-  font-family: "Nunito Sans", sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
   font-weight: 600;
   font-size: 30px;
   color: #ffa500;
@@ -137,7 +118,7 @@ export default {
 .forgotPass-p {
   width: fit-content;
   margin-bottom: 0%;
-  font-family: "Nunito Sans", sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
 }
 .forgot {
   color: #282225;
@@ -154,7 +135,7 @@ export default {
   text-align: center;
 
   text-decoration: none;
-  font-family: "Nunito Sans", sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
   border-width: 0px;
 }
 
@@ -167,13 +148,13 @@ form {
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-family: "Nunito Sans", sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
   width: 100%;
 }
 
 .mb-3 {
   text-align: left;
-  font-family: "Nunito Sans", sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
   margin-bottom: 10px;
   width: 60%;
 }

@@ -43,11 +43,6 @@ const router = createRouter({
       component: ()=>import('../views/Staff/ManageOrders.vue')
     },
     {
-      path: "/staff/recieved-orders",
-      name: "recieveOrdersbyStaff",
-      component: ()=>import('../views/Staff/RecievedOrders.vue')
-    },
-    {
       path: "/staff/orderDetail?:id",
       name: "orderDetailbyHubStaff",
       component: ()=>import('../views/Staff/OrderDetail.vue')
@@ -91,6 +86,16 @@ const router = createRouter({
       path: "/manager/manage-accounts",
       name: "manageAccountsByManager",
       component: ()=>import('../views/Manager/ManageAccountsByManager.vue')
+    },
+    {
+      path: "/manager/recieved-orders",
+      name: "recieveOrdersbyManager",
+      component: ()=>import('../views/Manager/RecievedOrders.vue')
+    },
+    {
+      path: "/manager/sent-orders",
+      name: "sentOrdersbyManager",
+      component: ()=>import('../views/Manager/SentOrders.vue')
     },
     
   ]

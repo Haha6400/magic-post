@@ -148,7 +148,7 @@ export default {
       .get(url)
       .then((response) => {
         console.log(response.data)
-        this.warehouseList = response.data.warehouse.allWarehouse
+        this.warehouseList = response.data.allWarehouse
         this.loading = false
       })
       .catch((error) => {

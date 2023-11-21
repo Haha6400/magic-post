@@ -9,6 +9,9 @@
 </template>
 
 <script setup>
+import axios from "axios";
+axios.defaults.headers.common.authorization = localStorage.getItem("token");
+
 import SideBar from "@/components/SideBar.vue";
 </script>
 <style>

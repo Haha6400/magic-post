@@ -1,8 +1,9 @@
 <template>
   <div class="container">
-    <h1 class="loginHeader">Đơn hàng đến</h1>
+    <h1 class="loginHeader">Đơn hàng gửi</h1>
     <div class="buttonList">
-      <ChipCard v-if="senderName" :title="'Đến từ'" :content="senderName"></ChipCard>
+      <ChipCard v-if="orderStatus" :title="'Trạng thái'" :content="orderStatus"></ChipCard>
+      <ChipCard v-if="recieverName" :title="'Đến từ'" :content="recieverName"></ChipCard>
       <ChipCard v-if="start" :title="'Bắt đầu'" :content="start"></ChipCard>
       <ChipCard v-if="end" :title="'Kết thúc'" :content="end"></ChipCard>
       <button class="signup" type="button" @click="dialog = true">
@@ -22,36 +23,6 @@
           />
         </svg>
       </button>
-      <!-- <div class="filter">
-        <div v-if="role == 'hubManager' || role == 'hubStaff'" class="input-container">
-          <label for="inputState">Chi nhánh</label>
-          <select id="inputState" class="form-control" v-model="senderBranch">
-            <option selected>All</option>
-            <option v-for="item in hubList" :value="item.name" :key="item._id">
-              {{ item.name }}
-            </option>
-          </select>
-        </div>
-
-        <div v-if="role == 'warehouseManager' || role == 'staff'" class="input-container">
-          <label for="inputState">Chi nhánh</label>
-          <select id="inputState" class="form-control" v-model="branchName">
-            <option v-for="item in warehouseList" :value="item.name" :key="item._id">
-              {{ item.name }}
-            </option>
-          </select>
-        </div>
-      </div> -->
-
-      <!-- <div>
-        <label for="inputState">Tìm kiếm đơn hàng</label>
-        <form id="inputState" class="search-bar">
-          <input class="search-box" type="text" placeholder="Tìm kiếm đơn hàng" v-model="search" />
-          <button type="submit">
-            <img src="@/assets/logo.png" />
-          </button>
-        </form>
-      </div> -->
     </div>
 
     <div class="loading">
@@ -122,10 +93,16 @@
       <v-card>
         <div class="popupHeader">Bộ lọc</div>
         <div class="input-container">
+          <label for="inputState">Trạng thái</label>
+          <select id="inputState" class="form-control" v-model="orderStatus">
+            <option>Còn trong kho</option>
+          </select>
+        </div>
+        <div class="input-container">
           <label for="inputState">Nơi gửi</label>
-          <select id="inputState" class="form-control" v-model="senderName">
-            <option v-for="item in warehouseList" :value="item.name" :key="item._id">
-              {{ item.name }}
+          <select id="inputState" class="form-control" v-model="recieverName">
+            <option v-for="item in warehouseList">
+              {{ item }}
             </option>
           </select>
         </div>
@@ -141,7 +118,12 @@
         </div>
 
         <div class="bottomButton">
-          <button @click="dialog = false" class="btn btn--green-1" style="width: fit-content">
+          <button
+            @click="dialog = false"
+            v-on:click="getListFiltered()"
+            class="btn btn--green-1"
+            style="width: fit-content"
+          >
             Đóng
           </button>
 
@@ -156,6 +138,9 @@
 
 <script>
 import axios from 'axios'
+axios.defaults.headers.common.authorization = localStorage.getItem('token')
+axios.defaults.baseURL = 'http://'
+
 import ChipCard from '../../components/ChipCard.vue'
 
 export default {
@@ -164,9 +149,12 @@ export default {
       loading: true,
       //dialog
       dialog: false,
-      senderName: '',
+      recieverName: '',
+      hubList: [],
+      warehouseList: [],
       start: null,
       end: null,
+      orderStatus: null,
       //table
       dataList: [],
       page: 1,
@@ -198,7 +186,20 @@ export default {
     let jsonUser = JSON.parse(user)
     this.role = jsonUser.account.role
     // this.senderBranch = 'All'
-    // let url = 'http://localhost:3000/api/workplace/all/hub'
+
+    // Get warehouse list
+    let url = 'http://localhost:3000/api/workplace/all/warehouse/name'
+    await axios
+      .get(url)
+      .then((response) => {
+        console.log(response.data)
+        this.warehouseList = response.data.warehouseName
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+
+    // url = 'http://localhost:3000/api/workplace/all/hub'
     // console.log('check role')
     // await axios
     //   .get(url)
@@ -209,31 +210,31 @@ export default {
     //   .catch((error) => {
     //     console.log(error)
     //   })
-    // url = 'http://localhost:3000/api/workplace/all/warehouse'
-    // await axios
-    //   .get(url)
-    //   .then((response) => {
-    //     console.log(response.data)
-    //     this.warehouseList = response.data.warehouse.allWarehouse
-    //   })
-    //   .catch((error) => {
-    //     console.log(error)
-    //   })
-    //   let url = 'http://localhost:3000/api/orders/all'
-    //   await axios
-    //     .get(url)
-    //     .then((response) => {
-    //       console.log(response.data)
-    //       this.dataList = response.data
-    //       this.loading = false
-    //     })
-    //     .catch((error) => {
-    //       console.log(error)
-    //       toast.error('???', { position: toast.POSITION.BOTTOM_RIGHT }),
-    //         {
-    //           autoClose: 1000
-    //         }
-    //     })
+
+    // Set default start end
+    const today = new Date()
+    const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()
+    // console.log(date)
+
+    // get dataList
+    url = 'localhost:3000/api/hub/send/all'
+    await axios
+      .post(url, {
+        start: '2023-11-01',
+        end: date
+      })
+      .then((response) => {
+        console.log(response.data)
+        this.dataList = response.data
+        this.loading = false
+      })
+      .catch((error) => {
+        console.log(error)
+        toast.error('???', { position: toast.POSITION.BOTTOM_RIGHT }),
+          {
+            autoClose: 1000
+          }
+      })
   },
   methods: {
     deleterFilter() {
@@ -241,6 +242,82 @@ export default {
       this.start = null
       this.end = null
       this.dialog = false
+      this.orderStatus = null
+      this.created()
+    },
+
+    async getListFiltered() {
+      this.dialog = false
+
+      let url = ''
+
+      if (!this.orderStatus) {
+        // Người dùng filter có start end
+        if (this.recieverName && this.start && this.end) {
+          url = 'localhost:3000/api/hub/send/all/wh'
+          await axios
+            .post(url, {
+              start: this.start,
+              end: this.end,
+              warehouseName: recieverName
+            })
+            .then((response) => {
+              console.log(response.data)
+              this.dataList = response.data
+              this.loading = false
+            })
+            .catch((error) => {
+              console.log(error)
+              toast.error('???', { position: toast.POSITION.BOTTOM_RIGHT }),
+                {
+                  autoClose: 1000
+                }
+            })
+        }
+      }
+
+      if (this.orderStatus) {
+        if (this.recieverName) {
+          url = 'localhost:3000/api/hub/send/available/wh'
+          await axios
+            .post(url, {
+              start: this.start,
+              end: this.end,
+              warehouseName: this.recieverName
+            })
+            .then((response) => {
+              console.log(response.data)
+              this.dataList = response.data
+              this.loading = false
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+        }
+
+        if (!this.recieverName) {
+          url = 'localhost:3000/api/hub/send/available'
+          await axios
+            .post(url, {
+              start: this.start,
+              end: this.end,
+            })
+            .then((response) => {
+              console.log(response.data)
+              this.dataList = response.data
+              this.loading = false
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+        }
+      }
+    },
+
+    getDate() {
+      const today = new Date()
+      const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()
+      return date
     }
   },
   components: { ChipCard }
@@ -406,7 +483,6 @@ export default {
 
   gap: 10px;
 }
-
 
 .form-control {
   border-radius: 18px;

@@ -26,11 +26,12 @@
         <div class="input-container">
           <label for="inputState">Vai trò</label>
           <select id="inputState" class="form-control" v-model="role">
-            <option selected>staff</option>
             <option>supervisor</option>
             <option>hubManager</option>
             <option>warehouseManager</option>
             <option>hubStaff</option>
+            <option>warehouseStaff</option>
+
           </select>
         </div>
 
@@ -68,6 +69,7 @@
 
 <script>
 import axios from 'axios'
+axios.defaults.headers.common.authorization = localStorage.getItem("token");
 
 export default {
   data() {
@@ -100,7 +102,7 @@ export default {
       .get(url)
       .then((response) => {
         console.log(response.data)
-        this.warehouseList = response.data.warehouse.allWarehouse
+        this.warehouseList = response.data.allWarehouse
       })
       .catch((error) => {
         console.log(error)
