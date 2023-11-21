@@ -103,5 +103,14 @@ const getAllHub = asyncHandler(async (req, res) => {
     res.status(200).json({ hub });
 });
 
+const getBranchNameById = asyncHandler(async (req, res) => {
+    const currentBranch = await branch.findById(req.params.branchId);
+    if (!currentBranch) {
+        res.status(404).json("Branch not found");
+    }
+    res.status(200).json(currentBranch.name);
 
-module.exports = { createBranch, getAllWarehouse, getAllHub, createHub, createWarehouse, getAllWarehouseName }
+})
+
+
+module.exports = { createBranch, getAllWarehouse, getAllHub, createHub, createWarehouse, getAllWarehouseName, getBranchNameById }
