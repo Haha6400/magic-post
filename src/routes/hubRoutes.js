@@ -4,7 +4,8 @@ const { staffAuth, roleCheck, accessAccountCheck } = require("../app/middleware/
 const { allHubReceive_Manager, allHubReceive_Supervisor, allHubSend_Manager, allHubSend_Supervisor,
     allHubReceiveByWH_Manager, allHubReceivByWH_Supervisor, allHubSendByWH_Manager, allHubSendByWH_Supervisor,
     availableHubReceive_Manager, availableHubReceive_Supervisor, availableHubSend_Manager, availableHubSend_Supervisor,
-    availableHubReceiveByWH_Manager, availableHubReceivByWH_Supervisor, availableHubSendByWH_Manager, availableHubSendByWH_Supervisor } = require("../app/controllers/hubController");
+    availableHubReceiveByWH_Manager, availableHubReceivByWH_Supervisor, availableHubSendByWH_Manager, availableHubSendByWH_Supervisor,
+    getOrderByStatus } = require("../app/controllers/hubController");
 
 /*-------------------------------------------------------ALL ORDERS-------------------------------------------------------*/
 //@access hubManager
@@ -32,4 +33,6 @@ router.post('/receive/s/available/wh', staffAuth, roleCheck(["supervisor"]), ava
 router.post('/send/s/available', staffAuth, roleCheck(["supervisor"]), availableHubSend_Supervisor);
 router.post('/send/s/available/wh', staffAuth, roleCheck(["supervisor"]), availableHubSendByWH_Supervisor);
 
+//@access hubStaff
+router.post('/all', staffAuth, roleCheck(["hubStaff"]), getOrderByStatus);
 module.exports = router; 
