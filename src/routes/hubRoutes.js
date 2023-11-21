@@ -34,5 +34,5 @@ router.post('/send/s/available', staffAuth, roleCheck(["supervisor"]), available
 router.post('/send/s/available/wh', staffAuth, roleCheck(["supervisor"]), availableHubSendByWH_Supervisor);
 
 //@access hubStaff
-router.post('/all', staffAuth, roleCheck(["hubStaff"]), getOrderByStatus);
+router.post('/all', staffAuth, roleCheck(["supervisor"]), getOrderByStatus);
 module.exports = router; 
