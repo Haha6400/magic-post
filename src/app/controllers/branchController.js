@@ -5,28 +5,28 @@ const branch = require("../models/branchModel");
 require("dotenv").config();
 
 async function createBranch(req, res, name, higherBranchName, lowerBranchName) {
-  if (!name) {
-    res.status(400);
-    throw new Error(`Error creating branch`);
-  }
-  if (await branch.findOne({ name: name })) {
-    res.status(400);
-    throw new Error(name + " is already exists");
-  }
-  const postalCode = Math.random() * (99999 - 10000) + 10000;
-  const higherBranch_id = await branch.findOne({ name: higherBranchName });
-  if (!higherBranch_id) {
-    console.log("Couldn't find higher branch");
-    return null;
-  }
-  const newBranch = await branch.create({
-    name: name,
-    higherBranch_id: higherBranch_id,
-    higherBranchName: higherBranchName,
-    lowerBranchName: lowerBranchName,
-    postal_code: postalCode,
-  });
-  return newBranch;
+    if (!name) {
+        res.status(400);
+        throw new Error(`Error creating branch`);
+    }
+    if (await branch.findOne({ name: name })) {
+        res.status(400);
+        throw new Error(name + " is already exists");
+    }
+    const postalCode = Math.random() * (99999 - 10000) + 10000;
+    const higherBranch_id = await branch.findOne({ name: higherBranchName });
+    if (!higherBranch_id) {
+        console.log("Couldn't find higher branch");
+        return null;
+    }
+    const newBranch = await branch.create({
+        name: name,
+        higherBranch_id: higherBranch_id,
+        higherBranchName: higherBranchName,
+        lowerBranchName: lowerBranchName,
+        postal_code: postalCode,
+    });
+    return newBranch;
 }
 
 const createHub = asyncHandler(async (req, res) => {
@@ -46,24 +46,24 @@ const createHub = asyncHandler(async (req, res) => {
 });
 
 const createWarehouse = asyncHandler(async (req, res) => {
-  const lowerBranch = await branch.find({ higherBranchName: req.body.name });
-  var lowerBranchName = [];
-  for (i in lowerBranch) {
-    lowerBranchName.push(lowerBranch[i].name);
-  }
-  const warehouse = await createBranch(
-    req,
-    res,
-    req.body.name,
-    "company",
-    lowerBranchName
-  );
-  if (warehouse)
-    res.status(200).json({ _id: warehouse.id, name: warehouse.name });
-  else {
-    res.status(400);
-    throw new Error(`Invalid`);
-  }
+    const lowerBranch = await branch.find({ higherBranchName: req.body.name });
+    var lowerBranchName = [];
+    for (i in lowerBranch) {
+        lowerBranchName.push(lowerBranch[i].name);
+    }
+    const warehouse = await createBranch(
+        req,
+        res,
+        req.body.name,
+        "company",
+        lowerBranchName
+    );
+    if (warehouse)
+        res.status(200).json({ _id: warehouse.id, name: warehouse.name });
+    else {
+        res.status(400);
+        throw new Error(`Invalid`);
+    }
 });
 
 /*
@@ -117,6 +117,16 @@ const getAllHub = asyncHandler(async (req, res) => {
 //     console.log("Dont have any hub");
 // }
 // res.status(200).json({ hub });
+
+const getBranchNameById = asyncHandler(async (req, res) => {
+    const currentBranch = await branch.findById(req.params.branchId);
+    if (!currentBranch) {
+        res.status(404).json("Branch not found");
+    }
+    res.status(200).json(currentBranch.name);
+
+})
+
 
 
 module.exports = { createBranch, getAllWarehouse, getAllHub, createHub, createWarehouse, getAllWarehouseName }
