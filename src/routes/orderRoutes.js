@@ -22,6 +22,8 @@ router.post('/create', staffAuth, roleCheck(["hubStaff", "hubManager", "supervis
 
 //@Put method
 router.put('/update/:id', updateOrder)
+// router.put("/status/update", updateStatus);
+
 //@Delete method
 router.delete('/delete/:id', deleteOrder)
 
