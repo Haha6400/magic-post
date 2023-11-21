@@ -1,5 +1,3 @@
-//TODO: Test cái đống này
-//TODO: Viết hàng thống kê hàng nhận, hàng gửi trên cả nước
 //TODO: Thống kê các hàng đã chuyển thành công, các hàng chuyển không thành công và trả lại điểm giao dịch.
 
 /*
@@ -335,9 +333,30 @@ const availableHubSendByWH_Supervisor = asyncHandler(async (req, res) => {
     res.status(200).json({ orders, count: orders.length });
 })
 
+/*
+@desc get order by status
+@access hubStaff
+@path POST /api/hub/all
+*/
+const getOrderByStatus = asyncHandler(async (req, res) => {
+    const currentHub = await getCurrentBranch(req, res);
+    const { start, end } = req.body;
+    const processes = await Process.find({
+        branch_id: currentHub,
+        status: req.body.status
+    }).sort('createdAt');
+    const orders = await Order.find({
+        createdAt: { $gt: new Date(start), $lt: new Date(end) },
+        processes_id: processes
+    })
+    res.status(200).json({ orders, count: orders.length });
+});
+
+
 module.exports = {
     allHubReceive_Manager, allHubReceive_Supervisor, allHubSend_Manager, allHubSend_Supervisor,
     allHubReceiveByWH_Manager, allHubReceivByWH_Supervisor, allHubSendByWH_Manager, allHubSendByWH_Supervisor,
     availableHubReceive_Manager, availableHubReceive_Supervisor, availableHubSend_Manager, availableHubSend_Supervisor,
-    availableHubReceiveByWH_Manager, availableHubReceivByWH_Supervisor, availableHubSendByWH_Manager, availableHubSendByWH_Supervisor
+    availableHubReceiveByWH_Manager, availableHubReceivByWH_Supervisor, availableHubSendByWH_Manager, availableHubSendByWH_Supervisor,
+    getOrderByStatus
 }
