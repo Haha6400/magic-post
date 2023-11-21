@@ -129,4 +129,4 @@ const getBranchNameById = asyncHandler(async (req, res) => {
 
 
 
-module.exports = { createBranch, getAllWarehouse, getAllHub, createHub, createWarehouse, getAllWarehouseName }
+module.exports = { createBranch, getAllWarehouse, getAllHub, createHub, createWarehouse, getAllWarehouseName, getBranchNameById }
