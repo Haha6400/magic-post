@@ -4,6 +4,8 @@
 + Đổi thông tin sender_id và receiver_id
 
 => Xong ui
+
+//TODO: Viết hàm update status
 */
 //TODO: Xác nhận lại với TĐ về mấy hàm tính toán giá tiền, cân nặng,... của đơn hàng
 //=> Minh tu tinh
@@ -30,7 +32,7 @@ const {
 @access supervisor
 */
 const getAllOrders = asyncHandler(async (req, res) => {
-    const orders = await Order.find({})
+    const orders = await Order.find()
     const result = await getOrders(orders)
     res.status(200).json(result)
 })
@@ -190,10 +192,24 @@ const printOrderLabel = asyncHandler(async (req, res) => {
     await printLabel(req, res);
 });
 
+// const updateStatus = asyncHandler(async (req, res) => {
+// const order = await Order.findById(req.body.orderId);
+// const { newStatus } = req.body;
+// const statusOrder = order.process.status;
+// const updateStatus = statusOrder.push(newStatus);
+// const updateProcess = await Process.Update({ status: updateStatus }, { new: true });
+// const newOrder = await Order.findByIdAndUpdate(
+//     req.body.orderId,
+//     { process: updateProcess },
+//     { new: true }
+// )
+// res.status(200).json({ newOrder });
+// });
+
 
 module.exports = {
     getAllOrders, getOrderById, createOrder, updateOrder, deleteOrder,
-    getOrdersByBranchName, printOrderLabel, getOrderByCode,
+    getOrdersByBranchName, printOrderLabel, getOrderByCode
 };
 
 

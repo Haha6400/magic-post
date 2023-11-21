@@ -95,7 +95,7 @@ async function getOrder(order_id) {
         'receiverName': receiver.fullname,
         'fee': fee.total,
         'receiver_fee': receiver_fee.total,
-        'status': processes.status
+        'status': processes.status[processes.status.length - 1]
     })
 }
 
@@ -103,7 +103,6 @@ async function getOrder(order_id) {
 async function getOrders(orders) {
     const result = []
     for (var i in orders) {
-        console.log(orders[i]._id)
         result.push(await getOrder(orders[i]._id))
     }
     return result
