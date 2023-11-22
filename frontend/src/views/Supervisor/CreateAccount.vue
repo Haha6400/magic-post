@@ -44,7 +44,7 @@
           </select>
         </div>
 
-        <div v-if="role == 'warehouseManager' || role == 'staff'" class="input-container">
+        <div v-if="role == 'warehouseManager' || role == 'warehouseStaff'" class="input-container">
           <label for="inputState">Chi nhánh</label>
           <select id="inputState" class="form-control" v-model="branchName">
             <option v-for="item in warehouseList" :value="item.name" :key="item._id">

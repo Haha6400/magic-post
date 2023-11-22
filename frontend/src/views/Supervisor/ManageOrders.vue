@@ -119,7 +119,7 @@ export default {
         { key: 'receiverName', title: 'Người nhận', align: 'center' },
         { key: 'fee', title: 'Chi phí', align: 'center' },
         { key: 'receiver_fee', title: 'Phí người nhận phải trả', align: 'center' },
-        { key: 'status[0]', title: 'Trạng thái đơn hàng', align: 'center' },
+        { key: 'status', title: 'Trạng thái đơn hàng', align: 'center' },
         { title: 'Chi tiết', sortable: false, align: 'center', text: 'Chi tiết', value: 'action' }
       ]
     }

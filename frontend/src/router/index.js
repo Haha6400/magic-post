@@ -97,6 +97,11 @@ const router = createRouter({
       name: "sentOrdersbyManager",
       component: ()=>import('../views/Manager/SentOrders.vue')
     },
+    {
+      path: "/workplaceStatistics?:id",
+      name: "workplaceStatistics",
+      component: ()=>import('../views/WorkplaceStatistics.vue')
+    },
     
   ]
 })

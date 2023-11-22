@@ -139,7 +139,6 @@
 <script>
 import axios from 'axios'
 axios.defaults.headers.common.authorization = localStorage.getItem('token')
-axios.defaults.baseURL = 'http://'
 
 import ChipCard from '../../components/ChipCard.vue'
 
@@ -211,30 +210,7 @@ export default {
     //     console.log(error)
     //   })
 
-    // Set default start end
-    const today = new Date()
-    const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()
-    // console.log(date)
-
-    // get dataList
-    url = 'localhost:3000/api/hub/send/all'
-    await axios
-      .post(url, {
-        start: '2023-11-01',
-        end: date
-      })
-      .then((response) => {
-        console.log(response.data)
-        this.dataList = response.data
-        this.loading = false
-      })
-      .catch((error) => {
-        console.log(error)
-        toast.error('???', { position: toast.POSITION.BOTTOM_RIGHT }),
-          {
-            autoClose: 1000
-          }
-      })
+    this.getDefaultList()
   },
   methods: {
     deleterFilter() {
@@ -243,7 +219,7 @@ export default {
       this.end = null
       this.dialog = false
       this.orderStatus = null
-      this.created()
+      this.getDefaultList()
     },
 
     async getListFiltered() {
@@ -253,17 +229,40 @@ export default {
 
       if (!this.orderStatus) {
         // Người dùng filter có start end
-        if (this.recieverName && this.start && this.end) {
-          url = 'localhost:3000/api/hub/send/all/wh'
+        if (this.recieverName) {
+          this.loading = true
+          url = 'http://localhost:3000/api/hub/send/all/wh'
           await axios
             .post(url, {
               start: this.start,
               end: this.end,
-              warehouseName: recieverName
+              warehouseName: this.recieverName
             })
             .then((response) => {
               console.log(response.data)
-              this.dataList = response.data
+              this.dataList = response.data.orders
+              this.loading = false
+            })
+            .catch((error) => {
+              console.log(error)
+              toast.error('???', { position: toast.POSITION.BOTTOM_RIGHT }),
+                {
+                  autoClose: 1000
+                }
+            })
+        }
+
+        if (!this.recieverName) {
+          this.loading = true
+          url = 'http://localhost:3000/api/hub/send/all'
+          await axios
+            .post(url, {
+              start: this.start,
+              end: this.end,
+            })
+            .then((response) => {
+              console.log(response.data)
+              this.dataList = response.data.order
               this.loading = false
             })
             .catch((error) => {
@@ -278,7 +277,8 @@ export default {
 
       if (this.orderStatus) {
         if (this.recieverName) {
-          url = 'localhost:3000/api/hub/send/available/wh'
+          this.loading = true
+          url = 'http://localhost:3000/api/hub/send/available/wh'
           await axios
             .post(url, {
               start: this.start,
@@ -287,7 +287,7 @@ export default {
             })
             .then((response) => {
               console.log(response.data)
-              this.dataList = response.data
+              this.dataList = response.data.orders
               this.loading = false
             })
             .catch((error) => {
@@ -296,7 +296,8 @@ export default {
         }
 
         if (!this.recieverName) {
-          url = 'localhost:3000/api/hub/send/available'
+          this.loading = true
+          url = 'http://localhost:3000/api/hub/send/available'
           await axios
             .post(url, {
               start: this.start,
@@ -304,7 +305,7 @@ export default {
             })
             .then((response) => {
               console.log(response.data)
-              this.dataList = response.data
+              this.dataList = response.data.orders
               this.loading = false
             })
             .catch((error) => {
@@ -318,6 +319,29 @@ export default {
       const today = new Date()
       const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()
       return date
+    },
+
+    async getDefaultList() {
+      const today = new Date()
+      const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()
+      let url = 'http://localhost:3000/api/hub/send/all'
+      await axios
+        .post(url, {
+          start: '2023-11-01',
+          end: date
+        })
+        .then((response) => {
+          console.log(response.data)
+          this.dataList = response.data.orders
+          this.loading = false
+        })
+        .catch((error) => {
+          console.log(error)
+          toast.error('???', { position: toast.POSITION.BOTTOM_RIGHT }),
+            {
+              autoClose: 1000
+            }
+        })
     }
   },
   components: { ChipCard }
