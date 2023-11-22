@@ -185,27 +185,12 @@ const getOrderByCode = asyncHandler(async (req, res) => {
 
 /*
 @desc print label for order
-@route GET /api/orders/label/:order_id
+@route GET /api/orders/label/:order_id 
 @access staff
 */
 const printOrderLabel = asyncHandler(async (req, res) => {
     await printLabel(req, res);
 });
-
-// const updateStatus = asyncHandler(async (req, res) => {
-// const order = await Order.findById(req.body.orderId);
-// const { newStatus } = req.body;
-// const statusOrder = order.process.status;
-// const updateStatus = statusOrder.push(newStatus);
-// const updateProcess = await Process.Update({ status: updateStatus }, { new: true });
-// const newOrder = await Order.findByIdAndUpdate(
-//     req.body.orderId,
-//     { process: updateProcess },
-//     { new: true }
-// )
-// res.status(200).json({ newOrder });
-// });
-
 
 module.exports = {
     getAllOrders, getOrderById, createOrder, updateOrder, deleteOrder,
