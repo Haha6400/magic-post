@@ -38,7 +38,7 @@
 
         <template v-slot:item.action="{ item }">
           <button>
-            <router-link :to="{ name: 'accountDetail', params: { id: item._id } }">
+            <router-link :to="{ name: 'workplaceStatistics', params: { id: item._id } }">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"

@@ -68,7 +68,20 @@ export default {
     let user = localStorage.getItem('userData')
     let jsonUser = JSON.parse(user)
     // this.role = jsonUser.account.role
-    this.branch = jsonUser.account.branch_id
+    let branch_id = jsonUser.account.branch_id
+
+    let url = ''
+
+    url = 'http://localhost:3000/api/workplace/' + branch_id
+    await axios
+      .get(url)
+      .then((response) => {
+        console.log(response.data)
+        this.branch = response.data
+      })
+      .catch((error) => {
+        console.log(error)
+      })
 
     if (jsonUser.account.role == 'warehouseManager') {
       this.role = 'warehouseStaff'
