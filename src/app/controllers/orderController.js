@@ -14,6 +14,7 @@ const asyncHandler = require('express-async-handler');
 const Order = require("../models/orderModel");
 const Branch = require("../models/branchModel");
 const Process = require('../models/processesModel')
+const Fee = require('../models/feeModel')
 const { printLabel } = require("../utils/createLabel");
 const {
     createCustomer,
@@ -154,6 +155,7 @@ const deleteOrder = asyncHandler(async (req, res) => {
         res.status(404)
         throw new Error("Order not found")
     }
+    console.log("here")
     await Order.deleteOne({ _id: req.params.id })
     res.json('Delete succeed')
 })
@@ -192,9 +194,19 @@ const printOrderLabel = asyncHandler(async (req, res) => {
     await printLabel(req, res);
 });
 
+const getTotalIncome = asyncHandler(async (req, res) => {
+    let totalIncome = 0;
+    const orders = await Order.find();
+    for (const order of orders) {
+        const fee = await Fee.findById(order.fee_id);
+        const cost = fee.total;
+        totalIncome += cost;
+    }
+    res.status(200).json({ totalIncome });
+});
 module.exports = {
     getAllOrders, getOrderById, createOrder, updateOrder, deleteOrder,
-    getOrdersByBranchName, printOrderLabel, getOrderByCode
+    getOrdersByBranchName, printOrderLabel, getOrderByCode, getTotalIncome
 };
 
 

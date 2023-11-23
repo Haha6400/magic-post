@@ -27,14 +27,19 @@ async function createCustomer(fullname, address, phoneNumber, branchName) {
 
 //create fee
 async function createFeeModel(charge, surcharge, vat, other_fee, total_fee) {
+    charge = parseInt(charge) || 0;
+    surcharge = parseInt(surcharge) || 0;
+    vat = parseInt(vat) || 0;
+    other_fee = parseInt(other_fee) || 0;
 
     fee = await Fee.create({
         'charge': charge,
         'surcharge': surcharge,
         'vat': vat,
         'other_fee': other_fee,
-        'total_fee': total_fee
+        'total': charge + surcharge + vat + other_fee
     })
+    console.log(fee)
     return fee
 }
 
@@ -61,11 +66,14 @@ async function createMassModel(actual_mass, converted_mass) {
 
 //create process
 async function createProcesses(branch, status) {
-
-    processes = await Process.create({
-        'branch_id': branch,
-        'status': status,
-    })
+    if (status === null) status = "PRE_TRANSIT"
+    const newEvent = {
+        branch_id: branch,
+        status: status
+    }
+    processes = await Process.create(
+        { events: [newEvent] }
+    )
     return processes
 }
 
@@ -89,13 +97,14 @@ async function getOrder(order_id) {
 
     const receiver_fee = await ReceiverFee.findById(order.receiver_fee_id)
     const processes = await Process.findById(order.processes_id)
+    const lastEvent = processes.events;
     return ({
         'order_code': order.order_code,
         'senderName': sender.fullname,
         'receiverName': receiver.fullname,
         'fee': fee.total,
         'receiver_fee': receiver_fee.total,
-        'status': processes.status[processes.status.length - 1]
+        'status': lastEvent[lastEvent.length - 1].status
     })
 }
 
@@ -108,10 +117,22 @@ async function getOrders(orders) {
     return result
 }
 
-
+async function findProcessByLastEvent(newEvent) {
+    try {
+        const result = await Process.findOne({
+            $expr: {
+                $eq: [{ $arrayElemAt: ['$events', -1] }, newEvent]
+            }
+        });
+        return result;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
 
 module.exports = {
     createCustomer, createFeeModel, createMassModel,
     createReceiverFeeModel, createProcesses, createPackage,
-    getOrder, getOrders
+    getOrder, getOrders, findProcessByLastEvent
 }
