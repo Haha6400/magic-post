@@ -110,14 +110,21 @@ const updateOrder = asyncHandler(async (req, res) => {
         res.status(404);
         throw new Error("Order not found")
     }
-    const processes1 = await Process.findByIdAndUpdate(
+    const processes = await Process.findByIdAndUpdate(
         order.processes_id._id,
-        { $push: { status: req.body.status } },
+        {
+            $push: {
+                'events': {
+                    'branch_id': req.currentAccount.branch_id,
+                    'status': req.body.status
+                }
+            }
+        },
         { new: true }
     )
 
     //End date
-    const end = (req.body.status == 'DELIVERED') ? processes1.updatedAt : order.endedAt
+    const end = (req.body.status == 'DELIVERED') ? processes.updatedAt : order.endedAt
 
     //Check if the order is refused by the receiver?
     const returnConfirmation = (req.body.status == ('RETURN' || 'PRE-RETURN') ? true : false)
