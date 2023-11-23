@@ -194,7 +194,6 @@ const printOrderLabel = asyncHandler(async (req, res) => {
     await printLabel(req, res);
 });
 
-
 const getTotalIncome = asyncHandler(async (req, res) => {
     let totalIncome = 0;
     const orders = await Order.find();
@@ -205,7 +204,6 @@ const getTotalIncome = asyncHandler(async (req, res) => {
     }
     res.status(200).json({ totalIncome });
 });
-
 module.exports = {
     getAllOrders, getOrderById, createOrder, updateOrder, deleteOrder,
     getOrdersByBranchName, printOrderLabel, getOrderByCode, getTotalIncome
