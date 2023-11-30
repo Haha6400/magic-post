@@ -14,6 +14,7 @@ const asyncHandler = require('express-async-handler');
 const Order = require("../models/orderModel");
 const Branch = require("../models/branchModel");
 const Process = require('../models/processesModel')
+const Fee = require('../models/feeModel')
 const { printLabel } = require("../utils/createLabel");
 const {
     createCustomer,
@@ -161,6 +162,7 @@ const deleteOrder = asyncHandler(async (req, res) => {
         res.status(404)
         throw new Error("Order not found")
     }
+    console.log("here")
     await Order.deleteOne({ _id: req.params.id })
     res.json('Delete succeed')
 })
