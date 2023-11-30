@@ -4,8 +4,7 @@ const { getAllOrders, getOrderById, createOrder,
     updateOrder, deleteOrder,
     getOrdersByBranchName,
     printOrderLabel,
-    getOrderByCode,
-    getTotalIncome } = require("../app/controllers/orderController")
+    getOrderByCode, } = require("../app/controllers/orderController")
 // const {printLabel} = require("../app/utils/createLabel");
 const { staffAuth, roleCheck, accessAccountCheck } = require("../app/middleware/auth");
 
@@ -15,7 +14,6 @@ router.get('/branch/:branchName', getOrdersByBranchName)
 router.get('/:id', getOrderById)
 router.get("/label/:order_id", printOrderLabel);
 router.get("/code/:order_code", getOrderByCode);
-router.get('/income/total', getTotalIncome);
 
 //@Post method
 // router.post('/create', createOrder)

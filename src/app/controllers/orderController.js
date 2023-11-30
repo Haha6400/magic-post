@@ -111,14 +111,21 @@ const updateOrder = asyncHandler(async (req, res) => {
         res.status(404);
         throw new Error("Order not found")
     }
-    const processes1 = await Process.findByIdAndUpdate(
+    const processes = await Process.findByIdAndUpdate(
         order.processes_id._id,
-        { $push: { status: req.body.status } },
+        {
+            $push: {
+                'events': {
+                    'branch_id': req.currentAccount.branch_id,
+                    'status': req.body.status
+                }
+            }
+        },
         { new: true }
     )
 
     //End date
-    const end = (req.body.status == 'DELIVERED') ? processes1.updatedAt : order.endedAt
+    const end = (req.body.status == 'DELIVERED') ? processes.updatedAt : order.endedAt
 
     //Check if the order is refused by the receiver?
     const returnConfirmation = (req.body.status == ('RETURN' || 'PRE-RETURN') ? true : false)
@@ -194,19 +201,9 @@ const printOrderLabel = asyncHandler(async (req, res) => {
     await printLabel(req, res);
 });
 
-const getTotalIncome = asyncHandler(async (req, res) => {
-    let totalIncome = 0;
-    const orders = await Order.find();
-    for (const order of orders) {
-        const fee = await Fee.findById(order.fee_id);
-        const cost = fee.total;
-        totalIncome += cost;
-    }
-    res.status(200).json({ totalIncome });
-});
 module.exports = {
     getAllOrders, getOrderById, createOrder, updateOrder, deleteOrder,
-    getOrdersByBranchName, printOrderLabel, getOrderByCode, getTotalIncome
+    getOrdersByBranchName, printOrderLabel, getOrderByCode
 };
 
 

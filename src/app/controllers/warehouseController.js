@@ -83,7 +83,6 @@ const getOrdersByWareHouseID = asyncHandler(async (req, res) => {
     const ordersFromOtherWH = await Order.find({ 'processes_id': processes, 'receiver_id': receiver })
     const result = await (await getOrders(ordersFromHUB)).concat(await getOrders(ordersFromOtherWH))
     res.status(200).json(result)
-
 })
 
 
