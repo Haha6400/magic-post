@@ -45,7 +45,7 @@ const getMonthlyOrders = asyncHandler(async (req, res) => {
 
 const getMonthlyIncomeByBranch = asyncHandler(async (req, res) => {
     const currentDate = new Date(req.body.currentDate)
-    const currentBranch = req.body.branch
+    const currentBranch = req.params.branch_id
     var total = 0;
     const orders = await Order.find({
         processes_id: {
