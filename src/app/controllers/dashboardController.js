@@ -7,16 +7,15 @@
 // */
 const asyncHandler = require('express-async-handler');
 const Order = require("../models/orderModel");
-const Branch = require("../models/branchModel");
 const Fee = require("../models/feeModel");
-const Customer = require("../models/customerModel");
-const Process = require("../models/processesModel");
+const Process = require('../models/processesModel')
+
 const {
     getOrder, getOrders } = require('../utils/orderFunctions');
 
 
 const getMonthlyIncome = asyncHandler(async (req, res) => {
-    const currentDate = req.body.currentDate
+    const currentDate = new Date(req.body.currentDate)
     var total = 0;
     const orders = await Order.find({
         createdAt: {
@@ -28,21 +27,58 @@ const getMonthlyIncome = asyncHandler(async (req, res) => {
         const fee = await Fee.findById({ _id: order.fee_id })
         total += fee.total
     }
-    console.log(total)
-    res.status(200).send(total)
+    res.status(200).json(total)
 })
 
 const getMonthlyOrders = asyncHandler(async (req, res) => {
     const currentDate = new Date(req.body.currentDate)
 
-    const orders = await Order.countDocuments({
+    const ordersCount = await Order.countDocuments({
         createdAt: {
             $gte: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
             $lt: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0)
         },
     })
 
-    console.log(orders)
-    res.status(200).send()
+    res.status(200).json(ordersCount)
 })
-module.exports = { getMonthlyIncome, getMonthlyOrders }
+
+const getMonthlyIncomeByBranch = asyncHandler(async (req, res) => {
+    const currentDate = new Date(req.body.currentDate)
+    const currentBranch = req.body.branch
+    var total = 0;
+    const orders = await Order.find({
+        processes_id: {
+            'events.branch_id': currentBranch
+        },
+        createdAt: {
+            $gte: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
+            $lt: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0)
+        },
+    })
+    for await (const order of orders) {
+        const fee = await Fee.findById({ _id: order.fee_id })
+        total += fee.total
+    }
+    res.status(200).json(total)
+})
+
+const getMonthlyOrdersByBranch = asyncHandler(async (req, res) => {
+    const currentDate = new Date(req.body.currentDate)
+    const currentBranch = req.params.branch_id
+    console.log(currentBranch)
+    const processes = await Process.find({
+        'events.branch_id': currentBranch
+    })
+
+    const ordersCount = await Order.countDocuments({
+        'processes_id': processes,
+        createdAt: {
+            $gte: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
+            $lt: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0)
+        },
+    })
+
+    res.status(200).json(ordersCount)
+})
+module.exports = { getMonthlyIncome, getMonthlyOrders, getMonthlyIncomeByBranch, getMonthlyOrdersByBranch }

@@ -176,7 +176,7 @@ const deleteOrder = asyncHandler(async (req, res) => {
 
 const getOrdersByBranchName = asyncHandler(async (req, res) => {
     const branch = await Branch.findOne({ 'name': req.params.branchName })
-    const proccesses = await Process.find({ branch_id: branch })
+    const proccesses = await Process.find({ 'events.branch_id': branch })
     const orders = await Order.find({ processes_id: proccesses })
     res.status(200).json(orders)
 })
