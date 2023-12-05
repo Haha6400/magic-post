@@ -14,6 +14,7 @@ const asyncHandler = require('express-async-handler');
 const Order = require("../models/orderModel");
 const Branch = require("../models/branchModel");
 const Process = require('../models/processesModel')
+const Fee = require('../models/feeModel')
 const { printLabel } = require("../utils/createLabel");
 const {
     createCustomer,
@@ -110,14 +111,21 @@ const updateOrder = asyncHandler(async (req, res) => {
         res.status(404);
         throw new Error("Order not found")
     }
-    const processes1 = await Process.findByIdAndUpdate(
+    const processes = await Process.findByIdAndUpdate(
         order.processes_id._id,
-        { $push: { status: req.body.status } },
+        {
+            $push: {
+                'events': {
+                    'branch_id': req.currentAccount.branch_id,
+                    'status': req.body.status
+                }
+            }
+        },
         { new: true }
     )
 
     //End date
-    const end = (req.body.status == 'DELIVERED') ? processes1.updatedAt : order.endedAt
+    const end = (req.body.status == 'DELIVERED') ? processes.updatedAt : order.endedAt
 
     //Check if the order is refused by the receiver?
     const returnConfirmation = (req.body.status == ('RETURN' || 'PRE-RETURN') ? true : false)
@@ -154,6 +162,7 @@ const deleteOrder = asyncHandler(async (req, res) => {
         res.status(404)
         throw new Error("Order not found")
     }
+    console.log("here")
     await Order.deleteOne({ _id: req.params.id })
     res.json('Delete succeed')
 })
@@ -167,7 +176,7 @@ const deleteOrder = asyncHandler(async (req, res) => {
 
 const getOrdersByBranchName = asyncHandler(async (req, res) => {
     const branch = await Branch.findOne({ 'name': req.params.branchName })
-    const proccesses = await Process.find({ branch_id: branch })
+    const proccesses = await Process.find({ 'events.branch_id': branch })
     const orders = await Order.find({ processes_id: proccesses })
     res.status(200).json(orders)
 })
@@ -185,27 +194,12 @@ const getOrderByCode = asyncHandler(async (req, res) => {
 
 /*
 @desc print label for order
-@route GET /api/orders/label/:order_id
+@route GET /api/orders/label/:order_id 
 @access staff
 */
 const printOrderLabel = asyncHandler(async (req, res) => {
     await printLabel(req, res);
 });
-
-// const updateStatus = asyncHandler(async (req, res) => {
-// const order = await Order.findById(req.body.orderId);
-// const { newStatus } = req.body;
-// const statusOrder = order.process.status;
-// const updateStatus = statusOrder.push(newStatus);
-// const updateProcess = await Process.Update({ status: updateStatus }, { new: true });
-// const newOrder = await Order.findByIdAndUpdate(
-//     req.body.orderId,
-//     { process: updateProcess },
-//     { new: true }
-// )
-// res.status(200).json({ newOrder });
-// });
-
 
 module.exports = {
     getAllOrders, getOrderById, createOrder, updateOrder, deleteOrder,

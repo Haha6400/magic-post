@@ -109,15 +109,6 @@ const getAllHub = asyncHandler(async (req, res) => {
     res.status(200).json({ hub });
 });
 
-// if (!warehouse) {
-//     console.log("Dont have any warehouse");
-// }
-// const hub = await branch.find({ higherBranch_id: warehouse });
-// if (!hub) {
-//     console.log("Dont have any hub");
-// }
-// res.status(200).json({ hub });
-
 const getBranchNameById = asyncHandler(async (req, res) => {
     const currentBranch = await branch.findById(req.params.branchId);
     if (!currentBranch) {
