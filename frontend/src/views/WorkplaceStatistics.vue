@@ -241,7 +241,7 @@ export default {
         console.log(error)
       })
 
-      //get wa
+    
     //test table
     url = 'http://localhost:3000/api/orders/all'
     await axios

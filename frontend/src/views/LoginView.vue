@@ -24,7 +24,7 @@
             required
           />
         </div>
-        <button v-if="!auth" type="submit" class="btn btn-primary" >
+        <button v-if="!auth" type="submit" class="btn btn-primary">
           Đăng nhập
           <!-- v-on:click="Login()" -->
         </button>
