@@ -20,7 +20,7 @@ router.get("/code/:order_code", getOrderByCode);
 router.post('/create', staffAuth, roleCheck(["hubStaff", "hubManager", "supervisor"]), createOrder)
 
 //@Put method
-router.put('/update/:id', updateOrder)
+router.put('/update/:id', staffAuth, updateOrder)
 // router.put("/status/update", updateStatus);
 
 //@Delete method
