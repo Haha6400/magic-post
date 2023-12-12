@@ -34,25 +34,6 @@
         </li>
 
         <!-- supervisor -->
-
-        <!-- Tạo tài khoản -->
-        <li v-if="role == 'supervisor'">
-          <router-link to="/supervisor/createAccount">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="w-6 h-6 icon"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-            </svg>
-
-            Tạo tài khoản
-          </router-link>
-        </li>
-
         <!-- Quản lý tài khoản -->
         <li v-if="role == 'supervisor'">
           <router-link to="/supervisor/manage-accounts">
@@ -67,7 +48,7 @@
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z"
+                d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"
               />
             </svg>
 
@@ -75,7 +56,7 @@
           </router-link>
         </li>
 
-        <!-- Điểm giao dịch -->
+        <!-- Quản lý điểm giao dịch -->
         <li v-if="role == 'supervisor'">
           <router-link to="/supervisor/manage-hubs">
             <svg
@@ -89,7 +70,7 @@
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
+                d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"
               />
             </svg>
 
@@ -97,7 +78,7 @@
           </router-link>
         </li>
 
-        <!-- Điểm tập kết -->
+        <!-- Quản lý điểm tập kết -->
         <li v-if="role == 'supervisor'">
           <router-link to="/supervisor/manage-warehouses">
             <svg
@@ -119,10 +100,32 @@
           </router-link>
         </li>
 
+        <!-- Quản lý đơn hàng -->
+        <li v-if="role == 'supervisor'">
+          <router-link to="/supervisor/manage-orders">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6 icon"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"
+              />
+            </svg>
+
+            Quản lý đơn hàng
+          </router-link>
+        </li>
+
         <!-- hubStaff -->
         <!-- Tạo đơn hàng -->
         <li v-if="role == 'hubStaff'">
-          <router-link to="/HubStaff/newOrder">
+          <router-link to="/hubStaff/newOrder">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -138,9 +141,46 @@
           </router-link>
         </li>
 
-        <!-- Quản lý đơn hàng - Full All branch - Chưa biết nhét zô đâu -->
-        <li v-if="role == ''">
-          <router-link to="/hubStaff/manage-orders">
+        <!-- Xác nhận đơn về -->
+        <li v-if="role == 'hubStaff'">
+          <router-link to="/hubStaff/newOrder">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6 icon"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+
+            Xác nhận đơn về
+          </router-link>
+        </li>
+
+        <!-- Xác nhận đơn đi -->
+        <li v-if="role == 'hubStaff'">
+          <router-link to="/hubStaff/newOrder">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6 icon"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+
+            Xác nhận đơn đi
+          </router-link>
+        </li>
+
+        <!-- Manager -->
+        <!-- Thống kê -->
+        <li v-if="role == 'hubManager' || role == 'warehouseManager'">
+          <router-link :to="{ name: 'workplaceStatistics', params: { id: this.branchId }}">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -152,11 +192,16 @@
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z"
+                d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z"
+              />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z"
               />
             </svg>
 
-            Quản lý đơn hàng
+            Thống kê
           </router-link>
         </li>
 
@@ -174,11 +219,76 @@
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z"
+                d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"
               />
             </svg>
 
             Tạo tài khoản
+          </router-link>
+        </li>
+
+        <li v-if="role == 'hubManager' || role == 'warehouseManager'">
+          <router-link to="/manager/manage-accounts">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6 icon"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z"
+              />
+            </svg>
+
+            Quản lý tài khoản
+          </router-link>
+        </li>
+
+        <!-- Đơn hàng nhận -->
+        <li v-if="role == 'hubManager' || role == 'warehouseManager'">
+          <router-link to="/manager/recieved-orders">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6 icon"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M21 16.811c0 .864-.933 1.405-1.683.977l-7.108-4.062a1.125 1.125 0 010-1.953l7.108-4.062A1.125 1.125 0 0121 8.688v8.123zM11.25 16.811c0 .864-.933 1.405-1.683.977l-7.108-4.062a1.125 1.125 0 010-1.953L9.567 7.71a1.125 1.125 0 011.683.977v8.123z"
+              />
+            </svg>
+
+            Đơn hàng nhận
+          </router-link>
+        </li>
+
+        <!-- Đơn hàng gửi -->
+        <li v-if="role == 'hubManager' || role == 'warehouseManager'">
+          <router-link to="/manager/sent-orders">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6 icon"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M3 8.688c0-.864.933-1.405 1.683-.977l7.108 4.062a1.125 1.125 0 010 1.953l-7.108 4.062A1.125 1.125 0 013 16.81V8.688zM12.75 8.688c0-.864.933-1.405 1.683-.977l7.108 4.062a1.125 1.125 0 010 1.953l-7.108 4.062a1.125 1.125 0 01-1.683-.977V8.688z"
+              />
+            </svg>
+
+            Đơn hàng gửi
           </router-link>
         </li>
 
@@ -361,7 +471,8 @@ export default {
       isLogin: false,
       role: '',
       userName: '',
-      avatar: null
+      avatar: null,
+      branchId: ''
     }
   },
 
@@ -374,13 +485,8 @@ export default {
       this.userName = jsonUser.account.userName
       this.isLogin = true
       this.role = jsonUser.account.role
-      // if (jsonUser.account.role == "supervisor") {
-      //   this.supervisor = true
-      // }
+      this.branchId = jsonUser.account.branch_id
 
-      // if (jsonUser.account.role == "hubManager") {
-      //   this.hubManager = true
-      // }
     }
   },
 
@@ -547,6 +653,11 @@ li {
 
 .bottom {
   color: #f8b760;
+}
+
+#sidebar .icon-right {
+  margin-left: auto;
+  transition: all 0.3s ease;
 }
 
 @media (max-width: 1200px) {

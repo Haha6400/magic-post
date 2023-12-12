@@ -2,18 +2,13 @@
   <div class="container">
     <div class="header">
       <h1 class="loginHeader">Tạo đơn hàng</h1>
-      <p class="discription">
-        Hoàn thiện đầy đủ thông tin để đến bước thiếp theo
-      </p>
+      <p class="discription">Hoàn thiện đầy đủ thông tin để đến bước thiếp theo</p>
     </div>
 
     <div class="wrapper-stepper">
       <div class="stepper">
         <div class="stepper-progress">
-          <div
-            class="stepper-progress-bar"
-            :style="'width:' + stepperProgress"
-          ></div>
+          <div class="stepper-progress-bar" :style="'width:' + stepperProgress"></div>
         </div>
 
         <div
@@ -33,18 +28,10 @@
               {{ item }}
             </span>
           </div>
-          <span class="stepper-item-title" v-if="item == 1"
-            >Thông tin người gửi
-          </span>
-          <span class="stepper-item-title" v-if="item == 2"
-            >Thông tin người nhận
-          </span>
-          <span class="stepper-item-title" v-if="item == 3"
-            >Thông tin gói hàng
-          </span>
-          <span class="stepper-item-title" v-if="item == 4"
-            >Thông tin khác
-          </span>
+          <span class="stepper-item-title" v-if="item == 1">Thông tin người gửi </span>
+          <span class="stepper-item-title" v-if="item == 2">Thông tin người nhận </span>
+          <span class="stepper-item-title" v-if="item == 3">Thông tin gói hàng </span>
+          <span class="stepper-item-title" v-if="item == 4">Thông tin khác </span>
         </div>
       </div>
 
@@ -54,21 +41,12 @@
           <form>
             <div class="form-container">
               <div class="input-container">
-                <label for="exampleInputEmail1" class="form-label"
-                  >Họ và tên</label
-                >
-                <input
-                  class="form-control"
-                  id="exampleInputEmail1"
-                  v-model="senderName"
-                  required
-                />
+                <label for="exampleInputEmail1" class="form-label">Họ và tên</label>
+                <input class="form-control" id="exampleInputEmail1" v-model="senderName" required />
               </div>
 
               <div class="input-container">
-                <label for="exampleInputEmail1" class="form-label"
-                  >Địa chỉ</label
-                >
+                <label for="exampleInputEmail1" class="form-label">Địa chỉ</label>
                 <input
                   class="form-control"
                   id="exampleInputEmail1"
@@ -78,9 +56,7 @@
               </div>
 
               <div class="input-container">
-                <label for="exampleInputEmail1" class="form-label"
-                  >Số điện thoại</label
-                >
+                <label for="exampleInputEmail1" class="form-label">Số điện thoại</label>
                 <input
                   class="form-control"
                   id="exampleInputEmail1"
@@ -96,9 +72,7 @@
           <form>
             <div class="form-container">
               <div class="input-container">
-                <label for="exampleInputEmail1" class="form-label"
-                  >Họ và tên</label
-                >
+                <label for="exampleInputEmail1" class="form-label">Họ và tên</label>
                 <input
                   class="form-control"
                   id="exampleInputEmail1"
@@ -108,9 +82,7 @@
               </div>
 
               <div class="input-container">
-                <label for="exampleInputEmail1" class="form-label"
-                  >Địa chỉ</label
-                >
+                <label for="exampleInputEmail1" class="form-label">Địa chỉ</label>
                 <input
                   class="form-control"
                   id="exampleInputEmail1"
@@ -120,9 +92,7 @@
               </div>
 
               <div class="input-container">
-                <label for="exampleInputEmail1" class="form-label"
-                  >Số điện thoại</label
-                >
+                <label for="exampleInputEmail1" class="form-label">Số điện thoại</label>
                 <input
                   class="form-control"
                   id="exampleInputEmail1"
@@ -146,53 +116,25 @@
                   </select>
                 </div>
                 <div class="input-container">
-                  <label for="exampleInputEmail1" class="form-label"
-                    >Số lượng</label
-                  >
-                  <input
-                    class="form-control"
-                    id="exampleInputEmail1"
-                    v-model="amount"
-                    required
-                  />
+                  <label for="exampleInputEmail1" class="form-label">Số lượng</label>
+                  <input class="form-control" id="exampleInputEmail1" v-model="amount" required />
                 </div>
               </div>
 
               <div class="row-container">
                 <div class="input-container">
-                  <label for="exampleInputEmail1" class="form-label"
-                    >Trị giá</label
-                  >
-                  <input
-                    class="form-control"
-                    id="exampleInputEmail1"
-                    v-model="price"
-                    required
-                  />
+                  <label for="exampleInputEmail1" class="form-label">Trị giá</label>
+                  <input class="form-control" id="exampleInputEmail1" v-model="price" required />
                 </div>
                 <div class="input-container">
-                  <label for="exampleInputEmail1" class="form-label"
-                    >Khối lượng</label
-                  >
-                  <input
-                    class="form-control"
-                    id="exampleInputEmail1"
-                    v-model="actual_mass"
-                    required
-                  />
+                  <label for="exampleInputEmail1" class="form-label">Khối lượng</label>
+                  <input class="form-control" id="exampleInputEmail1" v-model="actual_mass" />
                 </div>
               </div>
 
               <div class="input-container">
-                <label for="exampleInputEmail1" class="form-label"
-                  >Dịch vụ đặc biệt</label
-                >
-                <input
-                  class="form-control"
-                  id="exampleInputEmail1"
-                  v-model="special_service"
-                  required
-                />
+                <label for="exampleInputEmail1" class="form-label">Dịch vụ đặc biệt</label>
+                <input class="form-control" id="exampleInputEmail1" v-model="special_service" />
               </div>
             </div>
           </form>
@@ -202,9 +144,7 @@
           <form>
             <div class="form-container">
               <div class="input-container">
-                <label for="inputState"
-                  >Chỉ dẫn nếu không thể gửi hàng hóa</label
-                >
+                <label for="inputState">Chỉ dẫn nếu không thể gửi hàng hóa</label>
                 <select id="inputState" class="form-control" v-model="instruction">
                   <option selected>Chuyển hoàn ngay</option>
                   <option>Chuyển hoàn trước ngày</option>
@@ -213,28 +153,28 @@
                 </select>
               </div>
 
-              <div class="input-container">
-                <label for="exampleInputEmail1" class="form-label"
-                  >Cam kết người gửi</label
-                >
+              <!-- <div class="input-container">
+                <label for="exampleInputEmail1" class="form-label">Cam kết người gửi</label>
                 <input
                   class="form-control"
                   id="exampleInputEmail1"
                   v-model="sender_commitment"
                   required
                 />
+              </div> -->
+
+              <div class="input-container">
+                <label for="inputState">Địa chỉ hub đích</label>
+                <select id="inputState" class="form-control" v-model="receiverBranchName">
+                  <option v-for="item in dataList" :value="item.name" :key="item._id">
+                    {{ item.name }}
+                  </option>
+                </select>
               </div>
 
               <div class="input-container">
-                <label for="exampleInputEmail1" class="form-label"
-                  >Chú dẫn nghiệp vụ</label
-                >
-                <input
-                  class="form-control"
-                  id="exampleInputEmail1"
-                  v-model="email"
-                  required
-                />
+                <label for="exampleInputEmail1" class="form-label">Chú dẫn nghiệp vụ</label>
+                <input class="form-control" id="exampleInputEmail1" v-model="note" required />
               </div>
             </div>
           </form>
@@ -242,17 +182,17 @@
       </div>
 
       <div class="controls">
-        <button class="btn" @click="step--" :disabled="step == 1">
-          Quay lại
-        </button>
-        <button v-if="step != 4"
+        <button class="btn" @click="step--" :disabled="step == 1">Quay lại</button>
+        <button
+          v-if="step != 4"
           class="btn btn--green-1"
           @click="step++"
           :disabled="step == numStep"
         >
           Tiếp
         </button>
-        <button v-if="step == 4"
+        <button
+          v-if="step == 4"
           class="btn btn--green-1"
           v-on:click="newOrder()"
           style="width: fit-content"
@@ -260,55 +200,102 @@
           Tạo đơn hàng
         </button>
       </div>
-
-
     </div>
   </div>
 </template>
 
 <script>
-// import axios from "axios";
+import axios from 'axios'
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
 
 export default {
   data() {
     return {
       step: 1,
       numStep: 4,
-      brachID: "",
-      senderName: "",
-      senderAddress: "",
-      senderPhone: "",
-      receiverName: "",
-      receiverAddress: "",
-      receiverPhone: "",
-      type: "",
-      amount: "",
-      price: "",
-      actual_mass: "",
-      special_service: "",
-      instruction: "",
-      sender_commitment: ""
-    };
+      brachID: '',
+      senderName: '',
+      senderAddress: '',
+      senderPhone: '',
+      receiverName: '',
+      receiverAddress: '',
+      receiverPhone: '',
+      type: '',
+      amount: '',
+      price: '',
+      actual_mass: '',
+      special_service: '',
+      instruction: '',
+      sender_commitment: '',
+      note: '',
+
+      dataList: []
+    }
+  },
+
+  async created() {
+    let url = 'http://localhost:3000/api/workplace/all/hub'
+    await axios
+      .get(url)
+      .then((response) => {
+        console.log(response.data)
+        this.dataList = response.data.hub
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   },
 
   methods: {
-    // async newOrder() {
-    //   let url = "http://localhost:3000/api/orders/create";
-    //   await axios
-    //     .post(url, { email: this.email, password: this.password })
-    //     .then((response) => {
-    //       console.log(response.data);
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-    //       toast.error("Wrong user", { position: toast.POSITION.BOTTOM_RIGHT }),
-    //         {
-    //           autoClose: 1000,
-    //         };
-    //     });
-    // }
+    async newOrder() {
+      let url = 'http://localhost:3000/api/orders/create'
+      await axios
+        .post(url, {
+          type: this.type,
+          amount: this.amount,
+          price: this.amount * 10000,
+          note: this.note,
+          senderName: this.senderName,
+          senderAddress: this.senderAddress,
+          senderPhone: this.senderPhone,
+          receiverName: this.receiverName,
+          receiverAddress: this.receiverAddress,
+          receiverPhone: this.receiverPhone,
+          receiverBranchName: this.receiverBranchName
+        })
+        .then((response) => {
+          console.log(response.data)
+          toast.success('Create success', { position: toast.POSITION.BOTTOM_RIGHT }),
+            {
+              autoClose: 500
+            }
+            this.step = 1
+            this.senderName = '',
+            this.senderAddress = '',
+            this.senderPhone = '',
+            this.receiverName = '',
+            this.receiverAddress = '',
+            this.receiverPhone = '',
+            this.type = '',
+            this.amount = '',
+            this.price = '',
+            this.actual_mass = '',
+            this.special_service = '',
+            this.instruction = '',
+            this.sender_commitment = '',
+            this.note = ''
+        })
+        .catch((error) => {
+          console.log(error)
+          toast.error('Wrong user', { position: toast.POSITION.BOTTOM_RIGHT }),
+            {
+              autoClose: 1000
+            }
+        })
+    }
   }
-};
+}
 </script>
 
 <style scoped lang="scss">
@@ -341,17 +328,17 @@ $transiton: all 500ms ease;
 }
 
 .loginHeader {
-  font-family: "Nunito Sans", sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
   font-weight: 600;
   font-size: 30px;
   color: #ffa500;
   line-height: 28px;
   text-align: center;
-//   margin-top: 32px;
+  //   margin-top: 32px;
 }
 
 .discription {
-  font-family: "Nunito Sans", sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
   //   font-weight: 600;
   font-size: 18px;
   color: #5d7283;
@@ -449,7 +436,7 @@ body {
     position: absolute;
     font-size: 14px;
     bottom: -24px;
-    font-family: "Nunito Sans", sans-serif;
+    font-family: 'Nunito Sans', sans-serif;
     min-width: 150px;
   }
 }
@@ -475,7 +462,7 @@ body {
 
   .stepper-item-title {
     color: #5d7283;
-    font-family: "Nunito Sans", sans-serif;
+    font-family: 'Nunito Sans', sans-serif;
     min-width: 150px;
   }
 }
@@ -490,7 +477,7 @@ body {
 
   .stepper-item-title {
     color: #5d7283;
-    font-family: "Nunito Sans", sans-serif;
+    font-family: 'Nunito Sans', sans-serif;
     min-width: 150px;
   }
 }
@@ -518,7 +505,7 @@ body {
 }
 
 .btn {
-  font-family: "Nunito Sans", sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -540,7 +527,7 @@ body {
   &:disabled {
     opacity: 0.5;
     pointer-events: none;
-    font-family: "Nunito Sans", sans-serif;
+    font-family: 'Nunito Sans', sans-serif;
     border: 0;
     background-color: #ffe4b2;
   }
@@ -550,7 +537,7 @@ body {
     border: 0;
     color: #000;
     margin-left: auto;
-    font-family: "Nunito Sans", sans-serif;
+    font-family: 'Nunito Sans', sans-serif;
   }
 }
 
@@ -565,7 +552,7 @@ form {
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-family: "Nunito Sans", sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
   width: 100%;
   //   height: 80px;
   min-width: 500px;
@@ -574,7 +561,7 @@ form {
 .form-container {
   width: 100%;
   text-align: left;
-  font-family: "Nunito Sans", sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
   margin-bottom: 10px;
   display: flex;
   flex-direction: column;

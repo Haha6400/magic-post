@@ -30,37 +30,9 @@
 
         <div class="input-container">
           <label for="exampleInputEmail1" class="form-label">Chi nhánh</label>
-          <input class="form-control" id="exampleInputEmail1" v-model="branch" readonly />
+          <input class="form-control" id="exampleInputEmail1" v-model="branch" readonly/>
         </div>
 
-        <!-- <div class="input-container">
-            <label for="inputState">Vai trò</label>
-            <select id="inputState" class="form-control" v-model="role">
-              <option selected>staff</option>
-              <option>supervisor</option>
-              <option>hubManager</option>
-              <option>warehouseManager</option>
-              <option>hubStaff</option>
-            </select>
-          </div> -->
-
-        <!-- <div v-if="role == 'hubManager' || role == 'hubStaff'" class="input-container">
-          <label for="inputState">Chi nhánh</label>
-          <select id="inputState" class="form-control" v-model="branch">
-            <option v-for="item in hubList" :value="item._id" :key="item._id">
-              {{ item.name }}
-            </option>
-          </select>
-        </div> -->
-
-        <!-- <div v-if="role == 'warehouseManager' || role == 'staff'" class="input-container">
-          <label for="inputState">Chi nhánh</label>
-          <select id="inputState" class="form-control" v-model="branch">
-            <option v-for="item in warehouseList" :value="item._id" :key="item._id">
-              {{ item.name }}
-            </option>
-          </select>
-        </div> -->
       </div>
     </div>
 
@@ -95,7 +67,21 @@ export default {
   async created() {
     let user = localStorage.getItem('userData')
     let jsonUser = JSON.parse(user)
-    this.role = jsonUser.account.role
+    // this.role = jsonUser.account.role
+    let branch_id = jsonUser.account.branch_id
+
+    let url = ''
+
+    url = 'http://localhost:3000/api/workplace/' + branch_id
+    await axios
+      .get(url)
+      .then((response) => {
+        console.log(response.data)
+        this.branch = response.data
+      })
+      .catch((error) => {
+        console.log(error)
+      })
 
     if (jsonUser.account.role == 'warehouseManager') {
       this.role = 'warehouseStaff'

@@ -7,7 +7,8 @@ const { staffAuth, roleCheck, accessAccountCheck } = require("../app/middleware/
 router.post("/create/hub", staffAuth, roleCheck(["supervisor"]), createHub);
 router.post("/create/warehouse", staffAuth, roleCheck(["supervisor"]), createWarehouse);
 router.get("/all/warehouse", staffAuth, roleCheck(["supervisor"]), getAllWarehouse);
-router.get("/all/hub", staffAuth, roleCheck(["supervisor"]), getAllHub);
+// router.get("/all/hub", staffAuth, roleCheck(["supervisor"]), getAllHub);
+router.get("/all/hub", staffAuth, getAllHub);
 router.get("/all/warehouse/name", staffAuth, getAllWarehouseName);
 router.get("/:branchId", getBranchNameById);
 
