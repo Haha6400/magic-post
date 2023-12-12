@@ -8,8 +8,7 @@ const processesSchema = new mongoose.Schema({
                 ref: "Branch"
             },
             status: {
-                type: String,
-                required: true
+                type: String
             },
             timestamp: {
                 type: Date,
