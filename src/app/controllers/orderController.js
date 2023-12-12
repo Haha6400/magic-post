@@ -46,7 +46,6 @@ const getAllOrders = asyncHandler(async (req, res) => {
 const createOrder = asyncHandler(async (req, res) => {
     console.log(req.body);
     const { note, special_service, instructions, sender_commitment, //order attributes
-        status, // process attrs
         senderName, senderAddress, senderPhone, // sender attrs
         receiverName, receiverAddress, receiverPhone, //receiver attrs
         charge, surcharge, vat, other_fee, total_fee, receiverBranchName,//transporting fee
@@ -63,7 +62,7 @@ const createOrder = asyncHandler(async (req, res) => {
     const mass = await createMassModel(actual_mass, converted_mass)
     const fee = await createFeeModel(charge, surcharge, vat, other_fee, total_fee)
     const receiver_fee = await createReceiverFeeModel(cod, rf_other_fee, rf_total)
-    const processes = await createProcesses(currentBranch, status)
+    const processes = await createProcesses(currentBranch)
     const orderCode = (Math.random() + 1).toString(36).substring(7).toUpperCase(); //random orderCode
     const package = await createPackage(type, amount, price, mass)
     var order = await Order.create({
