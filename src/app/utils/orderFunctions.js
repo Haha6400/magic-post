@@ -65,8 +65,8 @@ async function createMassModel(actual_mass, converted_mass) {
 }
 
 //create process
-async function createProcesses(branch, status) {
-    if (status === null) status = "PRE_TRANSIT"
+async function createProcesses(branch) {
+    status = "PRE_TRANSIT"
     const newEvent = {
         branch_id: branch,
         status: status

@@ -22,7 +22,7 @@ router.get('/role', getRoleOfCurrentAccount);
 //@access PERSONAL
 router.get("/current", staffAuth, currentAccount);
 router.put("/update/:id", staffAuth, roleCheck(["hubManager", "warehouseManager", "supervisor", "hubStaff", "warehouseStaff"]), accessAccountCheck, updateAccount)
-// router.put("/update/:id", staffAuth, roleCheck(["hubManager", "warehouseManager", "supervisor", "hubStaff", "warehouseStaff"]), updateAccount)
+
 router.post("/reset-password", staffAuth, resetPasswordEmail);
 router.post("/reset-password/:id/:accessToken", staffAuth, passwordReset)
 router.post("/forgot-password", forgotPasswordEmail);
@@ -33,6 +33,7 @@ router.post("/login", loginStaff);
 
 //@access SUPERVISOR
 router.get("/all", staffAuth, roleCheck(["supervisor"]), getAllAccounts);
+
 router.get("/all/managers", staffAuth, roleCheck(["supervisor"]), getAllManagerAccounts)
 router.get("/wp/:branchName", staffAuth, roleCheck(["supervisor"]), getAccountsByEachBranch);
 
