@@ -1,15 +1,3 @@
-/*TODO: 
-- Viết thêm hàm Xác nhận hoàn trả hàng khi receiver từ chối nhận hàng:
-+ Update is_returned: true
-+ Đổi thông tin sender_id và receiver_id
-
-=> Xong ui
-
-//TODO: Viết hàm update status
-*/
-//TODO: Xác nhận lại với TĐ về mấy hàm tính toán giá tiền, cân nặng,... của đơn hàng
-//=> Minh tu tinh
-
 const asyncHandler = require('express-async-handler');
 const Order = require("../models/orderModel");
 const Branch = require("../models/branchModel");

@@ -189,11 +189,11 @@ const sendConfirmList = asyncHandler(async (req, res) => {
         events: {
             $elemMatch: {
                 'branch_id': currentBranch,
-                // 'status': "TRANSIT"
                 'status': { $nin: ['DELIVERED', 'RETURNED'] }
             }
         }
     }).sort('createdAt');
+    console.log(processes);
     for (i in processes) {
         const length = processes[i].events.length;
         console.log(length);

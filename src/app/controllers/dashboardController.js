@@ -1,10 +1,3 @@
-// /*TODO:  lấy doanh thu tháng hiện tại,
-// tổng số order tháng hiện tại,
-// số đơn hàng chưa xử lý tháng hiện tại,
-// tỷ lệ đơn hàng giao thành công,
-// hoàn trả gì gì đó để nhét vô pie
-// => Truy vấn theo branch chứ hong chia ra hub với warehouse (hoặc chia ra nhma hạn chế thui)
-// */
 const asyncHandler = require('express-async-handler');
 const Order = require("../models/orderModel");
 const Fee = require("../models/feeModel");
@@ -138,12 +131,6 @@ const allReceive = asyncHandler(async (req, res) => {
     res.status(200).json({ orders, count: orders.length });
 })
 
-const availableReceive = asyncHandler(async (req, res) => {
-    const currentBranch = await getCurrentBranch(req, res);
-    const statusArray = ["TRANSIT"]
-    const orders = await receiveFunction(req, res, currentBranch, statusArray);
-    res.status(200).json({ orders, count: orders.length });
-})
 
 const allSend = asyncHandler(async (req, res) => {
     const currentBranch = await getCurrentBranch(req, res);
@@ -152,14 +139,26 @@ const allSend = asyncHandler(async (req, res) => {
     res.status(200).json({ orders, count: orders.length });
 })
 
-const availableSend = asyncHandler(async (req, res) => {
-    const currentBranch = await getCurrentBranch(req, res);
-    const statusArray = ["PRE_TRANSIT", "PRE_RETURN", "TRANSIT"];
+const allReceive_Supervisors = asyncHandler(async (req, res) => {
+    const currentBranch = await Branch.find({
+        name: req.body.name
+    })
+    const statusArray = ["DELIVERED", "TRANSIT", "RETURNED"]
+    const orders = await receiveFunction(req, res, currentBranch, statusArray);
+    res.status(200).json({ orders, count: orders.length });
+})
+
+const allSend_Supervisors = asyncHandler(async (req, res) => {
+    const currentBranch = await Branch.find({
+        name: req.body.name
+    })
+    const statusArray = ["PRE_TRANSIT", "TRANSIT", "DELIVERED", "PRE_RETURN", "RETURNED", "FAILRE"];
     const orders = await sendFunction(req, res, currentBranch, statusArray);
     res.status(200).json({ orders, count: orders.length });
 })
 
+
 module.exports = {
     getMonthlyIncome, getMonthlyOrders, getMonthlyIncomeByBranch, getMonthlyOrdersByBranch,
-    allReceive, availableReceive, allSend, availableSend
+    allReceive, allSend, allReceive_Supervisors, allSend_Supervisors
 }
