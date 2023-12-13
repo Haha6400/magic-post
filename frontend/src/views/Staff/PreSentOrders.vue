@@ -258,6 +258,7 @@ export default {
     },
 
     deleteOrder(id) {
+      console.log(id)
       this.loading = true
       let url = 'http://localhost:3000/api/orders/delete/' + id
       axios
