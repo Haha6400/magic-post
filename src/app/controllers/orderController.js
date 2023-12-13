@@ -123,6 +123,7 @@ const updateOrder = asyncHandler(async (req, res) => {
         { new: true }
     )
 
+    console.log(processes.events.status)
     //End date
     const end = (req.body.status == 'DELIVERED') ? processes.updatedAt : order.endedAt
 
