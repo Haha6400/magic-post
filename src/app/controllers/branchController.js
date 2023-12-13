@@ -6,7 +6,7 @@ const Fee = require("../models/feeModel");
 const Process = require('../models/processesModel');
 const Customer = require("../models/customerModel");
 const { getCurrentBranch } = require("../middleware/branch");
-// const { getAllWarehouse } = require("../controllers/branchController");
+// const { getOrders } = require("../utils/orderFunctions");
 
 
 require("dotenv").config();
@@ -175,8 +175,8 @@ const receiveConfirmList = asyncHandler(async (req, res) => {
     const orders = await Order.find({
         processes_id: processes
     }).sort('createdAt');
-    console.log(orders);
-    res.status(200).json({ orders, count: orders.length });
+    const result = await getOrders(orders)
+    res.status(200).json({ result, count: result.length });
 });
 
 /*
@@ -203,8 +203,8 @@ const sendConfirmList = asyncHandler(async (req, res) => {
     const orders = await Order.find({
         processes_id: processes
     }).sort('createdAt');
-    console.log(orders);
-    res.status(200).json({ orders, count: orders.length });
+    const result = await getOrders(orders)
+    res.status(200).json({ result, count: result.length });
 });
 
 module.exports = { createBranch, getAllWarehouse, getAllHub, createHub, createWarehouse, getAllWarehouseName, getBranchNameById, receiveConfirmList, sendConfirmList }
