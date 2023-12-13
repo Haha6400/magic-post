@@ -148,7 +148,7 @@ const updateOrder = asyncHandler(async (req, res) => {
 */
 const deleteOrder = asyncHandler(async (req, res) => {
     const order = await Order.findOne({
-        orderCode: req.params.order_code
+        order_code: req.params.order_code
     })
     if (!order) {
         res.status(404)

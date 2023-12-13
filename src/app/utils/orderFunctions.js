@@ -101,9 +101,17 @@ async function getOrder(order_id) {
     const processes = await Process.findById(order.processes_id)
     const lastEvent = processes.events;
     return ({
+        'note': order.note,
+        'special_service': order.special_service,
+        'instructions': order.instructions,
+        'sender_commitment': order.sender_commitment,
         'order_code': order.order_code,
         'senderName': sender.fullname,
+        'senderAddress': sender.address,
+        'senderPhone': sender.phoneNumber,
         'receiverName': receiver.fullname,
+        'receiverAddress': receiver.address,
+        'receiverPhone': receiver.phoneNumber,
         'fee': fee.total,
         'receiver_fee': receiver_fee.total,
         'status': lastEvent[lastEvent.length - 1].status
