@@ -1,6 +1,13 @@
 const asyncHandler = require("express-async-handler");
 const staff = require("../models/staffModel");
 const branch = require("../models/branchModel");
+const Order = require("../models/orderModel");
+const Fee = require("../models/feeModel");
+const Process = require('../models/processesModel');
+const Customer = require("../models/customerModel");
+const { getCurrentBranch } = require("../middleware/branch");
+const { getOrders } = require("../utils/orderFunctions");
+
 
 require("dotenv").config();
 
@@ -118,6 +125,86 @@ const getBranchNameById = asyncHandler(async (req, res) => {
 
 })
 
+/*
+@desc List orders preparing to arrive at the branch.
+*/
+const receiveConfirmList = asyncHandler(async (req, res) => {
+    const currentBranch = await getCurrentBranch(req, res);
+    const currentHigherBranch = currentBranch.higherBranch_id;
+    processes = null;
+    if (currentHigherBranch === "6554dd73872582fea16dd837") { //Warehouse => Order from lower hub or other warehouse
+        const allWarehouse = await getAllWarehouse(req, res);
+        const allHubName = currentBranch.lowerBranchName;
+        const allHub = await branch.find({ 'name': allHubName })
+        const allComingBranch = allWarehouse + allHub;
+        processes = await Process.find({
+            events: {
+                $elemMatch: {
+                    'branch_id': { $in: allComingBranch },
+                    'status': "TRANSIT"
+                }
+            }
+        }).sort('createdAt');
+        for (i in processes) {
+            const length = processes[i].events.length;
+            console.log(length);
+            for (j in allComingBranch) {
+                if (processes[i].events[length - 1].branch_id.toString() !== allComingBranch[j].branch_id.toString()) {
+                    processes.splice(i, 1);
+                }
+            }
+        }
+    } else { //Hub => Orders from higher warehouse
+        // console.log("currentHigherBranch", currentHigherBranch);
+        processes = await Process.find({
+            events: {
+                $elemMatch: {
+                    'branch_id': currentHigherBranch,
+                    'status': "TRANSIT"
+                }
+            }
+        }).sort('createdAt');
+        for (i in processes) {
+            const length = processes[i].events.length;
+            console.log(length);
+            if (processes[i].events[length - 1].branch_id.toString() !== currentHigherBranch.toString()) {
+                processes.splice(i, 1);
+            }
+        }
+    }
+    const orders = await Order.find({
+        processes_id: processes
+    }).sort('createdAt');
+    const result = await getOrders(orders)
+    res.status(200).json({ result, count: result.length });
+});
 
+/*
+@desc List orders preparing to leave branch
+a.k.a the last event is in current branch and status = TRANSIT
+*/
+const sendConfirmList = asyncHandler(async (req, res) => {
+    const currentBranch = await getCurrentBranch(req, res);
+    const processes = await Process.find({
+        events: {
+            $elemMatch: {
+                'branch_id': currentBranch,
+                'status': "TRANSIT"
+            }
+        }
+    }).sort('createdAt');
+    for (i in processes) {
+        const length = processes[i].events.length;
+        console.log(length);
+        if (processes[i].events[length - 1].branch_id.toString() !== currentBranch.toString()) {
+            processes.splice(i, 1);
+        }
+    }
+    const orders = await Order.find({
+        processes_id: processes
+    }).sort('createdAt');
+    const result = await getOrders(orders)
+    res.status(200).json({ result, count: result.length });
+});
 
-module.exports = { createBranch, getAllWarehouse, getAllHub, createHub, createWarehouse, getAllWarehouseName, getBranchNameById }
+module.exports = { createBranch, getAllWarehouse, getAllHub, createHub, createWarehouse, getAllWarehouseName, getBranchNameById, receiveConfirmList, sendConfirmList }
