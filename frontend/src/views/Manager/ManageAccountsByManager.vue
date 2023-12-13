@@ -83,6 +83,11 @@
   <script>
   import axios from 'axios'
   axios.defaults.headers.common.authorization = localStorage.getItem('token')
+
+  
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
+
   
   export default {
     data() {
@@ -142,21 +147,21 @@
             console.log('delete')
             this.getList()
             this.loading = true
-            // toast.success('Deleted successfully', { position: toast.POSITION.BOTTOM_RIGHT }),
-            //   {
-            //     autoClose: 1000
-            //   }
+            toast.success('Deleted successfully', { position: toast.POSITION.BOTTOM_RIGHT }),
+              {
+                autoClose: 100
+              }
           })
           .catch((error) => {
             console.log(error)
-            // toast.error("Delete failed", { position: toast.POSITION.BOTTOM_RIGHT }), {
-            //   autoClose: 1000,
-            // }
+            toast.error("Delete failed", { position: toast.POSITION.BOTTOM_RIGHT }), {
+              autoClose: 1000,
+            }
           })
       },
   
       getList() {
-        let url = 'localhost:3000/api/accounts/wp'
+        let url = 'http://localhost:3000/api/accounts/wp'
         axios
           .get(url)
           .then((response) => {
@@ -166,10 +171,10 @@
           })
           .catch((error) => {
             console.log(error)
-            // toast.error('???', { position: toast.POSITION.BOTTOM_RIGHT }),
-            //   {
-            //     autoClose: 1000
-            //   }
+            toast.error('???', { position: toast.POSITION.BOTTOM_RIGHT }),
+              {
+                autoClose: 1000
+              }
           })
       }
     }
