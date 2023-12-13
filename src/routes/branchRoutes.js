@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { createHub, createWarehouse, getAllWarehouse, getAllHub, getAllWarehouseName, getBranchNameById } = require('../app/controllers/branchController');
 const { staffAuth, roleCheck, accessAccountCheck } = require("../app/middleware/auth");
-const { receiveConfirmList, sendConfirmList } = require("../app/controllers/branchController");
+const { receiveConfirmList, sendConfirmList, sendConfirm } = require("../app/controllers/branchController");
 //TEST
 router.post("/create/hub", staffAuth, roleCheck(["supervisor"]), createHub);
 router.post("/create/warehouse", staffAuth, roleCheck(["supervisor"]), createWarehouse);
@@ -14,5 +14,6 @@ router.get("/:branchId", getBranchNameById);
 
 router.get("/coming/receive", staffAuth, receiveConfirmList);
 router.get("/coming/send", staffAuth, sendConfirmList);
+router.put("/confirm/send/:order_code", staffAuth, sendConfirm);
 
 module.exports = router; 
