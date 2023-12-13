@@ -15,6 +15,7 @@ const Customer = require("../models/customerModel");
 const {
     getOrder, getOrders } = require('../utils/orderFunctions');
 const { getCurrentBranch } = require("../middleware/branch");
+const { getAllWarehouse } = require("../controllers/branchController");
 
 
 const getMonthlyIncome = asyncHandler(async (req, res) => {
