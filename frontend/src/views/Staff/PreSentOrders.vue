@@ -258,6 +258,28 @@ export default {
               autoClose: 1000
             }
         })
+    },
+
+    updateOrderStatus(orderCode) {
+      let url = 'localhost:3000/api/orders/update/' + orderCode
+      axios
+        .put(url, {
+          order_code: orderCode
+        })
+        .then((response) => {
+          console.log(response.data)
+          toast.success('Successfully Updated', { position: toast.POSITION.BOTTOM_RIGHT }),
+            {
+              autoClose: 100
+            }
+        })
+        .catch((error) => {
+          console.log(error)
+          toast.error('Update failed', { position: toast.POSITION.BOTTOM_RIGHT }),
+            {
+              autoClose: 100
+            }
+        })
     }
 
     // getList() {

@@ -83,6 +83,9 @@
 <script>
 import axios from 'axios'
 axios.defaults.headers.common.authorization = localStorage.getItem('token')
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
+
 
 export default {
   data() {
