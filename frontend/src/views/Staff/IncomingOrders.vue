@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1 class="loginHeader">Đơn hàng đến</h1>
+    <h1 class="loginHeader">Xác nhận đơn hàng đến</h1>
     <div class="buttonList">
       <form class="search-bar">
         <input class="search-box" type="text" placeholder="Tìm kiếm đơn hàng" v-model="search" />
