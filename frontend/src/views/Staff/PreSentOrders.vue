@@ -75,7 +75,7 @@
                   </button>
 
                   <button
-                    v-on:click="updateOrderStatus(item.order_code)"
+                    v-on:click="updateOrderStatus(item.order_code, newOrderStatus)"
                     class="btn btn--green-1"
                     style="width: fit-content"
                   >
@@ -186,6 +186,7 @@ export default {
       orderStatus: null,
 
       updateOrderDialog: false,
+      newOrderStatus: '',
 
       dataList: [],
       page: 1,
@@ -260,18 +261,22 @@ export default {
         })
     },
 
-    updateOrderStatus(orderCode) {
-      let url = 'localhost:3000/api/orders/update/' + orderCode
+    updateOrderStatus(orderCode, newStatus) {
+      console.log(newStatus)
+      let url = 'http://localhost:3000/api/orders/update/' + orderCode
       axios
         .put(url, {
-          order_code: orderCode
+          status: newStatus
         })
         .then((response) => {
           console.log(response.data)
+          this.getList()
           toast.success('Successfully Updated', { position: toast.POSITION.BOTTOM_RIGHT }),
             {
               autoClose: 100
             }
+          this.updateOrderDialog = false
+          
         })
         .catch((error) => {
           console.log(error)
@@ -280,25 +285,25 @@ export default {
               autoClose: 100
             }
         })
-    }
+    },
 
-    // getList() {
-    //   let url = 'http://localhost:3000/api/orders/all'
-    //   axios
-    //     .get(url)
-    //     .then((response) => {
-    //       console.log(response.data)
-    //       this.dataList = response.data
-    //       this.loading = false
-    //     })
-    //     .catch((error) => {
-    //       console.log(error)
-    //       toast.error('???', { position: toast.POSITION.BOTTOM_RIGHT }),
-    //         {
-    //           autoClose: 1000
-    //         }
-    //     })
-    // },
+    async getList() {
+      let url = 'http://localhost:3000/api/workplace/coming/send'
+      await axios
+        .get(url)
+        .then((response) => {
+          console.log(response.data)
+          this.dataList = response.data.result
+          this.loading = false
+        })
+        .catch((error) => {
+          console.log(error)
+          toast.error('???', { position: toast.POSITION.BOTTOM_RIGHT }),
+            {
+              autoClose: 1000
+            }
+        })
+    }
   },
   components: { ChipCard }
 }
