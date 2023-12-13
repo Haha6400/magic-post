@@ -53,7 +53,38 @@
         :search="search"
       >
         <template v-slot:item.status="{ item }">
-          <button @click="updateOrderDialog = true">{{ item.status }}</button>
+          <button @click="updateOrderDialog = true">
+            {{ item.status }}
+            <v-dialog v-model="updateOrderDialog" persistent width="800">
+              <v-card>
+                <div class="popupHeader">Cập nhật trạng thái đơn hàng</div>
+                <div class="input-container">
+                  <label for="inputState">Trạng thái</label>
+                  <select id="inputState" class="form-control" v-model="newOrderStatus">
+                    <option>TRANSIT</option>
+                  </select>
+                </div>
+
+                <div class="bottomButton">
+                  <button
+                    @click="updateOrderDialog = false"
+                    class="btn btn--green-1"
+                    style="width: fit-content"
+                  >
+                    Đóng
+                  </button>
+
+                  <button
+                    v-on:click="updateOrderStatus(item.order_code)"
+                    class="btn btn--green-1"
+                    style="width: fit-content"
+                  >
+                    Cập nhật
+                  </button>
+                </div>
+              </v-card>
+            </v-dialog>
+          </button>
         </template>
 
         <template v-slot:item.action="{ item }">
@@ -132,33 +163,6 @@
 
           <button v-on:click="deleterFilter()" class="btn btn--green-1" style="width: fit-content">
             Xóa bộ lọc
-          </button>
-        </div>
-      </v-card>
-    </v-dialog>
-
-    <v-dialog v-model="updateOrderDialog" persistent width="800">
-      <v-card>
-        <div class="popupHeader">Bộ lọc</div>
-        <div class="input-container">
-          <label for="inputState">Trạng thái</label>
-          <select id="inputState" class="form-control" v-model="orderStatus">
-            <option>Còn trong kho</option>
-          </select>
-        </div>
-
-        <div class="bottomButton">
-          <button
-            @click="updateOrderDialog = false"
-            v-on:click="getListFiltered()"
-            class="btn btn--green-1"
-            style="width: fit-content"
-          >
-            Đóng
-          </button>
-
-          <button v-on:click="deleterFilter()" class="btn btn--green-1" style="width: fit-content">
-            Cập nhật
           </button>
         </div>
       </v-card>

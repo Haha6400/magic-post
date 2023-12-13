@@ -30,9 +30,8 @@
 
         <div class="input-container">
           <label for="exampleInputEmail1" class="form-label">Chi nhánh</label>
-          <input class="form-control" id="exampleInputEmail1" v-model="branch" readonly/>
+          <input class="form-control" id="exampleInputEmail1" v-model="branch" readonly />
         </div>
-
       </div>
     </div>
 
@@ -50,6 +49,9 @@
 
 <script>
 import axios from 'axios'
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
+
 
 export default {
   data() {
@@ -90,21 +92,34 @@ export default {
     if (jsonUser.account.role == 'hubManager') {
       this.role = 'hubStaff'
     }
-
   },
 
   methods: {
     async createAccount() {
-      let url = ''
+      let url = 'http://localhost:3000/api/accounts/create'
       await axios
-        .post(url, { email: this.email, password: this.password })
+        .post(url, {
+          userName: this.name,
+          email: this.email,
+          phoneNumber: this.phoneNumber,
+          branchName: this.branch,
+          role: this.role
+        })
         .then((response) => {
           console.log(response.data)
+          toast.success('Success', { position: toast.POSITION.BOTTOM_RIGHT }),
+            {
+              autoClose: 100
+            }
         })
         .catch((error) => {
           console.log(error)
+          toast.error('Error', { position: toast.POSITION.BOTTOM_RIGHT }),
+            {
+              autoClose: 100
+            }
         })
-    },
+    }
   }
 }
 </script>

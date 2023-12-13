@@ -189,7 +189,8 @@ const sendConfirmList = asyncHandler(async (req, res) => {
         events: {
             $elemMatch: {
                 'branch_id': currentBranch,
-                'status': "TRANSIT"
+                // 'status': "TRANSIT"
+                'status': { $nin: ['DELIVERED', 'RETURNED'] }
             }
         }
     }).sort('createdAt');

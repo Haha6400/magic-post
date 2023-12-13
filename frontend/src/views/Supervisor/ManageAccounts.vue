@@ -142,16 +142,16 @@ export default {
           console.log('delete')
           this.getList()
           this.loading = true
-          // toast.success('Deleted successfully', { position: toast.POSITION.BOTTOM_RIGHT }),
-          //   {
-          //     autoClose: 1000
-          //   }
+          toast.success('Successfully Deleted', { position: toast.POSITION.BOTTOM_RIGHT }),
+            {
+              autoClose: 100
+            }
         })
         .catch((error) => {
           console.log(error)
-          // toast.error("Delete failed", { position: toast.POSITION.BOTTOM_RIGHT }), {
-          //   autoClose: 1000,
-          // }
+          toast.error("Delete failed", { position: toast.POSITION.BOTTOM_RIGHT }), {
+            autoClose: 100,
+          }
         })
     },
 
