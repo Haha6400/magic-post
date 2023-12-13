@@ -101,11 +101,14 @@ const getOrderById = asyncHandler(async (req, res) => {
 
 /*
 @desc Update order
-@route PUT /api/orders/update/:id
+@route PUT /api/orders/update/:order_code
 @access staff
 */
 const updateOrder = asyncHandler(async (req, res) => {
-    const order = await Order.findById(req.params.id)
+    const order = await Order.findOne({
+        order_code: req.params.order_code
+    }
+    )
     if (!order) {
         res.status(404);
         throw new Error("Order not found")
@@ -123,6 +126,7 @@ const updateOrder = asyncHandler(async (req, res) => {
         { new: true }
     )
 
+    console.log(processes.events.status)
     //End date
     const end = (req.body.status == 'DELIVERED') ? processes.updatedAt : order.endedAt
 
@@ -136,7 +140,7 @@ const updateOrder = asyncHandler(async (req, res) => {
 
 
     var updatedOrder = await Order.findByIdAndUpdate(
-        req.params.id,
+        order._id,
         {
             ...req.body,
             'sender_id': order.sender_id,

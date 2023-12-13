@@ -10,10 +10,9 @@ const processesSchema = new mongoose.Schema({
             status: {
                 type: String
             },
-            timestamp: {
-                type: Date,
-                default: Date.now
-            }
+        },
+        {
+            timestamps: true
         }
     ]
 });

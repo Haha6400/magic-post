@@ -50,17 +50,23 @@ const getMonthlyOrders = asyncHandler(async (req, res) => {
 const getMonthlyIncomeByBranch = asyncHandler(async (req, res) => {
     const currentDate = new Date(req.body.currentDate)
     const currentBranch = req.params.branch_id
+
+    console.log(currentBranch)
     var total = 0;
+
+    const processes = await Process.find({
+        'events.branch_id': currentBranch
+    })
+    console.log(processes)
     const orders = await Order.find({
-        processes_id: {
-            'events.branch_id': currentBranch
-        },
+        processes_id: processes,
         createdAt: {
             $gte: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
             $lt: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0)
         },
     })
     for await (const order of orders) {
+        console.log(order.processes_id.branch_id)
         const fee = await Fee.findById({ _id: order.fee_id })
         total += fee.total
     }
