@@ -88,7 +88,7 @@
         </template> -->
 
         <template v-slot:item.update="{ item }">
-          <button v-on:click="deleteOrder(item.order_code)">
+          <button v-on:click="verifyOrder(item.order_code)">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -281,21 +281,18 @@ export default {
         })
     },
 
-    updateOrderStatus(orderCode, newStatus) {
-      console.log(newStatus)
-      let url = 'http://localhost:3000/api/orders/update/' + orderCode
+    verifyOrder(orderCode) {
+      let url = 'http://localhost:3000/api/workplace/confirm/send/' + orderCode
       axios
-        .put(url, {
-          status: newStatus
-        })
+        .put(url)
         .then((response) => {
           console.log(response.data)
+          this.loading = true
           this.getList()
           toast.success('Successfully Updated', { position: toast.POSITION.BOTTOM_RIGHT }),
             {
               autoClose: 100
             }
-          this.updateOrderDialog = false
           
         })
         .catch((error) => {

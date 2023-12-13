@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-      <h1 class="loginHeader">Cập nhật đơn hàng trong kho</h1>
+      <h1 class="loginHeader">Cập nhật đơn hàng</h1>
       <div class="buttonList">
         <ChipCard v-if="orderStatus" :title="'Trạng thái'" :content="orderStatus"></ChipCard>
   

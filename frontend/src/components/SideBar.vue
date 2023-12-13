@@ -142,7 +142,7 @@
         </li>
 
         <!-- Đơn hàng đến -->
-        <li v-if="role == 'hubStaff'">
+        <li v-if="role == 'hubStaff' || role == 'warehouseStaff'">
           <router-link to="/hubStaff/imcomingOrders">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -164,7 +164,7 @@
         </li>
 
         <!-- Đơn hàng đi -->
-        <li v-if="role == 'hubStaff'">
+        <li v-if="role == 'hubStaff' || role == 'warehouseStaff'">
           <router-link to="/hubStaff/preSentOrders">
             <svg
               xmlns="http://www.w3.org/2000/svg"

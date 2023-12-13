@@ -192,7 +192,8 @@
       <div class="controls">
         <button class="btn" @click="step--" :disabled="step == 1">Quay lại</button>
 
-        <button v-if="step != 4"
+        <button
+          v-if="step != 4"
           class="btn btn--green-1"
           @click="step++"
           :disabled="step == numStep"
@@ -201,15 +202,7 @@
         </button>
         <!-- v-if="step != 4" -->
 
-        <button
-          v-if="step == 4"
-          class="btn btn--green-1"
-          v-on:click="updateOrder()"
-        >
-          Lưu
-        </button>
-
-        
+        <button v-if="step == 4" class="btn btn--green-1" v-on:click="updateOrder()">Lưu</button>
       </div>
       <p>{{ step }}</p>
     </div>
@@ -261,23 +254,23 @@ export default {
 
   methods: {
     async updateOrder() {
-        let url = "http://localhost:3000/api/orders/update/" + this.$route.params.id
-        await axios.put(url ,{
-            //TODOOO
-          }
-      ).then((response) => {
-        console.log(response.data);
-        // toast.success("Saved successfully", { position: toast.POSITION.BOTTOM_RIGHT }), {
-        //   autoClose: 1000,
-        // }
-      }).catch((error) => {
-        console.log(error);
-        // toast.error("Saved failed", { position: toast.POSITION.BOTTOM_RIGHT }), {
-        //   autoClose: 1000,
-        // }
-    
-      });
-
+      let url = 'http://localhost:3000/api/orders/update/' + this.$route.params.id
+      await axios
+        .put(url, {
+          //TODOOO
+        })
+        .then((response) => {
+          console.log(response.data)
+          // toast.success("Saved successfully", { position: toast.POSITION.BOTTOM_RIGHT }), {
+          //   autoClose: 1000,
+          // }
+        })
+        .catch((error) => {
+          console.log(error)
+          // toast.error("Saved failed", { position: toast.POSITION.BOTTOM_RIGHT }), {
+          //   autoClose: 1000,
+          // }
+        })
     }
   }
 }
@@ -295,7 +288,16 @@ $transiton: all 500ms ease;
   justify-content: center;
   min-width: 300px;
   background-color: #ffffff;
-  gap: 30px;
+  gap: 10px;
+  overflow-y: scroll;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 2.5vh;
+  margin-bottom: 2.5vh;
+  height: 95vh;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+
 }
 
 .header {
