@@ -6,7 +6,7 @@ const Fee = require("../models/feeModel");
 const Process = require('../models/processesModel');
 const Customer = require("../models/customerModel");
 const { getCurrentBranch } = require("../middleware/branch");
-// const { getOrders } = require("../utils/orderFunctions");
+const { getOrders } = require("../utils/orderFunctions");
 
 
 require("dotenv").config();

@@ -198,17 +198,6 @@ export default {
         console.log(error)
       })
 
-    // url = 'http://localhost:3000/api/workplace/all/hub'
-    // console.log('check role')
-    // await axios
-    //   .get(url)
-    //   .then((response) => {
-    //     console.log(response.data)
-    //     this.hubList = response.data.hub
-    //   })
-    //   .catch((error) => {
-    //     console.log(error)
-    //   })
 
     this.getDefaultList()
   },

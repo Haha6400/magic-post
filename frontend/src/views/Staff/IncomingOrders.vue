@@ -27,6 +27,51 @@
         </svg>
       </button>
 
+      <v-dialog v-model="dialog" persistent width="1024">
+      <v-card>
+        <div class="popupHeader">Bộ lọc</div>
+        <div class="input-container">
+          <label for="inputState">Trạng thái</label>
+          <select id="inputState" class="form-control" v-model="orderStatus">
+            <option>Còn trong kho</option>
+          </select>
+        </div>
+        <div class="input-container">
+          <label for="inputState">Nơi gửi</label>
+          <select id="inputState" class="form-control" v-model="senderName">
+            <option v-for="item in warehouseList">
+              {{ item }}
+            </option>
+          </select>
+        </div>
+
+        <div class="input-container">
+          <label for="startDate">Ngày bắt đầu</label>
+          <input id="startDate" class="form-control" type="date" v-model="start" />
+        </div>
+
+        <div class="input-container">
+          <label for="startDate">Ngày kết thúc</label>
+          <input id="startDate" class="form-control" type="date" v-model="end" />
+        </div>
+
+        <div class="bottomButton">
+          <button
+            @click="dialog = false"
+            v-on:click="getListFiltered()"
+            class="btn btn--green-1"
+            style="width: fit-content"
+          >
+            Đóng
+          </button>
+
+          <button v-on:click="deleterFilter()" class="btn btn--green-1" style="width: fit-content">
+            Xóa bộ lọc
+          </button>
+        </div>
+      </v-card>
+    </v-dialog>
+
       <!-- <router-link class="signup" type="button" to="/hubStaff/newOrder">
           + Tạo đơn hàng</router-link
         > -->
@@ -52,7 +97,7 @@
       >
         <template v-slot:item.status="{ item }">
           <!-- <button v-on:click="deleteOrder(item.order_code)"> -->
-            <button></button>
+          <button>{{ item.status }}</button>
         </template>
 
         <template v-slot:item.update="{ item }">
@@ -61,14 +106,14 @@
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
-              stroke-width="1.2"
-              stroke="black"
+              stroke-width="1.5"
+              stroke="currentColor"
               class="w-6 h-6 icon"
             >
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"
               />
             </svg>
           </button>
@@ -127,11 +172,13 @@ import axios from 'axios'
 import { toast } from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
 
-
 export default {
   data() {
     return {
       loading: true,
+      dialog: false,
+      orderStatus: null,
+
       dataList: [],
       page: 1,
       itemsPerPage: 6,
@@ -146,7 +193,7 @@ export default {
         { key: 'fee', title: 'Chi phí', align: 'center' },
         { key: 'receiver_fee', title: 'Phí người nhận phải trả', align: 'center' },
         { key: 'status', title: 'Trạng thái đơn hàng', align: 'center', value: 'status' },
-        { title: 'Cập nhật', sortable: false, align: 'center', text: 'Cập nhật', value: 'update' },
+        { title: 'Cập nhật', sortable: false, align: 'center', text: 'Xác nhận', value: 'update' },
         { title: 'Chi tiết', sortable: false, align: 'center', text: 'Chi tiết', value: 'action' }
       ]
     }
@@ -164,7 +211,7 @@ export default {
       .get(url)
       .then((response) => {
         console.log(response.data)
-        this.dataList = response.data.orders
+        this.dataList = response.data.result
         this.loading = false
       })
       .catch((error) => {
@@ -385,8 +432,93 @@ export default {
 button {
   margin: 2px;
 }
-/* .v-data-table > .v-data-table__wrapper > table > thead > tr > th,
-  td {
-    min-width: 200px !important;
-  } */
+
+.popupHeader {
+  font-family: 'Nunito Sans', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  color: #ffa500;
+  line-height: 28px;
+  text-align: center;
+  margin-top: 10px;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+.input-container {
+  width: 50%;
+  align-items: left;
+}
+
+
+.form-control {
+  border-radius: 18px;
+  width: 100%;
+  height: 50px;
+  background-color: #ffe4b2;
+}
+
+.v-card {
+  margin-right: 7%;
+  margin-left: 7%;
+  height: 70%;
+  /* max-height: 65%; */
+  overflow-y: scroll;
+  /* min-height: 70%; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  border-radius: 30px;
+}
+
+.bottomButton {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.bottomButton button:hover {
+  background-color: #ffe4b2;
+}
+
+.btn {
+  font-family: 'Nunito Sans', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 6px 16px;
+  border: 1px solid;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  line-height: 1.5;
+  transition: all 150ms;
+  border-radius: 30px;
+  width: 100px;
+  height: 40px;
+  font-size: 14px;
+  color: #333;
+  background-color: #ffe4b2;
+  border: 0;
+
+  &:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    font-family: 'Nunito Sans', sans-serif;
+    border: 0;
+    background-color: #ffe4b2;
+  }
+
+  &--green-1 {
+    background-color: #ffe4b2;
+    border: 0;
+    color: #000;
+    margin-left: auto;
+    font-family: 'Nunito Sans', sans-serif;
+  }
+}
+
 </style>
