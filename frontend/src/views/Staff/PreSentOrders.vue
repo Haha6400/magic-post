@@ -236,7 +236,7 @@ export default {
   async created() {
     let url = 'http://localhost:3000/api/workplace/coming/send'
     await axios
-      .get(url)
+      .post(url)
       .then((response) => {
         console.log(response.data)
         this.dataList = response.data.result
@@ -244,7 +244,7 @@ export default {
       })
       .catch((error) => {
         console.log(error)
-        toast.error('???', { position: toast.POSITION.BOTTOM_RIGHT }),
+        toast.error('SOS', { position: toast.POSITION.BOTTOM_RIGHT }),
           {
             autoClose: 1000
           }
@@ -308,7 +308,7 @@ export default {
     async getList() {
       let url = 'http://localhost:3000/api/workplace/coming/send'
       await axios
-        .get(url)
+        .post(url)
         .then((response) => {
           console.log(response.data)
           this.dataList = response.data.result

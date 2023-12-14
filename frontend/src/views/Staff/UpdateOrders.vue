@@ -200,7 +200,7 @@
           },
           { key: 'receiverName', title: 'Người nhận', align: 'center' },
           { key: 'fee', title: 'Chi phí', align: 'center' },
-          { key: 'receiver_fee', title: 'Phí người nhận phải trả', align: 'center' },
+          { key: 'receiver_fee', title: 'Phí người nhận trả', align: 'center' },
           { key: 'status', title: 'Trạng thái đơn hàng', align: 'center' },
           { title: 'Chi tiết', sortable: false, align: 'center', text: 'Chi tiết', value: 'action' }
         ]
@@ -216,7 +216,7 @@
     async created() {
       let url = 'http://localhost:3000/api/workplace/coming/send'
       await axios
-        .get(url)
+        .post(url)
         .then((response) => {
           console.log(response.data)
           this.dataList = response.data.result
@@ -290,7 +290,7 @@
       async getList() {
         let url = 'http://localhost:3000/api/workplace/coming/send'
         await axios
-          .get(url)
+          .post(url)
           .then((response) => {
             console.log(response.data)
             this.dataList = response.data.result

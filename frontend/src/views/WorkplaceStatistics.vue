@@ -21,7 +21,7 @@
       ></StatisticsCard>
       <div class="card">
         <div class="content-header">Thống kê trạng thái</div>
-        <apexchart width="300" type="donut" :options="options" :series="series"></apexchart>
+        <apexchart width="300" type="donut" :options="options" :series="[this.allRecieved, this.allSent, this.avaiableOrders]"></apexchart>
       </div>
     </div>
 
@@ -187,19 +187,19 @@ export default {
       branchName: '',
 
       //headerPart
-      allRecieved: null,
-      allSent: null,
-      totalOrders: null,
-      avaiableOrders: null,
+      allRecieved: 0,
+      allSent: 0,
+      totalOrders: 0,
+      avaiableOrders: 0,
 
       // chart
       options: {
-        labels: ['Apple', 'Mango', 'Orange', 'Watermelon'],
+        labels: ['Đơn đến', 'Đơn đi', 'Đơn chưa xử lý'],
         dataLabels: {
           enabled: false
         }
       },
-      series: [44, 55, 13, 33],
+      series: [this.allRecieved, this.allSent, this.avaiableOrders],
 
       //loading
       loading: true,
@@ -256,7 +256,7 @@ export default {
     //allRecieved
     url = 'http://localhost:3000/api/dashboard/all/receive'
     await axios
-      .get(url, {
+      .post(url, {
         start: startDate,
         end: date
       })
@@ -271,7 +271,7 @@ export default {
     //allSent
     url = 'http://localhost:3000/api/dashboard/all/send'
     await axios
-      .get(url, {
+      .post(url, {
         start: startDate,
         end: date
       })
@@ -287,15 +287,15 @@ export default {
     this.totalOrders = this.allRecieved + this.allSent
 
     //avaiableOrders
-    url = 'http://localhost:3000/api/dashboard/available'
+    url = 'http://localhost:3000/api/dashboard/avail'
     await axios
-      .get(url, {
+      .post(url, {
         start: startDate,
         end: date
       })
       .then((response) => {
         console.log(response.data)
-        this.allSent = response.data.count
+        this.avaiableOrders = response.data.count
       })
       .catch((error) => {
         console.log(error)
