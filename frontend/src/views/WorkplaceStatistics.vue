@@ -9,19 +9,19 @@
       ></StatisticsCard>
       <StatisticsCard
         class="card"
-        :title="'Tổng số đơn hàng'"
-        :content="'abc'"
+        :title="'Tổng số đơn'"
+        :content="totalOrders"
         :description="'Số liệu thống kê theo tháng'"
       ></StatisticsCard>
       <StatisticsCard
         class="card"
         :title="'Đơn hàng chưa xử lý'"
-        :content="'abc'"
+        :content="avaiableOrders"
         :description="'Số liệu thống kê theo tháng'"
       ></StatisticsCard>
       <div class="card">
         <div class="content-header">Thống kê trạng thái</div>
-        <apexchart width="300" type="donut" :options="options" :series="series"></apexchart>
+        <apexchart width="300" type="donut" :options="options" :series="[this.allRecieved, this.allSent, this.avaiableOrders]"></apexchart>
       </div>
     </div>
 
@@ -185,14 +185,21 @@ export default {
     return {
       //branchName
       branchName: '',
+
+      //headerPart
+      allRecieved: 0,
+      allSent: 0,
+      totalOrders: 0,
+      avaiableOrders: 0,
+
       // chart
       options: {
-        labels: ['Apple', 'Mango', 'Orange', 'Watermelon'],
+        labels: ['Đơn đến', 'Đơn đi', 'Đơn chưa xử lý'],
         dataLabels: {
           enabled: false
         }
       },
-      series: [44, 55, 13, 33],
+      series: [this.allRecieved, this.allSent, this.avaiableOrders],
 
       //loading
       loading: true,
@@ -205,6 +212,7 @@ export default {
       start: null,
       end: null,
       orderStatus: null,
+
       //table
       dataList: [],
       page: 1,
@@ -241,7 +249,58 @@ export default {
         console.log(error)
       })
 
-    
+    const today = new Date()
+    const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()
+    const startDate = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + '01'
+
+    //allRecieved
+    url = 'http://localhost:3000/api/dashboard/all/receive'
+    await axios
+      .post(url, {
+        start: startDate,
+        end: date
+      })
+      .then((response) => {
+        console.log(response.data)
+        this.allRecieved = response.data.count
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+
+    //allSent
+    url = 'http://localhost:3000/api/dashboard/all/send'
+    await axios
+      .post(url, {
+        start: startDate,
+        end: date
+      })
+      .then((response) => {
+        console.log(response.data)
+        this.allSent = response.data.count
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+
+    //totalOrder
+    this.totalOrders = this.allRecieved + this.allSent
+
+    //avaiableOrders
+    url = 'http://localhost:3000/api/dashboard/avail'
+    await axios
+      .post(url, {
+        start: startDate,
+        end: date
+      })
+      .then((response) => {
+        console.log(response.data)
+        this.avaiableOrders = response.data.count
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+
     //test table
     url = 'http://localhost:3000/api/orders/all'
     await axios

@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1 class="loginHeader">Đơn hàng đi</h1>
+    <h1 class="loginHeader">Xác nhận đơn hàng đi</h1>
     <div class="buttonList">
       <ChipCard v-if="orderStatus" :title="'Trạng thái'" :content="orderStatus"></ChipCard>
 
@@ -52,7 +52,7 @@
         :items="dataList"
         :search="search"
       >
-        <template v-slot:item.status="{ item }">
+        <!-- <template v-slot:item.status="{ item }">
           <button @click="updateOrderDialog = true">
             {{ item.status }}
             <v-dialog v-model="updateOrderDialog" persistent width="800">
@@ -84,6 +84,25 @@
                 </div>
               </v-card>
             </v-dialog>
+          </button>
+        </template> -->
+
+        <template v-slot:item.update="{ item }">
+          <button v-on:click="verifyOrder(item.order_code)">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6 icon"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"
+              />
+            </svg>
           </button>
         </template>
 
@@ -200,8 +219,9 @@ export default {
         },
         { key: 'receiverName', title: 'Người nhận', align: 'center' },
         { key: 'fee', title: 'Chi phí', align: 'center' },
-        { key: 'receiver_fee', title: 'Phí người nhận phải trả', align: 'center' },
+        { key: 'receiver_fee', title: 'Phí người nhận trả', align: 'center' },
         { key: 'status', title: 'Trạng thái đơn hàng', align: 'center' },
+        { title: 'Cập nhật', sortable: false, align: 'center', text: 'Xác nhận', value: 'update' },
         { title: 'Chi tiết', sortable: false, align: 'center', text: 'Chi tiết', value: 'action' }
       ]
     }
@@ -216,7 +236,7 @@ export default {
   async created() {
     let url = 'http://localhost:3000/api/workplace/coming/send'
     await axios
-      .get(url)
+      .post(url)
       .then((response) => {
         console.log(response.data)
         this.dataList = response.data.result
@@ -224,7 +244,7 @@ export default {
       })
       .catch((error) => {
         console.log(error)
-        toast.error('???', { position: toast.POSITION.BOTTOM_RIGHT }),
+        toast.error('SOS', { position: toast.POSITION.BOTTOM_RIGHT }),
           {
             autoClose: 1000
           }
@@ -238,6 +258,7 @@ export default {
     },
 
     deleteOrder(id) {
+      console.log(id)
       this.loading = true
       let url = 'http://localhost:3000/api/orders/delete/' + id
       axios
@@ -261,21 +282,18 @@ export default {
         })
     },
 
-    updateOrderStatus(orderCode, newStatus) {
-      console.log(newStatus)
-      let url = 'http://localhost:3000/api/orders/update/' + orderCode
+    verifyOrder(orderCode) {
+      let url = 'http://localhost:3000/api/workplace/confirm/send/' + orderCode
       axios
-        .put(url, {
-          status: newStatus
-        })
+        .put(url)
         .then((response) => {
           console.log(response.data)
+          this.loading = true
           this.getList()
           toast.success('Successfully Updated', { position: toast.POSITION.BOTTOM_RIGHT }),
             {
               autoClose: 100
             }
-          this.updateOrderDialog = false
           
         })
         .catch((error) => {
@@ -290,7 +308,7 @@ export default {
     async getList() {
       let url = 'http://localhost:3000/api/workplace/coming/send'
       await axios
-        .get(url)
+        .post(url)
         .then((response) => {
           console.log(response.data)
           this.dataList = response.data.result

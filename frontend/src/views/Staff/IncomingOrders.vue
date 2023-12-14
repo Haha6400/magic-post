@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1 class="loginHeader">Đơn hàng đến</h1>
+    <h1 class="loginHeader">Xác nhận đơn hàng đến</h1>
     <div class="buttonList">
       <form class="search-bar">
         <input class="search-box" type="text" placeholder="Tìm kiếm đơn hàng" v-model="search" />
@@ -101,7 +101,7 @@
         </template>
 
         <template v-slot:item.update="{ item }">
-          <button v-on:click="deleteOrder(item.order_code)">
+          <button v-on:click="verifyOrder(item.order_code)">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -191,7 +191,7 @@ export default {
         },
         { key: 'receiverName', title: 'Người nhận', align: 'center' },
         { key: 'fee', title: 'Chi phí', align: 'center' },
-        { key: 'receiver_fee', title: 'Phí người nhận phải trả', align: 'center' },
+        { key: 'receiver_fee', title: 'Phí người nhận trả', align: 'center' },
         { key: 'status', title: 'Trạng thái đơn hàng', align: 'center', value: 'status' },
         { title: 'Cập nhật', sortable: false, align: 'center', text: 'Xác nhận', value: 'update' },
         { title: 'Chi tiết', sortable: false, align: 'center', text: 'Chi tiết', value: 'action' }
@@ -208,7 +208,7 @@ export default {
   async created() {
     let url = 'http://localhost:3000/api/workplace/coming/receive'
     await axios
-      .get(url)
+      .post(url)
       .then((response) => {
         console.log(response.data)
         this.dataList = response.data.result
@@ -218,12 +218,13 @@ export default {
         console.log(error)
         toast.error('???', { position: toast.POSITION.BOTTOM_RIGHT }),
           {
-            autoClose: 1000
+            autoClose: 100
           }
       })
   },
 
   methods: {
+    //delete
     deleteOrder(id) {
       this.loading = true
       let url = 'http://localhost:3000/api/orders/delete/' + id
@@ -234,23 +235,48 @@ export default {
           console.log('delete')
           this.getList()
           this.loading = true
-          // toast.success('Deleted successfully', { position: toast.POSITION.BOTTOM_RIGHT }),
-          //   {
-          //     autoClose: 1000
-          //   }
+          toast.success('Deleted successfully', { position: toast.POSITION.BOTTOM_RIGHT }),
+            {
+              autoClose: 100
+            }
         })
         .catch((error) => {
           console.log(error)
-          // toast.error("Delete failed", { position: toast.POSITION.BOTTOM_RIGHT }), {
-          //   autoClose: 1000,
-          // }
+          toast.error("Delete failed", { position: toast.POSITION.BOTTOM_RIGHT }), {
+            autoClose: 100,
+          }
         })
     },
 
+    //update
+    verifyOrder(orderCode) {
+      let url = 'http://localhost:3000/api/workplace/confirm/send/' + orderCode
+      axios
+        .put(url)
+        .then((response) => {
+          console.log(response.data)
+          this.loading = true
+          this.getList()
+          toast.success('Successfully Updated', { position: toast.POSITION.BOTTOM_RIGHT }),
+            {
+              autoClose: 100
+            }
+          
+        })
+        .catch((error) => {
+          console.log(error)
+          toast.error('Update failed', { position: toast.POSITION.BOTTOM_RIGHT }),
+            {
+              autoClose: 100
+            }
+        })
+    },
+
+    //getList
     getList() {
       let url = 'http://localhost:3000/api/orders/all'
       axios
-        .get(url)
+        .post(url)
         .then((response) => {
           console.log(response.data)
           this.dataList = response.data
@@ -258,9 +284,9 @@ export default {
         })
         .catch((error) => {
           console.log(error)
-          toast.error('???', { position: toast.POSITION.BOTTOM_RIGHT }),
+          toast.error('SOS', { position: toast.POSITION.BOTTOM_RIGHT }),
             {
-              autoClose: 1000
+              autoClose: 100
             }
         })
     }
