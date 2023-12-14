@@ -12,8 +12,8 @@ router.get("/all/hub", staffAuth, getAllHub);
 router.get("/all/warehouse/name", staffAuth, getAllWarehouseName);
 router.get("/:branchId", getBranchNameById);
 
-router.get("/coming/receive", staffAuth, receiveConfirmList);
-router.get("/coming/send", staffAuth, sendConfirmList);
+router.post("/coming/receive", staffAuth, receiveConfirmList);
+router.post("/coming/send", staffAuth, sendConfirmList);
 router.put("/confirm/send/:order_code", staffAuth, sendConfirm);
 
 module.exports = router; 
