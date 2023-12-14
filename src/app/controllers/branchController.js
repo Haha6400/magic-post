@@ -131,12 +131,12 @@ const getBranchNameById = asyncHandler(async (req, res) => {
 const receiveConfirmList = asyncHandler(async (req, res) => {
     const currentBranch = await getCurrentBranch(req, res);
     const currentHigherBranch = currentBranch.higherBranch_id;
-    processes = null;
-    if (currentHigherBranch === "6554dd73872582fea16dd837") { //Warehouse => Order from lower hub or other warehouse
-        const allWarehouse = await getAllWarehouse(req, res);
+    var processes = null;
+    if (currentHigherBranch.toString() === "6554dd73872582fea16dd837") { //Warehouse => Order from lower hub or other warehouse
+        const allWarehouse = await branch.find({ higherBranch_id: "6554dd73872582fea16dd837" });
         const allHubName = currentBranch.lowerBranchName;
         const allHub = await branch.find({ 'name': allHubName })
-        const allComingBranch = allWarehouse + allHub;
+        const allComingBranch = allWarehouse.concat(allHub);
         processes = await Process.find({
             events: {
                 $elemMatch: {
@@ -146,10 +146,11 @@ const receiveConfirmList = asyncHandler(async (req, res) => {
             }
         }).sort('createdAt');
         for (i in processes) {
-            const length = processes[i].events.length;
-            console.log(length);
+            const eventsLength = processes[i].events.length;
+            const currentBranchId = processes[i].events[eventsLength - 1].branch_id.toString();
+            console.log(currentBranchId);
             for (j in allComingBranch) {
-                if (processes[i].events[length - 1].branch_id.toString() !== allComingBranch[j].branch_id.toString()) {
+                if (currentBranchId === allComingBranch[j]._id.toString()) {
                     processes.splice(i, 1);
                 }
             }
@@ -193,11 +194,12 @@ const sendConfirmList = asyncHandler(async (req, res) => {
             }
         }
     }).sort('createdAt');
-    console.log(processes);
     for (i in processes) {
         const length = processes[i].events.length;
-        console.log(length);
-        if (processes[i].events[length - 1].branch_id.toString() !== currentBranch.toString()) {
+        if ((processes[i].events[length - 1].branch_id.toString() !== currentBranch._id.toString())
+            || (processes[i].events[length - 1].status === "DELIVERING")) {
+            // console.log(processes[i].events[length - 1].branch_id.toString());
+            // console.log(currentBranch._id.toString());
             processes.splice(i, 1);
         }
     }
