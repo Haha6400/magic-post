@@ -20,7 +20,7 @@ async function createBranch(req, res, name, higherBranchName, lowerBranchName) {
         res.status(400);
         throw new Error(name + " is already exists");
     }
-    const postalCode = Math.random() * (99999 - 10000) + 10000;
+    const postalCode = Math.round(Math.random() * (99999 - 10000) + 10000);
     const higherBranch_id = await branch.findOne({ name: higherBranchName });
     if (!higherBranch_id) {
         console.log("Couldn't find higher branch");
@@ -131,50 +131,34 @@ const getBranchNameById = asyncHandler(async (req, res) => {
 const receiveConfirmList = asyncHandler(async (req, res) => {
     const currentBranch = await getCurrentBranch(req, res);
     const currentHigherBranch = currentBranch.higherBranch_id;
-    var processes = null;
+    var filteredProcess = [];
+    var allComingBranch;
     if (currentHigherBranch.toString() === "6554dd73872582fea16dd837") { //Warehouse => Order from lower hub or other warehouse
         const allWarehouse = await branch.find({ higherBranch_id: "6554dd73872582fea16dd837" });
         const allHubName = currentBranch.lowerBranchName;
         const allHub = await branch.find({ 'name': allHubName })
-        const allComingBranch = allWarehouse.concat(allHub);
-        processes = await Process.find({
-            events: {
-                $elemMatch: {
-                    'branch_id': { $in: allComingBranch },
-                    'status': "DELIVERING"
-                }
-            }
-        }).sort('createdAt');
-        for (i in processes) {
-            const eventsLength = processes[i].events.length;
-            const currentBranchId = processes[i].events[eventsLength - 1].branch_id.toString();
-            console.log(currentBranchId);
-            for (j in allComingBranch) {
-                if (currentBranchId === allComingBranch[j]._id.toString()) {
-                    processes.splice(i, 1);
-                }
+        allComingBranch = allWarehouse.concat(allHub);
+    } else { //Hub => Orders from higher warehouse
+        allComingBranch = currentHigherBranch
+    }
+    const processes = await Process.find({
+        events: {
+            $elemMatch: {
+                'branch_id': { $in: allComingBranch },
+                'status': "DELIVERING"
             }
         }
-    } else { //Hub => Orders from higher warehouse
-        // console.log("currentHigherBranch", currentHigherBranch);
-        processes = await Process.find({
-            events: {
-                $elemMatch: {
-                    'branch_id': currentHigherBranch,
-                    'status': "DELIVERING"
-                }
-            }
-        }).sort('createdAt');
-        for (i in processes) {
-            const length = processes[i].events.length;
-            console.log(length);
-            if (processes[i].events[length - 1].branch_id.toString() !== currentHigherBranch.toString()) {
-                processes.splice(i, 1);
+    });
+    const filteredStatusProcess = processes.filter(item => item.events[item.events.length - 1].status === "DELIVERING");
+    for (i in filteredStatusProcess) {
+        for (j in allComingBranch) {
+            if (filteredStatusProcess[i].events[filteredStatusProcess[i].events.length - 1].branch_id.toString() === allComingBranch[j]._id.toString()) {
+                filteredProcess.push((filteredStatusProcess[i]));
             }
         }
     }
     const orders = await Order.find({
-        processes_id: processes
+        processes_id: { $in: filteredProcess }
     }).sort('createdAt');
     const result = await getOrders(orders)
     res.status(200).json({ result, count: result.length });
@@ -193,18 +177,13 @@ const sendConfirmList = asyncHandler(async (req, res) => {
                 'status': { $nin: ['DELIVERED', 'RETURNED', 'DELIVERING'] }
             }
         }
-    }).sort('createdAt');
-    for (i in processes) {
-        const length = processes[i].events.length;
-        if ((processes[i].events[length - 1].branch_id.toString() !== currentBranch._id.toString())
-            || (processes[i].events[length - 1].status === "DELIVERING")) {
-            // console.log(processes[i].events[length - 1].branch_id.toString());
-            // console.log(currentBranch._id.toString());
-            processes.splice(i, 1);
-        }
-    }
+    });
+    const filteredProcess = processes.filter(item => item.events[item.events.length - 1].status !== "DELIVERING"
+        && item.events[item.events.length - 1].status !== "RETURNED"
+        && item.events[item.events.length - 1].status !== "DELIVERED"
+        && item.events[item.events.length - 1].branch_id.toString() === currentBranch._id.toString());
     const orders = await Order.find({
-        processes_id: processes
+        processes_id: filteredProcess
     }).sort('createdAt');
     const result = await getOrders(orders)
     res.status(200).json({ result, count: result.length });

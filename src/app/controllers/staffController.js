@@ -69,7 +69,14 @@ const createAccount = asyncHandler(async (req, res) => {
         role
     });
 
-    if (staffAccount) res.status(200).json({ _id: staffAccount.id, email: staffAccount.email });
+
+
+    if (staffAccount) {
+        if (role === "hubManager" || role === "warehouseManager") {
+            const updateBranch = await branch.findOneAndUpdate({ name: branchName }, { manager_id: staffAccount }, { new: true });
+        }
+        res.status(200).json({ _id: staffAccount.id, email: staffAccount.email });
+    }
     else {
         res.status(400);
         throw new Error(`Invalid`);
