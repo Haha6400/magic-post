@@ -250,9 +250,8 @@ img{
           <div class="shipping-label-header">
             <div class="flex items-center px-4 border-b-2 border-gray-700">
               <div class=" headerr flex-auto flex items-center py-2">
-                <img src="data:image/jpeg;base64,${
-                  readFileSync(path.resolve(__dirname, './labelLogo.jpg')).toString('base64')
-                  }" alt="alt text" />
+                <img src="data:image/jpeg;base64,${readFileSync(path.resolve(__dirname, './labelLogo.jpg')).toString('base64')
+  }" alt="alt text" />
                 <p class="inline-block text-lg text-gray-700 leading-tight">
                   Đồng hành cùng bạn trên mọi hành trình
                 </p>
@@ -421,21 +420,21 @@ img{
 `
 
 
-const printLabel = async(req, res) => {
+const printLabel = async (req, res) => {
   const order_id = req.params.order_id;
   const order = await Order.findById(order_id);
-  console.log(order);
-	// Create a browser instance
-	// const browser = await puppeteer.launch();
-	const browser = await puppeteer.launch();
-	const [page] = await browser.pages();
+  console.log("OK");
+  // Create a browser instance
+  // const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch();
+  const [page] = await browser.pages();
 
   //Create QR Code 
-  const qrcode= await QRCode.toDataURL('localhost:3000/api/orders/' + order_id);
+  const qrcode = await QRCode.toDataURL('localhost:3000/api/orders/' + order_id);
   // console.log('localhost:3000/api/orders/' + order_id);
   // console.log(qrcode);
-  
-	const sender = await Customer.findById(order.sender_id);
+
+  const sender = await Customer.findById(order.sender_id);
   const senderBranch = await Branch.findById(sender.branch_id);
   const receiver = await Customer.findById(order.receiver_id);
   const receiverBranch = await Branch.findById(receiver.branch_id);
@@ -443,8 +442,8 @@ const printLabel = async(req, res) => {
   const mass = await Mass.findById(order.mass_id);
   const receiverFee = await ReceiverFee.findById(order.recerver_fee_id);
 
-	// Website URL to export as pdf
-	const filledHTML = mustache.render(html, {
+  // Website URL to export as pdf
+  const filledHTML = mustache.render(html, {
     "order_code": order.order_code,
     "senderName": sender.fullname,
     "senderAddress": sender.address,
@@ -481,26 +480,26 @@ const printLabel = async(req, res) => {
 
     "qrcode": qrcode
   });
-	
-	await page.setContent(filledHTML, { waitUntil: 'domcontentloaded' });
-	await page.emulateMediaType('screen');
 
-	const pdf = await page.pdf({
-		// path: 'result.pdf',
-		margin: { top: '100px', right: '50px', bottom: '100px', left: '50px' },
-		printBackground: true,
-		format: 'A4',
-	});
+  await page.setContent(filledHTML, { waitUntil: 'domcontentloaded' });
+  await page.emulateMediaType('screen');
 
-	// Set Content-Disposition header
-    res.setHeader('Content-Disposition', 'attachment;filename=magic-post-label.pdf');
-    // Set content type
-    res.setHeader('Content-Type', 'application/pdf');
+  const pdf = await page.pdf({
+    // path: 'result.pdf',
+    margin: { top: '100px', right: '50px', bottom: '100px', left: '50px' },
+    printBackground: true,
+    format: 'A4',
+  });
 
-    // Send the PDF as the response
-    res.send(pdf);
-	
-	await browser.close();
+  // Set Content-Disposition header
+  res.setHeader('Content-Disposition', 'attachment;filename=magic-post-label.pdf');
+  // Set content type
+  res.setHeader('Content-Type', 'application/pdf');
+
+  // Send the PDF as the response
+  res.send(pdf);
+
+  await browser.close();
 }
 
-module.exports = {printLabel}
+module.exports = { printLabel }
