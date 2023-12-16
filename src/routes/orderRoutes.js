@@ -20,11 +20,15 @@ router.get("/code/:order_code", getOrderByCode);
 router.post('/create', staffAuth, roleCheck(["hubStaff", "hubManager", "supervisor"]), createOrder)
 
 //@Put method
-router.put('/update/:order_code', staffAuth, updateOrder)
+router.put('/update/:order_code',
+    staffAuth, roleCheck(["hubStaff", "hubManager", "warehouseStaff", "warehouseManager", "supervisor"]),
+    updateOrder)
 // router.put("/status/update", updateStatus);
 
 //@Delete method
-router.delete('/delete/:order_code', deleteOrder)
+router.delete('/delete/:order_code',
+    staffAuth, roleCheck(["hubStaff", "hubManager", "warehouseStaff", "warehouseManager", "supervisor"]),
+    deleteOrder)
 
 
 module.exports = router;
