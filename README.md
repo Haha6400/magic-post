@@ -1,10 +1,10 @@
 # **HỆ THỐNG QUẢN LÝ CHUYỂN PHÁT- MAGIC POST ✨**
  ![Logo Magic Post](https://raw.githubusercontent.com/Haha6400/magic-post/main/src/app/utils/mgic-post-logo.png?token=GHSAT0AAAAAACIMJ2KM4KZFN3457GGYVKSKZL5NRPQ)
 ## Mục lục
-- [Giới thiệu]()
-- [Cài đặt]()
-- [Công nghệ sử dụng]()
-- [Nhóm tác giả]()
+- [Giới thiệu](https://github.com/Haha6400/magic-post?tab=readme-ov-file#gi%E1%BB%9Bi-thi%E1%BB%87u)
+- [Cài đặt](https://github.com/Haha6400/magic-post?tab=readme-ov-file#c%C3%A0i-%C4%91%E1%BA%B7t)
+- [Công nghệ sử dụng](https://github.com/Haha6400/magic-post?tab=readme-ov-file#c%C3%B4ng-ngh%E1%BB%87-s%E1%BB%AD-d%E1%BB%A5ng)
+- [Nhóm tác giả](https://github.com/Haha6400/magic-post?tab=readme-ov-file#nh%C3%B3m-t%C3%A1c-gi%E1%BA%A3)
 
 ## Giới thiệu
 #### Tổng quan
