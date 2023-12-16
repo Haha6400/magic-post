@@ -189,27 +189,51 @@ const sendConfirmList = asyncHandler(async (req, res) => {
     res.status(200).json({ result, count: result.length });
 });
 
-const sendConfirm = asyncHandler(async (req, res) => {
-    const order = await Order.findOne({
-        order_code: req.params.order_code
-    })
-    if (!order) {
-        res.status(404);
-        throw new Error("Order not found")
-    }
-    updateStatus = null;
-    const currentBranch = await getCurrentBranch(req, res);
-    const receiver = await Customer.findById(order.receiver_id);
-    if (currentBranch.toString() === receiver.branch_id.toString()) {
-        if (order.is_returned) {
-            updateStatus = "RETURNED";
-        } else {
-            updateStatus = "DELIVERED";
-        }
-    } else {
-        updateStatus = "DELIVERING";
-    }
+// const sendConfirm = asyncHandler(async (req, res) => {
+//     const order = await Order.findOne({
+//         order_code: req.params.order_code
+//     })
+//     if (!order) {
+//         res.status(404);
+//         throw new Error("Order not found")
+//     }
+//     updateStatus = null;
+//     const currentBranch = await getCurrentBranch(req, res);
+//     const receiver = await Customer.findById(order.receiver_id);
+//     if (currentBranch.toString() === receiver.branch_id.toString()) {
+//         if (order.is_returned) {
+//             updateStatus = "RETURNED";
+//         } else {
+//             updateStatus = "DELIVERED";
+//         }
+//     } else {
+//         updateStatus = "DELIVERING";
+//     }
 
+//     const processes = await Process.findByIdAndUpdate(
+//         order.processes_id._id,
+//         {
+//             $push: {
+//                 'events': {
+//                     'branch_id': req.currentAccount.branch_id,
+//                     'status': updateStatus
+//                 }
+//             }
+//         },
+//         { new: true }
+//     )
+
+//     var updatedOrder = await Order.findByIdAndUpdate(
+//         order._id,
+//         {
+//             ...req.body
+//         },
+//         { new: true }
+//     )
+//     res.status(200).json(updatedOrder)
+// })
+
+async function confirmFunction(req, res, order, updateStatus) {
     const processes = await Process.findByIdAndUpdate(
         order.processes_id._id,
         {
@@ -231,6 +255,41 @@ const sendConfirm = asyncHandler(async (req, res) => {
         { new: true }
     )
     res.status(200).json(updatedOrder)
+}
+
+const sendConfirm = asyncHandler(async (req, res) => {
+    const order = await Order.findOne({
+        order_code: req.params.order_code
+    })
+    if (!order) {
+        res.status(404);
+        throw new Error("Order not found")
+    }
+    updateStatus = null;
+    const currentBranch = await getCurrentBranch(req, res);
+    const receiver = await Customer.findById(order.receiver_id);
+    if (currentBranch.toString() === receiver.branch_id.toString()) {
+        if (order.is_returned) {
+            updateStatus = "RETURNED";
+        } else {
+            updateStatus = "DELIVERED";
+        }
+    } else {
+        updateStatus = "DELIVERING";
+    }
+    confirmFunction(req, res, order, updateStatus);
 })
 
-module.exports = { createBranch, getAllWarehouse, getAllHub, createHub, createWarehouse, getAllWarehouseName, getBranchNameById, receiveConfirmList, sendConfirmList, sendConfirm }
+const receiveConfirm = asyncHandler(async (req, res) => {
+    const order = await Order.findOne({
+        order_code: req.params.order_code
+    })
+    if (!order) {
+        res.status(404);
+        throw new Error("Order not found")
+    }
+    const updateStatus = "TRANSIT";
+    confirmFunction(req, res, order, updateStatus);
+})
+
+module.exports = { createBranch, getAllWarehouse, getAllHub, createHub, createWarehouse, getAllWarehouseName, getBranchNameById, receiveConfirmList, sendConfirmList, sendConfirm, receiveConfirm }
