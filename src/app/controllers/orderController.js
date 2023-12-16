@@ -3,6 +3,7 @@ const Order = require("../models/orderModel");
 const Branch = require("../models/branchModel");
 const Process = require('../models/processesModel')
 const Fee = require('../models/feeModel')
+const Customer = require('../models/customerModel')
 const { printLabel } = require("../utils/createLabel");
 const {
     createCustomer,
@@ -101,20 +102,37 @@ const updateOrder = asyncHandler(async (req, res) => {
         res.status(404);
         throw new Error("Order not found")
     }
-    const processes = await Process.findByIdAndUpdate(
-        order.processes_id._id,
+    var updateStatus;
+    const currentBranch = req.currentAccount.branch_id
+    const receiver = await Customer.findById(order.receiver_id)
+
+    if (currentBranch.lowerBranch !== null) {
+        updateStatus = "TRANSIT"
+    }
+    else if (currentBranch.toString() === receiver.branch_id.toString()) {
+        console.log()
+        if (order.is_returned) {
+            updateStatus = "RETURNED";
+        } else {
+            updateStatus = "DELIVERED";
+        }
+    } else {
+
+        updateStatus = "DELIVERING";
+    }
+
+
+    const processes = await Process.updateOne(
+        { _id: order.processes_id._id },
         {
-            $push: {
+            $addToSet: {
                 'events': {
-                    'branch_id': req.currentAccount.branch_id,
-                    'status': req.body.status
+                    'branch_id': currentBranch,
+                    'status': updateStatus
                 }
             }
-        },
-        { new: true }
+        }
     )
-
-    console.log(processes.events.status)
     //End date
     const end = (req.body.status == 'DELIVERED') ? processes.updatedAt : order.endedAt
 
