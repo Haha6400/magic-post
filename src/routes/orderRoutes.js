@@ -24,7 +24,7 @@ router.put('/update/:order_code', staffAuth, updateOrder)
 // router.put("/status/update", updateStatus);
 
 //@Delete method
-router.delete('/delete/:id', deleteOrder)
+router.delete('/delete/:order_code', deleteOrder)
 
 
 module.exports = router;

@@ -1,11 +1,16 @@
 <template>
   <div class="container">
-    <h1 class="loginHeader">Đơn hàng nhận</h1>
+    <h1 class="loginHeader">Xác nhận đơn hàng đi</h1>
     <div class="buttonList">
       <ChipCard v-if="orderStatus" :title="'Trạng thái'" :content="orderStatus"></ChipCard>
-      <ChipCard v-if="senderName" :title="'Đến từ'" :content="senderName"></ChipCard>
-      <ChipCard v-if="start" :title="'Bắt đầu'" :content="start"></ChipCard>
-      <ChipCard v-if="end" :title="'Kết thúc'" :content="end"></ChipCard>
+
+      <form class="search-bar">
+        <input class="search-box" type="text" placeholder="Tìm kiếm đơn hàng" v-model="search" />
+        <button type="submit">
+          <img src="@/assets/logo.png" />
+        </button>
+      </form>
+
       <button class="signup" type="button" @click="dialog = true">
         Bộ lọc
         <svg
@@ -23,6 +28,10 @@
           />
         </svg>
       </button>
+
+      <!-- <router-link class="signup" type="button" to="/hubStaff/newOrder">
+          + Tạo đơn hàng</router-link
+        > -->
     </div>
 
     <div class="loading">
@@ -43,6 +52,60 @@
         :items="dataList"
         :search="search"
       >
+        <!-- <template v-slot:item.status="{ item }">
+          <button @click="updateOrderDialog = true">
+            {{ item.status }}
+            <v-dialog v-model="updateOrderDialog" persistent width="800">
+              <v-card>
+                <div class="popupHeader">Cập nhật trạng thái đơn hàng</div>
+                <div class="input-container">
+                  <label for="inputState">Trạng thái</label>
+                  <select id="inputState" class="form-control" v-model="newOrderStatus">
+                    <option>TRANSIT</option>
+                  </select>
+                </div>
+
+                <div class="bottomButton">
+                  <button
+                    @click="updateOrderDialog = false"
+                    class="btn btn--green-1"
+                    style="width: fit-content"
+                  >
+                    Đóng
+                  </button>
+
+                  <button
+                    v-on:click="updateOrderStatus(item.order_code, newOrderStatus)"
+                    class="btn btn--green-1"
+                    style="width: fit-content"
+                  >
+                    Cập nhật
+                  </button>
+                </div>
+              </v-card>
+            </v-dialog>
+          </button>
+        </template> -->
+
+        <template v-slot:item.update="{ item }">
+          <button v-on:click="verifyOrder(item.order_code)">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6 icon"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"
+              />
+            </svg>
+          </button>
+        </template>
+
         <template v-slot:item.action="{ item }">
           <button v-on:click="deleteOrder(item.order_code)">
             <svg
@@ -89,7 +152,7 @@
       </v-data-table>
     </v-card>
 
-    <v-dialog v-model="dialog" persistent width="1024">
+    <v-dialog v-model="dialog" persistent width="800">
       <v-card>
         <div class="popupHeader">Bộ lọc</div>
         <div class="input-container">
@@ -98,24 +161,14 @@
             <option>Còn trong kho</option>
           </select>
         </div>
-        <div class="input-container">
+        <!-- <div class="input-container">
           <label for="inputState">Nơi gửi</label>
           <select id="inputState" class="form-control" v-model="senderName">
             <option v-for="item in warehouseList">
               {{ item }}
             </option>
           </select>
-        </div>
-
-        <div class="input-container">
-          <label for="startDate">Ngày bắt đầu</label>
-          <input id="startDate" class="form-control" type="date" v-model="start" />
-        </div>
-
-        <div class="input-container">
-          <label for="startDate">Ngày kết thúc</label>
-          <input id="startDate" class="form-control" type="date" v-model="end" />
-        </div>
+        </div> -->
 
         <div class="bottomButton">
           <button
@@ -137,30 +190,27 @@
 </template>
 
 <script>
-import axios from 'axios'
-axios.defaults.headers.common.authorization = localStorage.getItem('token')
-
 import ChipCard from '../../components/ChipCard.vue'
+
+import axios from 'axios'
+
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
 
 export default {
   data() {
     return {
       loading: true,
-      //dialog
       dialog: false,
-      senderName: '',
-      hubList: [],
-      warehouseList: [],
-      start: null,
-      end: null,
       orderStatus: null,
-      //table
+
+      updateOrderDialog: false,
+      newOrderStatus: '',
+
       dataList: [],
       page: 1,
       itemsPerPage: 6,
       search: '',
-      role: '',
-      senderBranch: '',
       headers: [
         {
           align: 'center',
@@ -169,159 +219,99 @@ export default {
         },
         { key: 'receiverName', title: 'Người nhận', align: 'center' },
         { key: 'fee', title: 'Chi phí', align: 'center' },
-        { key: 'receiver_fee', title: 'Phí người nhận phải trả', align: 'center' },
+        { key: 'receiver_fee', title: 'Phí người nhận trả', align: 'center' },
         { key: 'status', title: 'Trạng thái đơn hàng', align: 'center' },
+        { title: 'Cập nhật', sortable: false, align: 'center', text: 'Xác nhận', value: 'update' },
         { title: 'Chi tiết', sortable: false, align: 'center', text: 'Chi tiết', value: 'action' }
       ]
     }
   },
+
   computed: {
     pageCount() {
       return Math.ceil(this.dataList.length / this.itemsPerPage)
     }
   },
-  async created() {
-    let user = localStorage.getItem('userData')
-    let jsonUser = JSON.parse(user)
-    this.role = jsonUser.account.role
-    // this.senderBranch = 'All'
 
-    // Get warehouse list
-    let url = 'http://localhost:3000/api/workplace/all/warehouse/name'
+  async created() {
+    let url = 'http://localhost:3000/api/workplace/coming/send'
     await axios
-      .get(url)
+      .post(url)
       .then((response) => {
         console.log(response.data)
-        this.warehouseList = response.data.warehouseName
+        this.dataList = response.data.result
+        this.loading = false
       })
       .catch((error) => {
         console.log(error)
+        toast.error('SOS', { position: toast.POSITION.BOTTOM_RIGHT }),
+          {
+            autoClose: 1000
+          }
       })
-
-
-    this.getDefaultList()
   },
+
   methods: {
     deleterFilter() {
-      this.senderName = null
-      this.start = null
-      this.end = null
       this.dialog = false
       this.orderStatus = null
-      this.getDefaultList()
     },
 
-    async getListFiltered() {
-      this.dialog = false
-
-      let url = ''
-
-      if (!this.orderStatus) {
-        // Người dùng filter có start end
-        if (this.senderName) {
-          this.loading = true
-          url = 'http://localhost:3000/api/hub/receive/all/wh'
-          await axios
-            .post(url, {
-              start: this.start,
-              end: this.end,
-              warehouseName: this.senderName
-            })
-            .then((response) => {
-              console.log(response.data)
-              this.dataList = response.data.orders
-              this.loading = false
-            })
-            .catch((error) => {
-              console.log(error)
-              toast.error('???', { position: toast.POSITION.BOTTOM_RIGHT }),
-                {
-                  autoClose: 1000
-                }
-            })
-        }
-
-        if (!this.senderName) {
-          this.loading = true
-          url = 'http://localhost:3000/api/hub/receive/all'
-          await axios
-            .post(url, {
-              start: this.start,
-              end: this.end,
-            })
-            .then((response) => {
-              console.log(response.data)
-              this.dataList = response.data.orders
-              this.loading = false
-            })
-            .catch((error) => {
-              console.log(error)
-              toast.error('???', { position: toast.POSITION.BOTTOM_RIGHT }),
-                {
-                  autoClose: 1000
-                }
-            })
-        }
-      }
-
-      if (this.orderStatus) {
-        if (this.senderName) {
-          this.loading = true
-          url = 'http://localhost:3000/api/hub/receive/available/wh'
-          await axios
-            .post(url, {
-              start: this.start,
-              end: this.end,
-              warehouseName: this.senderName
-            })
-            .then((response) => {
-              console.log(response.data)
-              this.dataList = response.data.orders
-              this.loading = false
-            })
-            .catch((error) => {
-              console.log(error)
-            })
-        }
-
-        if (!this.senderName) {
-          this.loading = true
-          url = 'http://localhost:3000/api/hub/receive/available'
-          await axios
-            .post(url, {
-              start: this.start,
-              end: this.end
-            })
-            .then((response) => {
-              console.log(response.data)
-              this.dataList = response.data.orders
-              this.loading = false
-            })
-            .catch((error) => {
-              console.log(error)
-            })
-        }
-      }
-    },
-
-    getDate() {
-      const today = new Date()
-      const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()
-      return date
-    },
-
-    async getDefaultList() {
-      const today = new Date()
-      const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()
-      let url = 'http://localhost:3000/api/hub/receive/all'
-      await axios
-        .post(url, {
-          start: '2023-11-01',
-          end: date
-        })
+    deleteOrder(id) {
+      console.log(id)
+      this.loading = true
+      let url = 'http://localhost:3000/api/orders/delete/' + id
+      axios
+        .delete(url)
         .then((response) => {
           console.log(response.data)
-          this.dataList = response.data.orders
+          console.log('delete')
+          this.getList()
+          this.loading = true
+          toast.success('Deleted successfully', { position: toast.POSITION.BOTTOM_RIGHT }),
+            {
+              autoClose: 1000
+            }
+        })
+        .catch((error) => {
+          console.log(error)
+          toast.error('Delete failed', { position: toast.POSITION.BOTTOM_RIGHT }),
+            {
+              autoClose: 1000
+            }
+        })
+    },
+
+    verifyOrder(orderCode) {
+      let url = 'http://localhost:3000/api/workplace/confirm/send/' + orderCode
+      axios
+        .put(url)
+        .then((response) => {
+          console.log(response.data)
+          this.loading = true
+          this.getList()
+          toast.success('Successfully Updated', { position: toast.POSITION.BOTTOM_RIGHT }),
+            {
+              autoClose: 100
+            }
+          
+        })
+        .catch((error) => {
+          console.log(error)
+          toast.error('Update failed', { position: toast.POSITION.BOTTOM_RIGHT }),
+            {
+              autoClose: 100
+            }
+        })
+    },
+
+    async getList() {
+      let url = 'http://localhost:3000/api/workplace/coming/send'
+      await axios
+        .post(url)
+        .then((response) => {
+          console.log(response.data)
+          this.dataList = response.data.result
           this.loading = false
         })
         .catch((error) => {
@@ -380,7 +370,9 @@ export default {
   margin-right: 7%;
   margin-left: 7%;
   height: 70%;
+  /* max-height: 65%; */
   overflow-y: scroll;
+  /* min-height: 70%; */
 }
 
 .v-card-text {
@@ -389,7 +381,9 @@ export default {
 
 .v-text-field {
   background-color: #ffe4b2;
+  /* border-radius: 30px; */
   border: 0px;
+  /* border-color: #ffe4b2; */
   width: 100%;
 }
 
@@ -406,10 +400,9 @@ export default {
   grid-gap: 30px;
 
   padding-bottom: 2%;
-  gap: 10px;
+  gap: 20px;
 
   margin-right: 7%;
-  margin-left: 7%;
 }
 .search-bar {
   box-sizing: border-box;
@@ -451,7 +444,7 @@ export default {
   height: 20px;
 }
 
-/* .searchButton {
+.searchButton {
   background-color: #f7b85e;
   text-decoration: none;
   border-radius: 30px;
@@ -473,7 +466,7 @@ export default {
   font-family: 'Nunito Sans', sans-serif;
   color: #000000;
   text-align: center;
-} */
+}
 
 .signup {
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -481,8 +474,8 @@ export default {
 
   font-family: 'Nunito Sans', sans-serif;
   font-weight: regular;
-  width: 10%;
-  min-width: 90px;
+  width: 12%;
+  min-width: 140px;
   height: 40px;
 
   display: flex;
@@ -493,20 +486,10 @@ export default {
   border-radius: 10px;
 
   color: #000000;
-
-  gap: 10px;
 }
 
-.form-control {
-  border-radius: 18px;
-  width: 100%;
-  height: 50px;
-  background-color: #ffe4b2;
-}
-
-label {
-  margin-bottom: 5px;
-  align-items: left;
+button {
+  margin: 2px;
 }
 
 .popupHeader {
@@ -524,6 +507,39 @@ label {
 .input-container {
   width: 50%;
   align-items: left;
+}
+
+.form-control {
+  border-radius: 18px;
+  width: 100%;
+  height: 50px;
+  background-color: #ffe4b2;
+}
+
+.v-card {
+  margin-right: 7%;
+  margin-left: 7%;
+  height: 70%;
+  /* max-height: 65%; */
+  overflow-y: scroll;
+  /* min-height: 70%; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  border-radius: 30px;
+}
+
+.bottomButton {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.bottomButton button:hover {
+  background-color: #ffe4b2;
 }
 
 .btn {
@@ -562,35 +578,4 @@ label {
     font-family: 'Nunito Sans', sans-serif;
   }
 }
-
-.v-card {
-  margin-right: 7%;
-  margin-left: 7%;
-  height: 70%;
-  /* max-height: 65%; */
-  overflow-y: scroll;
-  /* min-height: 70%; */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  border-radius: 30px;
-}
-
-.bottomButton {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
-}
-
-.bottomButton button:hover {
-  background-color: #ffe4b2;
-}
-
-/* .v-data-table > .v-data-table__wrapper > table > thead > tr > th,
-  td {
-    min-width: 200px !important;
-  } */
 </style>

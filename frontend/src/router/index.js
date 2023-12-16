@@ -37,6 +37,21 @@ const router = createRouter({
       name: "newOrderbyHubStaff",
       component: ()=>import('../views/Staff/NewOrders.vue')
     },
+    {
+      path: "/hubStaff/imcomingOrders",
+      name: "incomingOrdersbyHubStaff",
+      component: ()=>import('../views/Staff/IncomingOrders.vue')
+    },
+    {
+      path: "/hubStaff/preSentOrders",
+      name: "preSentOrdersbyHubStaff",
+      component: ()=>import('../views/Staff/PreSentOrders.vue')
+    },
+    {
+      path: "/hubStaff/updateOrders",
+      name: "updateOrdersbyHubStaff",
+      component: ()=>import('../views/Staff/UpdateOrders.vue')
+    },
     // {
     //   path: "/supervisor/manage-orders",
     //   name: "manageOrdersbySupervisor",

@@ -71,6 +71,10 @@
 import axios from 'axios'
 axios.defaults.headers.common.authorization = localStorage.getItem("token");
 
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
+
+
 export default {
   data() {
     return {
@@ -123,6 +127,15 @@ export default {
         .then((response) => {
           console.log(response.data)
           console.log("success")
+          toast.success('Successfully Updated', { position: toast.POSITION.BOTTOM_RIGHT }),
+            {
+              autoClose: 100
+            }
+          this.userName = null
+          this.email = null
+          this.phoneNumber = null
+          this.branchName = null
+          this.role = null
         })
         .catch((error) => {
           console.log(error)

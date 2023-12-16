@@ -84,7 +84,6 @@ const getOrderById = asyncHandler(async (req, res) => {
         res.status(404)
         throw new Error("Order not found")
     }
-    console.log(order)
     res.status(200).json(order)
 })
 
@@ -156,7 +155,7 @@ const deleteOrder = asyncHandler(async (req, res) => {
         throw new Error("Order not found")
     }
     console.log("here")
-    await Order.deleteOne({ _id: req.params.id })
+    await Order.deleteOne({ _id: order._id })
     res.json('Delete succeed')
 })
 
@@ -171,7 +170,8 @@ const getOrdersByBranchName = asyncHandler(async (req, res) => {
     const branch = await Branch.findOne({ 'name': req.params.branchName })
     const proccesses = await Process.find({ 'events.branch_id': branch })
     const orders = await Order.find({ processes_id: proccesses })
-    res.status(200).json(orders)
+    const result = await getOrders(orders)
+    res.status(200).json(result)
 })
 
 /*
@@ -181,7 +181,9 @@ const getOrdersByBranchName = asyncHandler(async (req, res) => {
 */
 const getOrderByCode = asyncHandler(async (req, res) => {
     const order = await Order.findOne({ 'order_code': req.params.order_code })
-    res.status(200).json(order)
+    const result = await getOrder(order)
+
+    res.status(200).json(result)
 })
 
 
