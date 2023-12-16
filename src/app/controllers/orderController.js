@@ -22,8 +22,9 @@ const {
 */
 const getAllOrders = asyncHandler(async (req, res) => {
     const orders = await Order.find()
-    const result = await getOrders(orders)
-    res.status(200).json(result)
+    // const result = await getOrders(orders)
+    // res.status(200).json(result)
+    res.status(200).json(orders)
 })
 
 /*
@@ -147,9 +148,8 @@ const updateOrder = asyncHandler(async (req, res) => {
 @access staff
 */
 const deleteOrder = asyncHandler(async (req, res) => {
-    const order = await Order.findOne({
-        order_code: req.params.order_code
-    })
+    console.log("OK");
+    const order = await Order.findById(req.params.id)
     if (!order) {
         res.status(404)
         throw new Error("Order not found")
@@ -193,7 +193,9 @@ const getOrderByCode = asyncHandler(async (req, res) => {
 @access staff
 */
 const printOrderLabel = asyncHandler(async (req, res) => {
-    await printLabel(req, res);
+    console.log("OK");
+    res.status(200).json(req.params.order_id);
+    // await printLabel(req, res);
 });
 
 module.exports = {

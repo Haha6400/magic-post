@@ -421,9 +421,10 @@ img{
 
 
 const printLabel = async (req, res) => {
+  // console.log("OK");
   const order_id = req.params.order_id;
   const order = await Order.findById(order_id);
-  console.log("OK");
+
   // Create a browser instance
   // const browser = await puppeteer.launch();
   const browser = await puppeteer.launch();
