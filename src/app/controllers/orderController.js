@@ -149,7 +149,7 @@ const updateOrder = asyncHandler(async (req, res) => {
 */
 const deleteOrder = asyncHandler(async (req, res) => {
     console.log("OK");
-    const order = await Order.findById(req.params.id)
+    const order = await Order.findOne({ order_code: req.params.order_code })
     if (!order) {
         res.status(404)
         throw new Error("Order not found")
