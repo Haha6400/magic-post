@@ -131,37 +131,68 @@ const getBranchNameById = asyncHandler(async (req, res) => {
 const receiveConfirmList = asyncHandler(async (req, res) => {
     const currentBranch = await getCurrentBranch(req, res);
     const currentHigherBranch = currentBranch.higherBranch_id;
-    var filteredProcess = [];
-    var allComingBranch;
+    var processes;
     if (currentHigherBranch.toString() === "6554dd73872582fea16dd837") { //Warehouse => Order from lower hub or other warehouse
         const allWarehouse = await branch.find({ higherBranch_id: "6554dd73872582fea16dd837" });
         const allHubName = currentBranch.lowerBranchName;
         const allHub = await branch.find({ 'name': allHubName })
-        allComingBranch = allWarehouse.concat(allHub);
+        const allComingBranch = allWarehouse.concat(allHub);
+        processes = await Process.find({
+            events: {
+                $elemMatch: {
+                    'branch_id': { $in: allComingBranch },
+                    'status': "DELIVERING"
+                }
+            }
+        });
+        filteredStatusProcess = processes.filter(item => item.events[item.events.length - 1].status === "DELIVERING");
+        var filteredHubProcess = [];
+        var filteredWHProcess = [];
+        for (i in filteredStatusProcess) {
+            for (j in allHub) {
+                if (filteredStatusProcess[i].events[filteredStatusProcess[i].events.length - 1].branch_id.toString() === allHub[j]._id.toString()) {
+                    filteredHubProcess.push((filteredStatusProcess[i]));
+                }
+            }
+            for (j in allWarehouse) {
+                if (filteredStatusProcess[i].events[filteredStatusProcess[i].events.length - 1].branch_id.toString() === allWarehouse[j]._id.toString()) {
+                    filteredWHProcess.push((filteredStatusProcess[i]));
+                }
+            }
+        }
+        const ordersFromHub = await Order.find({
+            processes_id: { $in: filteredHubProcess }
+        }).sort('createdAt');
+        const receivers = await Customer.find({
+            'branch_id': { $in: allHub }
+        })
+        const ordersFromWH = await Order.find({
+            processes_id: { $in: filteredWHProcess },
+            receiver_id: receivers
+        }).sort('createdAt');
+        const resultHub = await getOrders(ordersFromHub)
+        const resultWH = await getOrders(ordersFromWH)
+        const result = resultHub.concat(resultWH);
+        res.status(200).json({ result, count: result.length });
     } else { //Hub => Orders from higher warehouse
-        allComingBranch = currentHigherBranch
-    }
-    const processes = await Process.find({
-        events: {
-            $elemMatch: {
-                'branch_id': { $in: allComingBranch },
-                'status': "DELIVERING"
+        processes = await Process.find({
+            events: {
+                $elemMatch: {
+                    'branch_id': { $in: currentHigherBranch },
+                    'status': "DELIVERING"
+                }
             }
-        }
-    });
-    const filteredStatusProcess = processes.filter(item => item.events[item.events.length - 1].status === "DELIVERING");
-    for (i in filteredStatusProcess) {
-        for (j in allComingBranch) {
-            if (filteredStatusProcess[i].events[filteredStatusProcess[i].events.length - 1].branch_id.toString() === allComingBranch[j]._id.toString()) {
-                filteredProcess.push((filteredStatusProcess[i]));
-            }
-        }
+        });
+        filteredStatusProcess = processes.filter(item => item.events[item.events.length - 1].status === "DELIVERING");
+        const filteredProcess = filteredStatusProcess.filter(item => item.events[item.events.length - 1].branch_id.toString() === allComingBranch._id.toString());
+        console.log("filteredProcess", filteredProcess);
+        const orders = await Order.find({
+            processes_id: { $in: filteredProcess }
+        }).sort('createdAt');
+        console.log("orders", orders);
+        const result = await getOrders(orders)
+        res.status(200).json({ result, count: result.length });
     }
-    const orders = await Order.find({
-        processes_id: { $in: filteredProcess }
-    }).sort('createdAt');
-    const result = await getOrders(orders)
-    res.status(200).json({ result, count: result.length });
 });
 
 /*
