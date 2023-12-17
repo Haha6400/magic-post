@@ -48,7 +48,7 @@ async function createReceiverFeeModel(cod, rf_other_fee) {
     receiver_fee = await ReceiverFee.create({
         'cod': cod,
         'other_fee': rf_other_fee,
-        'total': cod + rf_other_fee,
+        'total': cod,
     })
     return receiver_fee
 }
