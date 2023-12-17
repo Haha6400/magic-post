@@ -224,7 +224,7 @@ const getAccountsByBranch = asyncHandler(async (req, res) => {
 @access supervisor
 */
 const getAccountsByEachBranch = asyncHandler(async (req, res) => {
-    const staffBranch = await branch.findOne({ name: req.params.branchName }).sort('createdAt');
+    const staffBranch = await branch.findOne({ name: req.body.branchName }).sort('createdAt');
     const staffAccounts = await staff.find({ branch_id: staffBranch }).sort('createdAt');
     if (!staffAccounts) {
         res.status(404);
