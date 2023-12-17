@@ -107,7 +107,7 @@ export default {
       loading: true,
       warehouseList: [],
       page: 1,
-      itemsPerPage: 6,
+      itemsPerPage: 3,
       search: '',
       headers: [
         { text: '1', value: 'num', title: 'Số thứ tự', sortable: false },

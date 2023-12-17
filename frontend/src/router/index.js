@@ -38,12 +38,12 @@ const router = createRouter({
       component: ()=>import('../views/Staff/NewOrders.vue')
     },
     {
-      path: "/hubStaff/imcomingOrders",
+      path: "/incomingOrders",
       name: "incomingOrdersbyHubStaff",
       component: ()=>import('../views/Staff/IncomingOrders.vue')
     },
     {
-      path: "/hubStaff/preSentOrders",
+      path: "/preSentOrders",
       name: "preSentOrdersbyHubStaff",
       component: ()=>import('../views/Staff/PreSentOrders.vue')
     },

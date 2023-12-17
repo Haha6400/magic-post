@@ -249,6 +249,7 @@ export default {
     },
 
     //update
+    // TODO: error
     verifyOrder(orderCode) {
       let url = 'http://localhost:3000/api/workplace/confirm/send/' + orderCode
       axios
@@ -274,7 +275,7 @@ export default {
 
     //getList
     getList() {
-      let url = 'http://localhost:3000/api/orders/all'
+      let url = 'http://localhost:3000/api/workplace/coming/receive'
       axios
         .post(url)
         .then((response) => {
