@@ -23,9 +23,9 @@ const {
 */
 const getAllOrders = asyncHandler(async (req, res) => {
     const orders = await Order.find()
-    // const result = await getOrders(orders)
-    // res.status(200).json(result)
-    res.status(200).json(orders)
+    const result = await getOrders(orders)
+    res.status(200).json(result)
+    // res.status(200).json(orders)
 })
 
 /*
