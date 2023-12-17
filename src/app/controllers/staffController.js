@@ -186,8 +186,9 @@ const loginStaff = asyncHandler(async (req, res) => {
 */
 async function formatAccount(req, res, account) {
     const workplace = await branch.findById(account.branch_id);
-    console.log(account);
+    console.log(account._id);
     return ({
+        '_id': account._id,
         'userName': account.email,
         'email': account.email,
         'phoneNumber': account.phoneNumber,
