@@ -58,8 +58,8 @@ async function createReceiverFeeModel(cod, rf_other_fee, rf_total) {
 async function createMassModel(actual_mass, converted_mass) {
 
     mass = await Mass.create({
-        'actual_mass': actual_mass,
-        'converted_mass': converted_mass,
+        'actual': actual_mass,
+        'converted': converted_mass,
     })
     return mass
 }

@@ -2,7 +2,7 @@ const asyncHandler = require('express-async-handler');
 const Order = require("../models/orderModel");
 const Branch = require("../models/branchModel");
 const Process = require('../models/processesModel')
-const Fee = require('../models/feeModel')
+const Mass = require('../models/massModel')
 const Customer = require('../models/customerModel')
 const { printLabel } = require("../utils/createLabel");
 const {
@@ -159,7 +159,6 @@ const updateOrder = asyncHandler(async (req, res) => {
     res.status(200).json(updatedOrder)
 })
 
-
 /*
 @desc Delete order
 @route DELETE /api/orders/delete/:id
@@ -211,9 +210,8 @@ const getOrderByCode = asyncHandler(async (req, res) => {
 @access staff
 */
 const printOrderLabel = asyncHandler(async (req, res) => {
-    console.log("OK");
-    res.status(200).json(req.params.order_id);
-    // await printLabel(req, res);
+    // res.status(200).json(req.params.order_id);
+    await printLabel(req, res);
 });
 
 module.exports = {
