@@ -143,7 +143,7 @@
 
         <!-- Đơn hàng đến -->
         <li v-if="role == 'hubStaff' || role == 'warehouseStaff'">
-          <router-link to="/hubStaff/imcomingOrders">
+          <router-link to="/incomingOrders">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -165,7 +165,7 @@
 
         <!-- Đơn hàng đi -->
         <li v-if="role == 'hubStaff' || role == 'warehouseStaff'">
-          <router-link to="/hubStaff/preSentOrders">
+          <router-link to="/preSentOrders">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -280,7 +280,7 @@
 
         <!-- Đơn hàng nhận -->
         <li v-if="role == 'hubManager' || role == 'warehouseManager'">
-          <router-link to="/manager/recieved-orders">
+          <router-link to="/incomingOrders">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -302,7 +302,7 @@
 
         <!-- Đơn hàng gửi -->
         <li v-if="role == 'hubManager' || role == 'warehouseManager'">
-          <router-link to="/manager/sent-orders">
+          <router-link to="/preSentOrders">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

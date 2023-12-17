@@ -199,6 +199,15 @@
         >
           Tạo đơn hàng
         </button>
+
+        <!-- <button
+          v-if="step == 4"
+          class="btn btn--green-1"
+          v-on:click="newOrder()"
+          style="width: fit-content"
+        >
+          In đơn hàng
+        </button> -->
       </div>
     </div>
   </div>
@@ -229,6 +238,7 @@ export default {
       instruction: '',
       sender_commitment: '',
       note: '',
+      receiverBranchName: '',
 
       dataList: []
     }
@@ -253,8 +263,6 @@ export default {
       await axios
         .post(url, {
           type: this.type,
-          amount: this.amount,
-          price: this.amount * 10000,
           note: this.note,
           senderName: this.senderName,
           senderAddress: this.senderAddress,
@@ -262,6 +270,9 @@ export default {
           receiverName: this.receiverName,
           receiverAddress: this.receiverAddress,
           receiverPhone: this.receiverPhone,
+          amount: this.amount,
+          price: this.amount * 10000,
+          actual_mass: this.mass,
           receiverBranchName: this.receiverBranchName
         })
         .then((response) => {
@@ -270,28 +281,41 @@ export default {
             {
               autoClose: 500
             }
-            this.step = 1
-            this.senderName = '',
-            this.senderAddress = '',
-            this.senderPhone = '',
-            this.receiverName = '',
-            this.receiverAddress = '',
-            this.receiverPhone = '',
-            this.type = '',
-            this.amount = '',
-            this.price = '',
-            this.actual_mass = '',
-            this.special_service = '',
-            this.instruction = '',
-            this.sender_commitment = '',
-            this.note = ''
+          this.printOrder(response.data._id)
+          this.step = 1
+          ;(this.senderName = ''),
+            (this.senderAddress = ''),
+            (this.senderPhone = ''),
+            (this.receiverName = ''),
+            (this.receiverAddress = ''),
+            (this.receiverPhone = ''),
+            (this.type = ''),
+            (this.amount = ''),
+            (this.price = ''),
+            (this.actual_mass = ''),
+            (this.special_service = ''),
+            (this.instruction = ''),
+            (this.sender_commitment = ''),
+            (this.note = '')
         })
         .catch((error) => {
           console.log(error)
-          toast.error('Wrong user', { position: toast.POSITION.BOTTOM_RIGHT }),
+          toast.error('Error', { position: toast.POSITION.BOTTOM_RIGHT }),
             {
               autoClose: 1000
             }
+        })
+    },
+
+    async printOrder(id) {
+      let url = 'http://localhost:3000/api/orders/label/' + id
+      await axios
+        .get(url)
+        .then((response) => {
+          console.log(response.data)
+        })
+        .catch((error) => {
+          console.log(error)
         })
     }
   }
