@@ -1,5 +1,5 @@
 # **HỆ THỐNG QUẢN LÝ CHUYỂN PHÁT- MAGIC POST ✨**
- ![Logo Magic Post](https://raw.githubusercontent.com/Haha6400/magic-post/main/src/app/utils/mgic-post-logo.png?token=GHSAT0AAAAAACIMJ2KM4KZFN3457GGYVKSKZL5NRPQ)
+ ![Logo Magic Post](https://raw.githubusercontent.com/Haha6400/magic-post/main/src/app/utils/mgic-post-logo.png?token=GHSAT0AAAAAACIMJ2KMHXO5X6GEKFLPRUH6ZL5OPEA)
 ## Mục lục
 - [Giới thiệu](https://github.com/Haha6400/magic-post?tab=readme-ov-file#gi%E1%BB%9Bi-thi%E1%BB%87u)
 - [Cài đặt](https://github.com/Haha6400/magic-post?tab=readme-ov-file#c%C3%A0i-%C4%91%E1%BA%B7t)
