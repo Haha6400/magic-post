@@ -4,7 +4,7 @@ const { getAllOrders, getOrderById, createOrder,
     updateOrder, deleteOrder,
     getOrdersByBranchName,
     printOrderLabel,
-    getOrderByCode, } = require("../app/controllers/orderController")
+    getOrderByCode } = require("../app/controllers/orderController")
 // const {printLabel} = require("../app/utils/createLabel");
 const { staffAuth, roleCheck, accessAccountCheck } = require("../app/middleware/auth");
 
@@ -23,12 +23,12 @@ router.post('/create', staffAuth, roleCheck(["hubStaff", "hubManager", "supervis
 router.put('/update/:order_code',
     staffAuth, roleCheck(["hubStaff", "hubManager", "warehouseStaff", "warehouseManager", "supervisor"]),
     updateOrder)
+
 // router.put("/status/update", updateStatus);
 
 //@Delete method
 router.delete('/delete/:order_code',
     staffAuth, roleCheck(["hubStaff", "hubManager", "warehouseStaff", "warehouseManager", "supervisor"]),
     deleteOrder)
-
 
 module.exports = router;

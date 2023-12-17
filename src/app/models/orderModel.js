@@ -40,6 +40,10 @@ const orderSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Fee"
     },
+    mass_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Mass"
+    },
     receiver_fee_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Receiver_fee",
