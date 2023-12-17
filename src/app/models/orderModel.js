@@ -48,6 +48,10 @@ const orderSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Receiver_fee",
     },
+    mass_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Mass",
+    },
     is_returned: {
         type: Boolean,
         default: false

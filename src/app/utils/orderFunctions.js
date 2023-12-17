@@ -6,6 +6,7 @@ const Process = require('../models/processesModel')
 const branch = require("../models/branchModel");
 const Package = require('../models/packageModel')
 const Order = require('../models/orderModel.js')
+const { Code } = require("mongodb")
 
 //create customer
 async function createCustomer(fullname, address, phoneNumber, branchName) {
@@ -26,30 +27,28 @@ async function createCustomer(fullname, address, phoneNumber, branchName) {
 }
 
 //create fee
-async function createFeeModel(charge, surcharge, vat, other_fee, total_fee) {
+async function createFeeModel(charge, surcharge, other_fee) {
     charge = parseInt(charge) || 0;
     surcharge = parseInt(surcharge) || 0;
-    vat = parseInt(vat) || 0;
     other_fee = parseInt(other_fee) || 0;
 
     fee = await Fee.create({
         'charge': charge,
         'surcharge': surcharge,
-        'vat': vat,
+        'vat': 0.1,
         'other_fee': other_fee,
-        'total': charge + surcharge + vat + other_fee
+        'total': 1.1 * charge + surcharge + other_fee
     })
-    console.log(fee)
     return fee
 }
 
 //create receiver fee
-async function createReceiverFeeModel(cod, rf_other_fee, rf_total) {
+async function createReceiverFeeModel(cod, rf_other_fee) {
 
     receiver_fee = await ReceiverFee.create({
         'cod': cod,
-        'rf_other_fee': rf_other_fee,
-        'rf_total': rf_total,
+        'other_fee': rf_other_fee,
+        'total': cod + rf_other_fee,
     })
     return receiver_fee
 }

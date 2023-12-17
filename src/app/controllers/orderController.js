@@ -2,7 +2,7 @@ const asyncHandler = require('express-async-handler');
 const Order = require("../models/orderModel");
 const Branch = require("../models/branchModel");
 const Process = require('../models/processesModel')
-const Mass = require('../models/massModel')
+const Fee = require('../models/feeModel')
 const Customer = require('../models/customerModel')
 const { printLabel } = require("../utils/createLabel");
 const {
@@ -38,20 +38,21 @@ const createOrder = asyncHandler(async (req, res) => {
     const { note, special_service, instructions, sender_commitment, //order attributes
         senderName, senderAddress, senderPhone, // sender attrs
         receiverName, receiverAddress, receiverPhone, //receiver attrs
-        charge, surcharge, vat, other_fee, total_fee, receiverBranchName,//transporting fee
+        surcharge, other_fee, receiverBranchName,//transporting fee
         actual_mass, converted_mass, // mass attrs
         type, amount, price,//package attrs
-        cod, rf_other_fee, rf_total, // the fee receiver will pay
+        rf_other_fee, // the fee receiver will pay
     } = req.body
     const currentAccount = req.currentAccount;
     const currentBranch = currentAccount.branch_id;
     console.log(currentBranch.name)
 
+    const cod = price + 1.1 * await feeCalculator(actual_mass)
     const sender = await createCustomer(senderName, senderAddress, senderPhone, currentBranch.name)
     const receiver = await createCustomer(receiverName, receiverAddress, receiverPhone, receiverBranchName)
     const mass = await createMassModel(actual_mass, converted_mass)
-    const fee = await createFeeModel(charge, surcharge, vat, other_fee, total_fee)
-    const receiver_fee = await createReceiverFeeModel(cod, rf_other_fee, rf_total)
+    const fee = await createFeeModel(await feeCalculator(actual_mass), surcharge, other_fee)
+    const receiver_fee = await createReceiverFeeModel(cod, rf_other_fee)
     const processes = await createProcesses(currentBranch)
     const orderCode = (Math.random() + 1).toString(36).substring(7).toUpperCase(); //random orderCode
     const package = await createPackage(type, amount, price, mass)
@@ -213,6 +214,28 @@ const printOrderLabel = asyncHandler(async (req, res) => {
     // res.status(200).json(req.params.order_id);
     await printLabel(req, res);
 });
+
+
+/**
+ * Magic-post fee calculator
+ * 
+ */
+async function feeCalculator(actual_mass) {
+    var fee;
+    if (0 <= actual_mass < 0.25) {
+        fee = 30000
+    } else if (actual_mass < 0.5) {
+        fee = 35000
+    } else if (actual_mass < 1) {
+        fee = 50000
+    } else if (actual_mass < 1.5) {
+        fee = 68000
+    } else {
+        var rem = actual_mass - 1.5
+        fee = 68000 + rem * 2300
+    }
+    return fee
+}
 
 module.exports = {
     getAllOrders, getOrderById, createOrder, updateOrder, deleteOrder,
