@@ -441,7 +441,8 @@ const printLabel = async (req, res) => {
   const receiverBranch = await Branch.findById(receiver.branch_id);
   const fee = await Fee.findById(order.fee_id);
   const mass = await Mass.findById(order.mass_id);
-  const receiverFee = await ReceiverFee.findById(order.recerver_fee_id);
+  const receiverFee = await ReceiverFee.findById(order.receiver_fee_id);
+  // console.log(order)
 
   // Website URL to export as pdf
   const filledHTML = mustache.render(html, {

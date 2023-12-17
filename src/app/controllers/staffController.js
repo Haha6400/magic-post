@@ -184,9 +184,26 @@ const loginStaff = asyncHandler(async (req, res) => {
 @route GET /api/accounts
 @access supervisor
 */
+async function formatAccount(req, res, account) {
+    const workplace = await branch.findById(account.branch_id);
+    console.log(account._id);
+    return ({
+        '_id': account._id,
+        'userName': account.email,
+        'email': account.email,
+        'phoneNumber': account.phoneNumber,
+        'role': account.role,
+        'workplace': workplace.name
+    });
+}
+
 const getAllAccounts = asyncHandler(async (req, res) => {
     console.log("OK");
-    const staffAccounts = await staff.find().sort('createdAt');
+    const unformattedStaffAccounts = await staff.find().sort('createdAt');
+    var staffAccounts = []
+    for (i in unformattedStaffAccounts) {
+        staffAccounts.push(await formatAccount(req, res, unformattedStaffAccounts[i]))
+    }
     res.status(200).json({ staffAccounts, count: staffAccounts.length });
 });
 
