@@ -44,6 +44,8 @@ async function createFeeModel(charge, surcharge, other_fee) {
 
 //create receiver fee
 async function createReceiverFeeModel(cod, rf_other_fee) {
+    cod = parseInt(cod) || 0;
+    rf_other_fee = parseInt(rf_other_fee) || 0;
 
     receiver_fee = await ReceiverFee.create({
         'cod': cod,

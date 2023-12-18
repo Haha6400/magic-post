@@ -23,6 +23,7 @@ router.post('/create', staffAuth, roleCheck(["hubStaff", "hubManager", "supervis
 router.put('/update/:order_code',
     staffAuth, roleCheck(["hubStaff", "hubManager", "warehouseStaff", "warehouseManager", "supervisor"]),
     updateOrder)
+// router.put('/update', updateOrder)
 
 // router.put("/status/update", updateStatus);
 
