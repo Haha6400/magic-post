@@ -23,9 +23,9 @@ const {
 */
 const getAllOrders = asyncHandler(async (req, res) => {
     const orders = await Order.find()
-    // const result = await getOrders(orders)
-    // res.status(200).json(result)
-    res.status(200).json(orders)
+    const result = await getOrders(orders)
+    res.status(200).json(result)
+    // res.status(200).json(orders)
 })
 
 /*
@@ -54,7 +54,8 @@ const createOrder = asyncHandler(async (req, res) => {
     const fee = await createFeeModel(await feeCalculator(actual_mass), surcharge, other_fee)
     const receiver_fee = await createReceiverFeeModel(cod, rf_other_fee)
     const processes = await createProcesses(currentBranch)
-    const orderCode = (Math.random() + 1).toString(36).substring(7).toUpperCase(); //random orderCode
+    const randomInRange = Math.floor(Math.random() * (999999999 - 100000000 + 1)) + 100000000;
+    const orderCode = "MG" + randomInRange.toString() + "VN"
     const package = await createPackage(type, amount, price, mass)
     var order = await Order.create({
         note, special_service, instructions, sender_commitment,
@@ -159,6 +160,7 @@ const updateOrder = asyncHandler(async (req, res) => {
     )
     res.status(200).json(updatedOrder)
 })
+
 
 /*
 @desc Delete order
