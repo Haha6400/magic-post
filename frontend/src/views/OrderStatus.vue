@@ -15,8 +15,18 @@
         </button>
       </form>
     </div>
+    <div class="loading">
+        <v-progress-circular
+          v-if="loading"
+          color="#ffa500"
+          align-items="center"
+          indeterminate
+          :size="34"
+        ></v-progress-circular>
+      </div>
 
     <div class="responseData" v-if="auth">
+      
       <p>Mã vận đơn: {{ this.order_status.order_code }} <br /></p>
       <p>
         Trạng thái đơn hàng: <span v-if="this.order_status.is_returned">Đã đến nơi</span>
@@ -35,7 +45,29 @@ export default {
     return {
       order_code: '',
       order_status: '',
-      auth: false
+      auth: false,
+      loading: false
+    }
+  },
+
+  async created() {
+    if (localStorage.getItem('orderCode')) {
+      this.loading = true
+      this.order_code = localStorage.getItem('orderCode')
+      localStorage.clear()
+      console.log(this.order_code)
+      let url = 'http://localhost:3000/api/orders/code/' + this.order_code
+      await axios
+        .get(url)
+        .then((response) => {
+          console.log(response.data)
+          this.order_status = response.data
+          this.auth = true
+          this.loading = false
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     }
   },
 

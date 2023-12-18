@@ -47,7 +47,10 @@
                 </svg>
               </button>
             </form>
-            <router-link class="searchButton" type="button" to="/orderStatus"
+            <!-- <button class="searchButton" v-on:click="getOrderStatus()"
+              >Tra cứu</button
+            > -->
+            <router-link class="searchButton" type="button" to="/orderStatus" v-on:click="getOrderStatus()"
               >Tra cứu</router-link
             >
           </div>
@@ -127,6 +130,19 @@
 <script>
 export default {
   name: "HomeView",
+  data() {
+    return {
+      search: "",
+    }
+  },
+
+  methods: {
+    getOrderStatus() {
+      localStorage.setItem('orderCode', this.search)
+    }
+  }
+
+
 };
 </script>
 
