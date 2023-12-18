@@ -184,7 +184,7 @@ const receiveConfirmList = asyncHandler(async (req, res) => {
             }
         });
         filteredStatusProcess = processes.filter(item => item.events[item.events.length - 1].status === "DELIVERING");
-        const filteredProcess = filteredStatusProcess.filter(item => item.events[item.events.length - 1].branch_id.toString() === allComingBranch._id.toString());
+        const filteredProcess = filteredStatusProcess.filter(item => item.events[item.events.length - 1].branch_id.toString() === currentHigherBranch._id.toString());
         console.log("filteredProcess", filteredProcess);
         const orders = await Order.find({
             processes_id: { $in: filteredProcess }

@@ -60,6 +60,10 @@
           <button v-if="item.status == 'TRANSIT'" class="status">
             <p style="background-color: #99D9F2">{{ item.status }}</p>
           </button>
+
+          <button v-if="item.status == 'PRE_TRANSIT'" class="status">
+            <p style="background-color: #99f2b1">{{ item.status }}</p>
+          </button>
         </template>
 
         <template v-slot:item.update="{ item }">
