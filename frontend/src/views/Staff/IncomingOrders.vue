@@ -28,49 +28,53 @@
       </button>
 
       <v-dialog v-model="dialog" persistent width="1024">
-      <v-card>
-        <div class="popupHeader">Bộ lọc</div>
-        <div class="input-container">
-          <label for="inputState">Trạng thái</label>
-          <select id="inputState" class="form-control" v-model="orderStatus">
-            <option>Còn trong kho</option>
-          </select>
-        </div>
-        <div class="input-container">
-          <label for="inputState">Nơi gửi</label>
-          <select id="inputState" class="form-control" v-model="senderName">
-            <option v-for="item in warehouseList">
-              {{ item }}
-            </option>
-          </select>
-        </div>
+        <v-card>
+          <div class="popupHeader">Bộ lọc</div>
+          <div class="input-container">
+            <label for="inputState">Trạng thái</label>
+            <select id="inputState" class="form-control" v-model="orderStatus">
+              <option>Còn trong kho</option>
+            </select>
+          </div>
+          <div class="input-container">
+            <label for="inputState">Nơi gửi</label>
+            <select id="inputState" class="form-control" v-model="senderName">
+              <option v-for="item in warehouseList">
+                {{ item }}
+              </option>
+            </select>
+          </div>
 
-        <div class="input-container">
-          <label for="startDate">Ngày bắt đầu</label>
-          <input id="startDate" class="form-control" type="date" v-model="start" />
-        </div>
+          <div class="input-container">
+            <label for="startDate">Ngày bắt đầu</label>
+            <input id="startDate" class="form-control" type="date" v-model="start" />
+          </div>
 
-        <div class="input-container">
-          <label for="startDate">Ngày kết thúc</label>
-          <input id="startDate" class="form-control" type="date" v-model="end" />
-        </div>
+          <div class="input-container">
+            <label for="startDate">Ngày kết thúc</label>
+            <input id="startDate" class="form-control" type="date" v-model="end" />
+          </div>
 
-        <div class="bottomButton">
-          <button
-            @click="dialog = false"
-            v-on:click="getListFiltered()"
-            class="btn btn--green-1"
-            style="width: fit-content"
-          >
-            Đóng
-          </button>
+          <div class="bottomButton">
+            <button
+              @click="dialog = false"
+              v-on:click="getListFiltered()"
+              class="btn btn--green-1"
+              style="width: fit-content"
+            >
+              Đóng
+            </button>
 
-          <button v-on:click="deleterFilter()" class="btn btn--green-1" style="width: fit-content">
-            Xóa bộ lọc
-          </button>
-        </div>
-      </v-card>
-    </v-dialog>
+            <button
+              v-on:click="deleterFilter()"
+              class="btn btn--green-1"
+              style="width: fit-content"
+            >
+              Xóa bộ lọc
+            </button>
+          </div>
+        </v-card>
+      </v-dialog>
 
       <!-- <router-link class="signup" type="button" to="/hubStaff/newOrder">
           + Tạo đơn hàng</router-link
@@ -96,8 +100,13 @@
         :search="search"
       >
         <template v-slot:item.status="{ item }">
-          <!-- <button v-on:click="deleteOrder(item.order_code)"> -->
-          <button>{{ item.status }}</button>
+          <button v-if="item.status == 'DELIVERING'" class="status">
+            <p style="background-color: #ffe4b2;">{{ item.status }}</p>
+          </button>
+
+          <button v-if="item.status == 'TRANSIT'" class="status">
+            <p style="background-color: #6898c6;">{{ item.status }}</p>
+          </button>
         </template>
 
         <template v-slot:item.update="{ item }">
@@ -242,9 +251,10 @@ export default {
         })
         .catch((error) => {
           console.log(error)
-          toast.error("Delete failed", { position: toast.POSITION.BOTTOM_RIGHT }), {
-            autoClose: 100,
-          }
+          toast.error('Delete failed', { position: toast.POSITION.BOTTOM_RIGHT }),
+            {
+              autoClose: 100
+            }
         })
     },
 
@@ -262,7 +272,6 @@ export default {
             {
               autoClose: 100
             }
-          
         })
         .catch((error) => {
           console.log(error)
@@ -290,7 +299,7 @@ export default {
               autoClose: 100
             }
         })
-    }
+    },
   }
 }
 </script>
@@ -477,7 +486,6 @@ button {
   align-items: left;
 }
 
-
 .form-control {
   border-radius: 18px;
   width: 100%;
@@ -548,4 +556,20 @@ button {
   }
 }
 
+.status p {
+  font-size: 14px;
+  font-style: italic;
+  background-color: #ffe4b2;
+  border-radius: 30px;
+
+  width: 130px;
+  height: 35px;
+
+  margin-bottom: 0px;
+  padding: 10px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 </style>
