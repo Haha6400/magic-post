@@ -33,7 +33,7 @@
           <span class="stepper-item-title" v-if="item == 1">Thông tin người gửi </span>
           <span class="stepper-item-title" v-if="item == 2">Thông tin người nhận </span>
           <span class="stepper-item-title" v-if="item == 3">Thông tin gói hàng </span>
-          <span class="stepper-item-title" v-if="item == 4">Thông tin khác </span>
+          <!-- <span class="stepper-item-title" v-if="item == 4">Thông tin khác </span> -->
         </div>
       </div>
 
@@ -44,7 +44,7 @@
             <div class="form-container">
               <div class="input-container">
                 <label for="exampleInputEmail1" class="form-label">Họ và tên</label>
-                <input class="form-control" id="exampleInputEmail1" v-model="senderName" required />
+                <input class="form-control" id="exampleInputEmail1" v-model="orderData.senderName" required />
               </div>
 
               <div class="input-container">
@@ -52,7 +52,7 @@
                 <input
                   class="form-control"
                   id="exampleInputEmail1"
-                  v-model="senderAddress"
+                  v-model="orderData.senderAddress"
                   required
                 />
               </div>
@@ -62,7 +62,7 @@
                 <input
                   class="form-control"
                   id="exampleInputEmail1"
-                  v-model="senderPhone"
+                  v-model="orderData.senderPhone"
                   required
                 />
               </div>
@@ -78,7 +78,7 @@
                 <input
                   class="form-control"
                   id="exampleInputEmail1"
-                  v-model="receiverName"
+                  v-model="orderData.receiverName"
                   required
                 />
               </div>
@@ -88,7 +88,7 @@
                 <input
                   class="form-control"
                   id="exampleInputEmail1"
-                  v-model="receiverAddress"
+                  v-model="orderData.receiverAddress"
                   required
                 />
               </div>
@@ -98,7 +98,7 @@
                 <input
                   class="form-control"
                   id="exampleInputEmail1"
-                  v-model="receiverPhone"
+                  v-model="orderData.receiverPhone"
                   required
                 />
               </div>
@@ -110,14 +110,14 @@
           <form>
             <div class="form-container">
               <div class="row-container">
-                <div class="input-container">
+                <!-- <div class="input-container">
                   <label for="inputState">Loại hàng hóa</label>
                   <select id="inputState" class="form-control" v-model="orderData.type">
                     <option selected>Tài liệu</option>
                     <option>docs</option>
                   </select>
-                </div>
-                <div class="input-container">
+                </div> -->
+                <!-- <div class="input-container">
                   <label for="exampleInputEmail1" class="form-label">Số lượng</label>
                   <input
                     class="form-control"
@@ -125,15 +125,15 @@
                     v-model="orderData.note"
                     required
                   />
-                </div>
+                </div> -->
               </div>
 
               <div class="row-container">
                 <div class="input-container">
                   <label for="exampleInputEmail1" class="form-label">Trị giá</label>
-                  <input class="form-control" id="exampleInputEmail1" v-model="price" required />
+                  <input class="form-control" id="exampleInputEmail1" v-model="orderData.fee" required />
                 </div>
-                <div class="input-container">
+                <!-- <div class="input-container">
                   <label for="exampleInputEmail1" class="form-label">Khối lượng</label>
                   <input
                     class="form-control"
@@ -141,7 +141,7 @@
                     v-model="actual_mass"
                     required
                   />
-                </div>
+                </div> -->
               </div>
 
               <div class="input-container">
@@ -153,16 +153,26 @@
                   required
                 />
               </div>
+
+              <div class="input-container">
+                <label for="exampleInputEmail1" class="form-label">Cam kết người gửi</label>
+                <input
+                  class="form-control"
+                  id="exampleInputEmail1"
+                  v-model="orderData.note"
+                  required
+                />
+              </div>
             </div>
           </form>
         </div>
 
-        <div class="stepper-pane" v-if="step == 4">
+        <!-- <div class="stepper-pane" v-if="step == 4">
           <form>
             <div class="form-container">
               <div class="input-container">
                 <label for="inputState">Chỉ dẫn nếu không thể gửi hàng hóa</label>
-                <select id="inputState" class="form-control" v-model="instruction">
+                <select id="inputState" class="form-control" v-model="orderData.instruction">
                   <option selected>Chuyển hoàn ngay</option>
                   <option>Chuyển hoàn trước ngày</option>
                   <option>Chuyển hoàn trước khi thời gian lưu trữ</option>
@@ -175,7 +185,7 @@
                 <input
                   class="form-control"
                   id="exampleInputEmail1"
-                  v-model="sender_commitment"
+                  v-model="orderData.note"
                   required
                 />
               </div>
@@ -186,14 +196,14 @@
               </div>
             </div>
           </form>
-        </div>
+        </div> -->
       </div>
 
       <div class="controls">
         <button class="btn" @click="step--" :disabled="step == 1">Quay lại</button>
 
         <button
-          v-if="step != 4"
+          v-if="step != 3"
           class="btn btn--green-1"
           @click="step++"
           :disabled="step == numStep"
@@ -202,7 +212,7 @@
         </button>
         <!-- v-if="step != 4" -->
 
-        <button v-if="step == 4" class="btn btn--green-1" v-on:click="updateOrder()">Lưu</button>
+        <button v-if="step == 3" class="btn btn--green-1" v-on:click="updateOrder()">Lưu</button>
       </div>
       <p>{{ step }}</p>
     </div>
@@ -216,7 +226,7 @@ export default {
   data() {
     return {
       step: 1,
-      numStep: 4,
+      numStep: 3,
       orderData: null
       //   brachID: '',
       //   senderName: '',

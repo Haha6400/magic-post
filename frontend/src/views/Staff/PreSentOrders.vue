@@ -52,40 +52,15 @@
         :items="dataList"
         :search="search"
       >
-        <!-- <template v-slot:item.status="{ item }">
-          <button @click="updateOrderDialog = true">
-            {{ item.status }}
-            <v-dialog v-model="updateOrderDialog" persistent width="800">
-              <v-card>
-                <div class="popupHeader">Cập nhật trạng thái đơn hàng</div>
-                <div class="input-container">
-                  <label for="inputState">Trạng thái</label>
-                  <select id="inputState" class="form-control" v-model="newOrderStatus">
-                    <option>TRANSIT</option>
-                  </select>
-                </div>
-
-                <div class="bottomButton">
-                  <button
-                    @click="updateOrderDialog = false"
-                    class="btn btn--green-1"
-                    style="width: fit-content"
-                  >
-                    Đóng
-                  </button>
-
-                  <button
-                    v-on:click="updateOrderStatus(item.order_code, newOrderStatus)"
-                    class="btn btn--green-1"
-                    style="width: fit-content"
-                  >
-                    Cập nhật
-                  </button>
-                </div>
-              </v-card>
-            </v-dialog>
+        <template v-slot:item.status="{ item }">
+          <button v-if="item.status == 'DELIVERING'" class="status">
+            <p style="background-color: #ffe4b2">{{ item.status }}</p>
           </button>
-        </template> -->
+
+          <button v-if="item.status == 'TRANSIT'" class="status">
+            <p style="background-color: #99D9F2">{{ item.status }}</p>
+          </button>
+        </template>
 
         <template v-slot:item.update="{ item }">
           <button v-on:click="verifyOrder(item.order_code)">
@@ -190,8 +165,6 @@
 </template>
 
 <script>
-import ChipCard from '../../components/ChipCard.vue'
-
 import axios from 'axios'
 
 import { toast } from 'vue3-toastify'
@@ -294,7 +267,6 @@ export default {
             {
               autoClose: 100
             }
-          
         })
         .catch((error) => {
           console.log(error)
@@ -323,7 +295,6 @@ export default {
         })
     }
   },
-  components: { ChipCard }
 }
 </script>
 
@@ -577,5 +548,22 @@ button {
     margin-left: auto;
     font-family: 'Nunito Sans', sans-serif;
   }
+}
+
+.status p {
+  font-size: 14px;
+  font-style: italic;
+  background-color: #ffe4b2;
+  border-radius: 30px;
+
+  width: 130px;
+  height: 35px;
+
+  margin-bottom: 0px;
+  padding: 10px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 </style>
