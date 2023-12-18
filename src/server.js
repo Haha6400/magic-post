@@ -1,22 +1,29 @@
 //REST API demo in Node.js
 const express = require('express'); // requre the express framework
+const cors = require('cors');  //handle cors requests
 const app = express();
-const errorHandler = require("./app/middleware/errorHandler"); 
+const errorHandler = require("./app/middleware/errorHandler");
 var fs = require('fs'); //require file system object
-// var route = require('./routes')
 const connectDB = require('./config/dbConnection');
 const dotenv = require("dotenv").config();
+const cookieParser = require('cookie-parser');
 
 connectDB();
 // const staff = require('./models/staff'); //import class staff
 
 app.use(express.json());
 app.use(errorHandler);
+app.use(cors())
 app.use("/api/accounts", require("./routes/staffRoutes"));
 app.use("/api/orders", require("./routes/orderRoutes"));
+app.use("/api/workplace", require("./routes/branchRoutes"));
+app.use("/api/hub", require("./routes/hubRoutes"));
+app.use('/api/warehouse', require('./routes/warehouseRoutes.js'))
+app.use("/api/dashboard", require('./routes/dashboardRoutes.js'))
+
 
 // create a server to listen at port 3000
-var server = app.listen(3000, function(){
+var server = app.listen(3000, function () {
     var host = server.address().address
     var port = server.address().port
     console.log("REST API listening at http://%s:%s", host, port)

@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const mongoose = require('mongoose');
 
 const staffSchema = new mongoose.Schema({
@@ -14,12 +15,12 @@ const staffSchema = new mongoose.Schema({
         required: [true, "Please add the staff phone number"],
     },
     password: {
-        type: String,
-        required: [true, "Please add password"],
+        type: String
     },
-    workplace: {
-        type: String,
-        required: [true, "Please add the staff workplace"],
+    branch_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "branch"
     },
     role: {
         type: String,
