@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const staff = require("../models/staffModel")
 const branch = require('../models/branchModel')
+const access_token = require('../models/tokenModel')
 
 /*
 @desc Verify JWT from authorization header Middleware
@@ -11,16 +12,28 @@ const staffAuth = async (req, res, next) => {
     if (!authHeader) return res.sendStatus(403);
     console.log(authHeader); //Bearer token
     const token = authHeader.split(' ')[0];
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
-        console.log("verifying");
-        if (err) {
-            res.status(403)
-            throw new Error(`invalid token`);
-        }
-        console.log(decoded); //for correct token
-        req.currentAccount = decoded.accountInfo;
-        next();
-    });
+    console.log("token", token)
+    const checkToken = await access_token.findOne({
+        'token': token
+    })
+    console.log("checkToken", checkToken)
+    if (checkToken === null) {
+        res.status(200).json("Please log in again")
+    }
+    else {
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+            console.log("verifying");
+            if (err) {
+                res.status(403).json(`invalid token`);
+            } else {
+                console.log("decoded", decoded); //for correct token
+                req.currentAccount = decoded.accountInfo;
+                req.tokeExp = decoded.exp;
+                req.token = token;
+                next();
+            }
+        });
+    }
 };
 
 /*

@@ -11,7 +11,8 @@ Includes:
 const express = require("express");
 const router = express.Router();
 const { getAllAccounts, createAccount, loginStaff, currentAccount, deleteAccount, getAccountById, getAccountByEmail, getAccountsByBranch,
-    getAccountsByEachBranch, getRoleOfCurrentAccount, updateAccount, passwordReset, resetPasswordEmail, forgotPasswordEmail, passwordForgot, getAllManagerAccounts } = require("../app/controllers/staffController")
+    getAccountsByEachBranch, getRoleOfCurrentAccount, updateAccount, passwordReset, resetPasswordEmail, forgotPasswordEmail, passwordForgot,
+    getAllManagerAccounts, logoutStaff } = require("../app/controllers/staffController")
 const { staffAuth, roleCheck, accessAccountCheck } = require("../app/middleware/auth");
 
 
@@ -30,6 +31,7 @@ router.post("/forgot-password/:message", passwordForgot);
 
 //@access PUBLIC
 router.post("/login", loginStaff);
+router.post("/logout", staffAuth, logoutStaff)
 
 //@access SUPERVISOR
 router.get("/all", staffAuth, roleCheck(["supervisor"]), getAllAccounts);

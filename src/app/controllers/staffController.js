@@ -14,6 +14,7 @@ Includes:
 const asyncHandler = require('express-async-handler');
 const staff = require("../models/staffModel");
 const branch = require("../models/branchModel");
+const access_token = require("../models/tokenModel");
 const bcrypt = require('bcrypt');
 const saltRounds = 10
 const jwt = require('jsonwebtoken');
@@ -99,6 +100,30 @@ const deleteAccount = asyncHandler(async (req, res) => {
     res.status(200).json(staffAccount);
 });
 
+
+async function resetToken(req, res) {
+    await access_token.deleteOne({
+        token: req.token
+    })
+    //create JWTs
+    const accessToken = jwt.sign({
+        "accountInfo": {
+            "userName": updatedAccount.userName,
+            "email": updatedAccount.email,
+            "role": updatedAccount.role,
+            "branch_id": await branch.findById(updatedAccount.branch_id)
+        }
+    },
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: maxAge }
+    );
+    const token = await access_token.create({
+        'token': accessToken,
+        'account_id': account
+    })
+    return accessToken;
+}
+
 /*
 @des Update an account
 @route PUT /api/accounts/:id
@@ -117,19 +142,8 @@ const updateAccount = asyncHandler(async (req, res) => {
     const updatedAccount = await staff.findByIdAndUpdate(staffAccount.id, req.body, { new: true });
     // res.status(200).json({updatedAccount});
 
-
-    //create JWTs
-    const accessToken = jwt.sign({
-        "accountInfo": {
-            "userName": updatedAccount.userName,
-            "email": updatedAccount.email,
-            "role": updatedAccount.role,
-            "branch_id": await branch.findById(updatedAccount.branch_id)
-        }
-    },
-        process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: maxAge }
-    );
+    //reset JWTs
+    const accessToken = await resetToken(req, res)
     res.status(200).json({ accessToken });
 });
 
@@ -172,10 +186,38 @@ const loginStaff = asyncHandler(async (req, res) => {
             httpOnly: true,
             maxAge: maxAge * 1000
         });
+
+        ////////////////////////////////
+        const token = await access_token.create({
+            'token': accessToken,
+            'account_id': account
+        })
+        ////////////////////////////////
         res.status(200).json({ accessToken, account });
     } else {
         res.status(401);
         throw new Error(`Email or password mismatch`);
+    }
+});
+
+/*
+@des Logout user
+@route POST /api/accounts/logout
+@access private
+*/
+const logoutStaff = asyncHandler(async (req, res) => {
+    const tokenReq = req.token;
+    const tokenData = await access_token.findOne({
+        'token': tokenReq
+    })
+    console.log(tokenData)
+    if (tokenData === undefined) {
+        res.status(200).json("Please log in")
+    } else {
+        await access_token.deleteOne({
+            _id: tokenData._id
+        })
+        res.status(200).json("Log out successfully")
     }
 });
 
@@ -305,19 +347,7 @@ const currentAccount = asyncHandler(async (req, res) => {
 const resetPasswordEmail = asyncHandler(async (req, res) => {
     try {
         const currentAccount = req.currentAccount;
-        const accessToken = jwt.sign({
-            "accountInfo": {
-                "_id": currentAccount.id,
-                "userName": currentAccount.userName,
-                "email": currentAccount.email,
-                "role": currentAccount.role,
-                "branch_id": await branch.findById(currentAccount.branch_id),
-                "password": currentAccount.password
-            }
-        },
-            process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: "30m" }
-        );
+        const accessToken = req.token;
         const link = `http://localhost:3000/api/accounts/reset-password/${currentAccount._id}/${accessToken}`;
 
         await sendEmail(currentAccount.email, "Magic Post Password Reset", link);
@@ -343,6 +373,7 @@ const passwordReset = asyncHandler(async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
     const updateAccount = await staff.findByIdAndUpdate(req.params.id, { password: hashedPassword }, { new: true });
+    const accessToken = await resetToken(req, res)
     // await currentAccount.accessToken.delete();
     res.status(200).json("password reset sucessfully.");
 
@@ -375,6 +406,7 @@ const passwordForgot = asyncHandler(async (req, res) => {
     const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
     const updateAccount = await staff.findOneAndUpdate({ email: emailStaff }, { password: hashedPassword }, { new: true });
     // await currentAccount.accessToken.delete();
+    const accessToken = await resetToken(req, res)
     res.status(200).json("password reset sucessfully.");
 
 });
@@ -382,5 +414,5 @@ module.exports = {
     getAllAccounts, createAccount, loginStaff, currentAccount, deleteAccount,
     getAccountById, getAccountByEmail, getAccountsByBranch, getAccountsByEachBranch,
     updateAccount, passwordReset, resetPasswordEmail, forgotPasswordEmail, passwordForgot,
-    getRoleOfCurrentAccount, getAllManagerAccounts
+    getRoleOfCurrentAccount, getAllManagerAccounts, logoutStaff
 };
