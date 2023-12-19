@@ -217,6 +217,7 @@
 import axios from 'axios'
 import { toast } from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
+import {saveAs} from 'file-saver'
 
 export default {
   data() {
@@ -281,7 +282,7 @@ export default {
             {
               autoClose: 500
             }
-          this.printOrder(response.data._id)
+          this.printOrder(response.data._id, response.data.order_code)
           this.step = 1
           ;(this.senderName = ''),
             (this.senderAddress = ''),
@@ -307,14 +308,14 @@ export default {
         })
     },
 
-    async printOrder(id) {
+    async printOrder(id, orderCode) {
       let url = 'http://localhost:3000/api/orders/label/' + id
-      await axios
-        .get(url)
-        .then((response) => {
-          console.log(response.data)
-        })
-        .catch((error) => {
+      let fileName = '[magic_post] ' + orderCode
+      axios
+        .get(url, {responseType: 'blob'})
+        .then(response => {
+            saveAs(response.data, fileName);
+        }).catch((error) => {
           console.log(error)
         })
     }

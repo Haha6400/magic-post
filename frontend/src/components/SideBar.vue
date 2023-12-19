@@ -491,7 +491,9 @@
 </template>
 
 <script>
-// import axios from "axios";
+import axios from 'axios'
+axios.defaults.headers.common.authorization = localStorage.getItem('token')
+
 export default {
   name: 'SideBar',
   props: {},
@@ -520,12 +522,28 @@ export default {
   },
 
   methods: {
-    logout() {
-      localStorage.clear()
-      this.isLogin = false
-      this.userName = ''
-      this.role = null
-      this.avatar = null
+    async logout() {
+      let url = 'http://localhost:3000/api/accounts/logout'
+      let token = localStorage.getItem('token').toString()
+      console.log(typeof token)
+      await axios
+        .post(url, {
+          headers: {
+            "authorization": token
+          }
+        })
+        .then((response) => {
+          console.log(response.data)
+          localStorage.clear()
+          this.isLogin = false
+          this.userName = ''
+          this.role = null
+          this.avatar = null
+          this.$router.go(0)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     }
   }
 }
