@@ -164,6 +164,7 @@ const loginStaff = asyncHandler(async (req, res) => {
     if (!account) {
         return res.json({ message: 'Wrong credentials' })
     }
+    console.log("login here")
 
     //compare password with hashed password
     const match = await bcrypt.compare(password, account.password);
@@ -206,6 +207,7 @@ const loginStaff = asyncHandler(async (req, res) => {
 @access private
 */
 const logoutStaff = asyncHandler(async (req, res) => {
+    console.log("logout here")
     const tokenReq = req.token;
     const tokenData = await access_token.findOne({
         'token': tokenReq
@@ -217,7 +219,11 @@ const logoutStaff = asyncHandler(async (req, res) => {
         await access_token.deleteOne({
             _id: tokenData._id
         })
-        res.status(200).json("Log out successfully")
+        const checkTokenData = await access_token.findOne({
+            'token': tokenReq
+        })
+        console.log("checkTokenData", checkTokenData)
+        res.status(200).json({ checkTokenData })
     }
 });
 
