@@ -185,6 +185,7 @@ export default {
       newOrderStatus: '',
 
       dataList: [],
+      dataListLength: 0,
       page: 1,
       itemsPerPage: 6,
       search: '',
@@ -206,7 +207,7 @@ export default {
 
   computed: {
     pageCount() {
-      return Math.ceil(this.dataList.length / this.itemsPerPage)
+      return Math.ceil(this.dataListLength / this.itemsPerPage)
     }
   },
 
@@ -217,6 +218,7 @@ export default {
       .then((response) => {
         console.log(response.data)
         this.dataList = response.data.result
+        this.dataListLength = response.data.count
         this.loading = false
       })
       .catch((error) => {
@@ -288,6 +290,7 @@ export default {
         .then((response) => {
           console.log(response.data)
           this.dataList = response.data.result
+          this.dataListLength = response.data.count
           this.loading = false
         })
         .catch((error) => {
