@@ -182,7 +182,6 @@ import { toast } from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
 axios.defaults.headers.common.authorization = localStorage.getItem('token')
 
-
 export default {
   data() {
     return {
@@ -220,7 +219,11 @@ export default {
   async created() {
     let url = 'http://localhost:3000/api/workplace/coming/receive'
     await axios
-      .post(url)
+      .post(url, {
+        headers: {
+          authorization: localStorage.getItem('token')
+        }
+      })
       .then((response) => {
         console.log(response.data)
         this.dataList = response.data.result

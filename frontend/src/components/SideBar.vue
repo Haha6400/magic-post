@@ -531,6 +531,7 @@ export default {
         .post(url)
         .then((response) => {
           console.log(response.data)
+          this.$router.go(0);
         })
         .catch((error) => {
           console.log(error)
