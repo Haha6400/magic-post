@@ -60,6 +60,10 @@
           <button v-if="item.status == 'TRANSIT'" class="status">
             <p style="background-color: #99D9F2">{{ item.status }}</p>
           </button>
+
+          <button v-if="item.status == 'PRE_TRANSIT'" class="status">
+            <p style="background-color: #99f2b1">{{ item.status }}</p>
+          </button>
         </template>
 
         <template v-slot:item.update="{ item }">
@@ -181,6 +185,7 @@ export default {
       newOrderStatus: '',
 
       dataList: [],
+      dataListLength: 0,
       page: 1,
       itemsPerPage: 6,
       search: '',
@@ -202,7 +207,7 @@ export default {
 
   computed: {
     pageCount() {
-      return Math.ceil(this.dataList.length / this.itemsPerPage)
+      return Math.ceil(this.dataListLength / this.itemsPerPage)
     }
   },
 
@@ -213,6 +218,7 @@ export default {
       .then((response) => {
         console.log(response.data)
         this.dataList = response.data.result
+        this.dataListLength = response.data.count
         this.loading = false
       })
       .catch((error) => {
@@ -284,6 +290,7 @@ export default {
         .then((response) => {
           console.log(response.data)
           this.dataList = response.data.result
+          this.dataListLength = response.data.count
           this.loading = false
         })
         .catch((error) => {
