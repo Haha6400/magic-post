@@ -521,20 +521,21 @@ export default {
 
   methods: {
     async logout() {
-      localStorage.clear()
-      this.isLogin = false
-      this.userName = ''
-      this.role = null
-      this.avatar = null
       let url = 'http://localhost:3000/api/accounts/logout'
       await axios
         .post(url)
+        
         .then((response) => {
           console.log(response.data)
         })
         .catch((error) => {
           console.log(error)
         })
+        localStorage.clear()
+          this.isLogin = false
+          this.userName = ''
+          this.role = null
+          this.avatar = null
     }
   }
 }
