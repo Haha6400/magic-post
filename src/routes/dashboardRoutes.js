@@ -6,7 +6,7 @@ const { staffAuth, roleCheck, accessAccountCheck } = require("../app/middleware/
 const { sendConfirmList } = require("../app/controllers/branchController");
 router.get('/income', getMonthlyIncome)
 router.get('/count', getMonthlyOrders)
-router.get('/income/:branch_id', getMonthlyIncomeByBranch)
+router.post('/income/:branch_id', getMonthlyIncomeByBranch)
 router.get('/count/:branch_id', getMonthlyOrdersByBranch)
 router.post('/all/receive', staffAuth, allReceive);
 router.post('/all/send', staffAuth, allSend);

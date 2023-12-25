@@ -44,7 +44,7 @@
             <div class="form-container">
               <div class="input-container">
                 <label for="exampleInputEmail1" class="form-label">Họ và tên</label>
-                <input class="form-control" id="exampleInputEmail1" v-model="orderData.senderName" required />
+                <input class="form-control" id="exampleInputEmail1" v-model="senderName" required />
               </div>
 
               <div class="input-container">
@@ -52,7 +52,7 @@
                 <input
                   class="form-control"
                   id="exampleInputEmail1"
-                  v-model="orderData.senderAddress"
+                  v-model="senderAddress"
                   required
                 />
               </div>
@@ -62,7 +62,7 @@
                 <input
                   class="form-control"
                   id="exampleInputEmail1"
-                  v-model="orderData.senderPhone"
+                  v-model="senderPhone"
                   required
                 />
               </div>
@@ -78,7 +78,7 @@
                 <input
                   class="form-control"
                   id="exampleInputEmail1"
-                  v-model="orderData.receiverName"
+                  v-model="receiverName"
                   required
                 />
               </div>
@@ -88,7 +88,7 @@
                 <input
                   class="form-control"
                   id="exampleInputEmail1"
-                  v-model="orderData.receiverAddress"
+                  v-model="receiverAddress"
                   required
                 />
               </div>
@@ -98,7 +98,7 @@
                 <input
                   class="form-control"
                   id="exampleInputEmail1"
-                  v-model="orderData.receiverPhone"
+                  v-model="receiverPhone"
                   required
                 />
               </div>
@@ -131,7 +131,7 @@
               <div class="row-container">
                 <div class="input-container">
                   <label for="exampleInputEmail1" class="form-label">Trị giá</label>
-                  <input class="form-control" id="exampleInputEmail1" v-model="orderData.fee" required />
+                  <input class="form-control" id="exampleInputEmail1" v-model="fee" required />
                 </div>
                 <!-- <div class="input-container">
                   <label for="exampleInputEmail1" class="form-label">Khối lượng</label>
@@ -149,19 +149,14 @@
                 <input
                   class="form-control"
                   id="exampleInputEmail1"
-                  v-model="orderData.special_service"
+                  v-model="special_service"
                   required
                 />
               </div>
 
               <div class="input-container">
                 <label for="exampleInputEmail1" class="form-label">Cam kết người gửi</label>
-                <input
-                  class="form-control"
-                  id="exampleInputEmail1"
-                  v-model="orderData.note"
-                  required
-                />
+                <input class="form-control" id="exampleInputEmail1" v-model="note" required />
               </div>
             </div>
           </form>
@@ -227,21 +222,23 @@ export default {
     return {
       step: 1,
       numStep: 3,
-      orderData: null
-      //   brachID: '',
-      //   senderName: '',
-      //   senderAddress: '',
-      //   senderPhone: '',
-      //   receiverName: '',
-      //   receiverAddress: '',
-      //   receiverPhone: '',
-      //   type: '',
-      //   amount: '',
-      //   price: '',
-      //   actual_mass: '',
-      //   special_service: '',
-      //   instruction: '',
-      //   sender_commitment: ''
+      orderData: null,
+      brachID: '',
+      senderName: '',
+      senderAddress: '',
+      senderPhone: '',
+      receiverName: '',
+      receiverAddress: '',
+      receiverPhone: '',
+      type: '',
+      amount: '',
+      price: '',
+      actual_mass: '',
+      special_service: '',
+      instruction: '',
+      sender_commitment: '',
+      note: '',
+      fee: ''
     }
   },
 
@@ -252,13 +249,22 @@ export default {
       .then((response) => {
         console.log(response.data)
         this.orderData = response.data
+        this.senderName = response.data.senderName
+        this.senderAddress = response.data.senderAddress
+        this.senderPhone = response.data.senderPhone
+        this.receiverName = response.data.receiverName
+        this.receiverAddress = response.data.receiverAddress
+        this.receiverPhone = response.data.receiverPhone
+        this.fee = response.data.fee
+        this.special_service = response.data.special_service
+        this.note = response.data.note
       })
       .catch((error) => {
         console.log(error)
-        toast.error("???", { position: toast.POSITION.BOTTOM_RIGHT }),
-            {
-              autoClose: 1000,
-            };
+        toast.error('???', { position: toast.POSITION.BOTTOM_RIGHT }),
+          {
+            autoClose: 1000
+          }
       })
   },
 
@@ -307,7 +313,6 @@ $transiton: all 500ms ease;
   height: 95vh;
   border-radius: 12px;
   transition: all 0.3s ease;
-
 }
 
 .header {

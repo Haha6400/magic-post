@@ -431,7 +431,7 @@ const printLabel = async (req, res) => {
   const [page] = await browser.pages();
 
   //Create QR Code 
-  const qrcode = await QRCode.toDataURL('localhost:3000/api/orders/' + order_id);
+  const qrcode = await QRCode.toDataURL('localhost:3000/api/orders/' + order.order_code);
   // console.log('localhost:3000/api/orders/' + order_id);
   // console.log(qrcode);
 

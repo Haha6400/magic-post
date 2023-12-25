@@ -54,7 +54,7 @@ export default {
     if (localStorage.getItem('orderCode')) {
       this.loading = true
       this.order_code = localStorage.getItem('orderCode')
-      localStorage.clear()
+      localStorage.removeItem('orderCode')
       console.log(this.order_code)
       let url = 'http://localhost:3000/api/orders/code/' + this.order_code
       await axios

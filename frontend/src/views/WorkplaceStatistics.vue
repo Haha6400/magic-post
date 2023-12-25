@@ -4,7 +4,7 @@
       <StatisticsCard
         class="card"
         :title="'Doanh thu'"
-        :content="'150M'"
+        :content="income"
         :description="'Số liệu thống kê theo tháng'"
       ></StatisticsCard>
       <StatisticsCard
@@ -191,6 +191,7 @@ export default {
       allSent: 0,
       totalOrders: 0,
       avaiableOrders: 0,
+      income: 0,
 
       // chart
       options: {
@@ -235,6 +236,7 @@ export default {
     }
   },
   async created() {
+    console.log(this.$route.params.id)
     // get name
     let url = ''
 
@@ -249,9 +251,25 @@ export default {
         console.log(error)
       })
 
+    
+
     const today = new Date()
     const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()
     const startDate = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + '01'
+
+    //getIncome
+    url = 'http://localhost:3000/api/dashboard/income/' + this.$route.params.id
+    await axios
+      .post(url, {
+        currentDate: date
+      })
+      .then((response) => {
+        console.log(response.data)
+        this.income = response.data
+      })
+      .catch((error) => {
+        console.log(error)
+      })
 
     //allRecieved
     url = 'http://localhost:3000/api/dashboard/all/receive'

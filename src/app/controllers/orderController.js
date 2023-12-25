@@ -130,7 +130,7 @@ const updateOrder = asyncHandler(async (req, res) => {
             $addToSet: {
                 'events': {
                     'branch_id': currentBranch,
-                    'status': updateStatus
+                    'status': req.body.status
                 }
             }
         }
