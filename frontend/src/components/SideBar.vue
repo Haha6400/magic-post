@@ -524,25 +524,27 @@ export default {
   methods: {
     async logout() {
       let url = 'http://localhost:3000/api/accounts/logout'
-      let token = localStorage.getItem('token')
+      let token = localStorage.getItem('token').toString()
+      console.log(typeof token)
       await axios
         .post(url, {
           headers: {
+            "authorization": token
             'authorization': token
           }
         })
         .then((response) => {
           console.log(response.data)
+          localStorage.clear()
+          this.isLogin = false
+          this.userName = ''
+          this.role = null
+          this.avatar = null
           this.$router.go(0)
         })
         .catch((error) => {
           console.log(error)
         })
-      localStorage.clear()
-      this.isLogin = false
-      this.userName = ''
-      this.role = null
-      this.avatar = null
     }
   }
 }
