@@ -266,7 +266,6 @@ export default {
     },
 
     //update
-    // TODO: error
     verifyOrder(orderCode) {
       let url = 'http://localhost:3000/api/workplace/confirm/send/' + orderCode
       axios
@@ -274,6 +273,7 @@ export default {
         .then((response) => {
           console.log(response.data)
           this.loading = true
+          sleep(1000);
           this.getList()
           toast.success('Successfully Updated', { position: toast.POSITION.BOTTOM_RIGHT }),
             {

@@ -32,6 +32,9 @@
           Trạng thái đơn hàng: <span v-if="this.order_status.is_returned">Đã đến nơi</span>
           <span v-if="!this.order_status.is_returned">Đã vận chuyển</span><br />
         </p>
+        <p>
+            Địa điểm hiện tại: {{ this.order_status.currentAt }}
+        </p>
       </div>
   
       <img alt="logo" src="../assets/home/header.jpg" />
@@ -51,7 +54,9 @@
     },
   
     async created() {
+        console.log(this.$route)
         let url = 'http://localhost:3000/api/orders/code/' + this.$route.params.id
+
         await axios
           .get(url)
           .then((response) => {
@@ -71,7 +76,7 @@
   
     methods: {
       async orderStatus() {
-        let url = 'http://localhost:3000/api/orders/code/' + this.order_code
+        let url = 'http://localhost:3000/api/orders/code/' + this.$route.params.id
         await axios
           .get(url)
           .then((response) => {
@@ -191,6 +196,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
   
   img {

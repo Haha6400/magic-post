@@ -10,12 +10,17 @@
           placeholder="Tìm kiếm đơn hàng"
           v-model="order_code"
         />
-        
-        <!-- <router-link :to="{ name: 'orderStatusByCustomer', params: { id: order_code } }"> -->
-          <button v-on:click="orderStatus()">
+
+        <!-- <router-link :to="{ name: 'orderStatusByCustomer', params: { id: order_code } }">
+          <img src="@/assets/logo.png" />
+        </router-link> -->
+        <button v-on:click="orderStatus()">
+          <!-- <img src="@/assets/logo.png" /> -->
+          <router-link v-if="order_code" :to="{ name: 'orderStatusByCustomer', params: { id: order_code } }">
             <img src="@/assets/logo.png" />
-          </button>
-        <!-- </router-link> -->
+          </router-link>
+          <img v-if="!order_code" src="@/assets/logo.png" />
+        </button>
       </form>
     </div>
 
@@ -35,6 +40,7 @@
         Trạng thái đơn hàng: <span v-if="this.order_status.is_returned">Đã đến nơi</span>
         <span v-if="!this.order_status.is_returned">Đã vận chuyển</span><br />
       </p>
+      <p>Địa điểm hiện tại: {{ this.order_status.currentAt }}</p>
     </div>
 
     <img alt="logo" src="../assets/home/header.jpg" />

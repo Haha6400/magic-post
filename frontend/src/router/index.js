@@ -33,9 +33,10 @@ const router = createRouter({
       component: ()=>import('../views/OrderStatus.vue')
     },
     {
-      path: "/orderStatus?:id",
+      path: "/orderStatus/:id",
       name: "orderStatusByCustomer",
-      component: ()=>import('../views/OrderStatusWithOrderCode.vue')
+      component: ()=>import('../views/OrderStatusWithOrderCode.vue'),
+      props: route => ({ id: Number(route.params.id) }),
     },
     {
       path: "/hubStaff/newOrder",
@@ -63,7 +64,7 @@ const router = createRouter({
     //   component: ()=>import('../views/ManageOrders.vue')
     // },
     {
-      path: "/staff/orderDetail?:id",
+      path: "/staff/orderDetail/:id",
       name: "orderDetailbyHubStaff",
       component: ()=>import('../views/Staff/OrderDetail.vue')
     },
@@ -78,7 +79,7 @@ const router = createRouter({
       component: ()=>import('../views/Supervisor/CreateAccount.vue')
     },
     {
-      path: "/supervisor/accountDetail?:id",
+      path: "/supervisor/accountDetail/:id",
       name: "accountDetail",
       component: ()=>import('../views/Supervisor/AccountDetail.vue')
     },
@@ -118,7 +119,7 @@ const router = createRouter({
       component: ()=>import('../views/Manager/SentOrders.vue')
     },
     {
-      path: "/workplaceStatistics?:id",
+      path: "/workplaceStatistics/:id",
       name: "workplaceStatistics",
       component: ()=>import('../views/WorkplaceStatistics.vue')
     },

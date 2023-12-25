@@ -504,7 +504,7 @@ export default {
       role: '',
       userName: '',
       avatar: null,
-      branchId: ''
+      branchId: '',
     }
   },
 
@@ -530,7 +530,6 @@ export default {
         .post(url, {
           headers: {
             "authorization": token
-            'authorization': token
           }
         })
         .then((response) => {
