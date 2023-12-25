@@ -33,6 +33,11 @@ const router = createRouter({
       component: ()=>import('../views/OrderStatus.vue')
     },
     {
+      path: "/orderStatus?:id",
+      name: "orderStatusByCustomer",
+      component: ()=>import('../views/OrderStatusWithOrderCode.vue')
+    },
+    {
       path: "/hubStaff/newOrder",
       name: "newOrderbyHubStaff",
       component: ()=>import('../views/Staff/NewOrders.vue')

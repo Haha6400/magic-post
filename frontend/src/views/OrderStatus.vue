@@ -3,30 +3,33 @@
     <h1 class="loginHeader">Tra cứu đơn hàng</h1>
 
     <div class="search-side">
-      <form class="search-bar" @submit.prevent="orderStatus()">
+      <form class="search-bar">
         <input
           class="search-box"
           type="text"
           placeholder="Tìm kiếm đơn hàng"
           v-model="order_code"
         />
-        <button type="submit" v-on:click="orderStatus()">
-          <img src="@/assets/logo.png" />
-        </button>
+        
+        <!-- <router-link :to="{ name: 'orderStatusByCustomer', params: { id: order_code } }"> -->
+          <button v-on:click="orderStatus()">
+            <img src="@/assets/logo.png" />
+          </button>
+        <!-- </router-link> -->
       </form>
     </div>
+
     <div class="loading">
-        <v-progress-circular
-          v-if="loading"
-          color="#ffa500"
-          align-items="center"
-          indeterminate
-          :size="34"
-        ></v-progress-circular>
-      </div>
+      <v-progress-circular
+        v-if="loading"
+        color="#ffa500"
+        align-items="center"
+        indeterminate
+        :size="34"
+      ></v-progress-circular>
+    </div>
 
     <div class="responseData" v-if="auth">
-      
       <p>Mã vận đơn: {{ this.order_status.order_code }} <br /></p>
       <p>
         Trạng thái đơn hàng: <span v-if="this.order_status.is_returned">Đã đến nơi</span>
@@ -73,22 +76,23 @@ export default {
 
   methods: {
     async orderStatus() {
-      let url = 'http://localhost:3000/api/orders/code/' + this.order_code
-      await axios
-        .get(url)
-        .then((response) => {
-          console.log(response.data)
-          this.order_status = response.data
-          this.auth = true
-          // this.loading = false
-        })
-        .catch((error) => {
-          console.log(error)
-          // toast.error('???', { position: toast.POSITION.BOTTOM_RIGHT }),
-          //   {
-          //     autoClose: 1000
-          //   }
-        })
+      this.$router.push({ name: 'orderStatusByCustomer', params: { id: this.order_code } })
+      // let url = 'http://localhost:3000/api/orders/code/' + this.order_code
+      // await axios
+      //   .get(url)
+      //   .then((response) => {
+      //     console.log(response.data)
+      //     this.order_status = response.data
+      //     this.auth = true
+      //     // this.loading = false
+      //   })
+      //   .catch((error) => {
+      //     console.log(error)
+      //     // toast.error('???', { position: toast.POSITION.BOTTOM_RIGHT }),
+      //     //   {
+      //     //     autoClose: 1000
+      //     //   }
+      //   })
     }
   }
 }
