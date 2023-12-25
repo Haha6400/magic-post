@@ -528,7 +528,7 @@ export default {
       await axios
         .post(url, {
           headers: {
-            authorization: token
+            'authorization': token
           }
         })
         .then((response) => {
