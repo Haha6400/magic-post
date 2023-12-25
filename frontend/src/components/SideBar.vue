@@ -530,6 +530,7 @@ export default {
         .post(url, {
           headers: {
             "authorization": token
+            'authorization': token
           }
         })
         .then((response) => {
