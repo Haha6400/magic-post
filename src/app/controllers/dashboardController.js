@@ -111,6 +111,7 @@ async function statisticFunction(req, res, currentBranch, statusArray, senders) 
 }
 
 async function receiveFunction(req, res, currentBranch, statusArray) {
+    currentBranch = currentBranch[0]
     const lowerBranch = await Branch.find({ higherBranch_id: currentBranch });
     lowerBranch.push(currentBranch);
     const senders = await Customer.find({ branch_id: { $nin: lowerBranch } }).sort('createdAt');
@@ -118,8 +119,11 @@ async function receiveFunction(req, res, currentBranch, statusArray) {
 }
 
 async function sendFunction(req, res, currentBranch, statusArray) {
+    currentBranch = currentBranch[0]
+    // console.log("currentBranch", currentBranch)
     const lowerBranch = await Branch.find({ higherBranch_id: currentBranch });
     lowerBranch.push(currentBranch);
+    // console.log("lowerBranch", lowerBranch)
     const senders = await Customer.find({ branch_id: { $in: lowerBranch } }).sort('createdAt');
     return statisticFunction(req, res, currentBranch, statusArray, senders);
 }
@@ -152,6 +156,7 @@ const allSend_Supervisors = asyncHandler(async (req, res) => {
     const currentBranch = await Branch.find({
         name: req.body.name
     })
+    console.log("currentBranch", currentBranch)
     const statusArray = ["PRE_TRANSIT", "TRANSIT", "DELIVERED", "PRE_RETURN", "RETURNED", "FAILRE"];
     const orders = await sendFunction(req, res, currentBranch, statusArray);
     res.status(200).json({ orders, count: orders.length });
