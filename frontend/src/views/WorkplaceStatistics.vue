@@ -9,7 +9,7 @@
       ></StatisticsCard>
       <StatisticsCard
         class="card"
-        :title="'Tổng số đơn'"
+        :title="'Tổng số đơn hàng'"
         :content="totalOrders"
         :description="'Số liệu thống kê theo tháng'"
       ></StatisticsCard>
@@ -22,7 +22,7 @@
       <div class="card">
         <div class="content-header">Thống kê trạng thái</div>
         <apexchart
-          width="300"
+          width="270"
           type="donut"
           :options="options"
           :series="[this.allRecieved, this.allSent]"
@@ -282,70 +282,98 @@ export default {
       })
 
     //allRecieved
-    if (this.userRole != 'supervisor') {
-      url = 'http://localhost:3000/api/dashboard/all/receive'
-      await axios
-        .post(url, {
-          start: startDate,
-          end: date
-        })
-        .then((response) => {
-          console.log(response.data)
-          this.allRecieved = response.data.count
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    }
+    // if (this.userRole != 'supervisor') {
+    //   url = 'http://localhost:3000/api/dashboard/all/receive'
+    //   await axios
+    //     .post(url, {
+    //       start: startDate,
+    //       end: date
+    //     })
+    //     .then((response) => {
+    //       console.log(response.data)
+    //       this.allRecieved = response.data.count
+    //     })
+    //     .catch((error) => {
+    //       console.log(error)
+    //     })
+    // }
 
-    if (this.userRole == 'supervisor') {
-      url = 'http://localhost:3000/api/dashboard/all/receive/supervisor'
-      await axios
-        .post(url, {
-          start: startDate,
-          end: date,
-          name: this.branchName
-        })
-        .then((response) => {
-          console.log(response.data)
-          this.allRecieved = response.data.count
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    }
+    // if (this.userRole == 'supervisor') {
+    //   url = 'http://localhost:3000/api/dashboard/all/receive/supervisor'
+    //   await axios
+    //     .post(url, {
+    //       start: startDate,
+    //       end: date,
+    //       name: this.branchName
+    //     })
+    //     .then((response) => {
+    //       console.log(response.data)
+    //       this.allRecieved = response.data.count
+    //     })
+    //     .catch((error) => {
+    //       console.log(error)
+    //     })
+    // }
+    url = 'http://localhost:3000/api/dashboard/all/receive/supervisor'
+    await axios
+      .post(url, {
+        start: startDate,
+        end: date,
+        name: this.branchName
+      })
+      .then((response) => {
+        console.log(response.data)
+        this.allRecieved = response.data.count
+      })
+      .catch((error) => {
+        console.log(error)
+      })
 
     //allSent
-    if (this.userRole != 'supervisor') {
-      url = 'http://localhost:3000/api/dashboard/all/send'
-      await axios
-        .post(url, {
-          start: startDate,
-          end: date
-        })
-        .then((response) => {
-          console.log(response.data)
-          this.allSent = response.data.count
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    } else {
-      url = 'http://localhost:3000/api/dashboard/all/send/supervisor'
-      await axios
-        .post(url, {
-          start: startDate,
-          end: date,
-          name: this.branchName
-        })
-        .then((response) => {
-          console.log(response.data)
-          this.allSent = response.data.count
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    }
+    // if (this.userRole != 'supervisor') {
+    //   url = 'http://localhost:3000/api/dashboard/all/send'
+    //   await axios
+    //     .post(url, {
+    //       start: startDate,
+    //       end: date
+    //     })
+    //     .then((response) => {
+    //       console.log(response.data)
+    //       this.allSent = response.data.count
+    //     })
+    //     .catch((error) => {
+    //       console.log(error)
+    //     })
+    // } else {
+    //   url = 'http://localhost:3000/api/dashboard/all/send/supervisor'
+    //   await axios
+    //     .post(url, {
+    //       start: startDate,
+    //       end: date,
+    //       name: this.branchName
+    //     })
+    //     .then((response) => {
+    //       console.log(response.data)
+    //       this.allSent = response.data.count
+    //     })
+    //     .catch((error) => {
+    //       console.log(error)
+    //     })
+    // }
+    url = 'http://localhost:3000/api/dashboard/all/send/supervisor'
+    await axios
+      .post(url, {
+        start: startDate,
+        end: date,
+        name: this.branchName
+      })
+      .then((response) => {
+        console.log(response.data)
+        this.allSent = response.data.count
+      })
+      .catch((error) => {
+        console.log(error)
+      })
 
     //totalOrder
     this.totalOrders = this.allRecieved + this.allSent

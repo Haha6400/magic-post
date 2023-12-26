@@ -267,7 +267,7 @@ export default {
 
     //update
     verifyOrder(orderCode) {
-      let url = 'http://localhost:3000/api/workplace/confirm/send/' + orderCode
+      let url = 'http://localhost:3000/api/workplace/confirm/receive/' + orderCode
       axios
         .put(url)
         .then((response) => {
