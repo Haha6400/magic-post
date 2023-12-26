@@ -52,39 +52,7 @@
         :items="dataList"
         :search="search"
       >
-        <template v-slot:item.status="{ item }">
-          <button
-            @click="updateOrderDialog = true"
-            v-if="item.status == 'DELIVERING'"
-            class="status"
-          >
-            <p style="background-color: #ffe4b2">{{ item.status }}</p>
-          </button>
-
-          <button @click="updateOrderDialog = true" v-if="item.status == 'TRANSIT'" class="status">
-            <p style="background-color: #99d9f2">{{ item.status }}</p>
-          </button>
-
-          <button @click="updateOrderDialog = true" v-if="item.status == 'PRE_TRANSIT'" class="status">
-            <p style="background-color: #FFB9B9">{{ item.status }}</p>
-          </button>
-
-          <button @click="updateOrderDialog = true" v-if="item.status == 'DELIVERING'" class="status">
-            <p style="background-color: #D5FFB9">{{ item.status }}</p>
-          </button>
-
-          <button @click="updateOrderDialog = true" v-if="item.status == 'DELIVERED'" class="status">
-            <p style="background-color: #B9F9FF">{{ item.status }}</p>
-          </button>
-
-          <button @click="updateOrderDialog = true" v-if="item.status == 'PRE_RETURNED'" class="status">
-            <p style="background-color: #B9D7FF">{{ item.status }}</p>
-          </button>
-
-          <button @click="updateOrderDialog = true" v-if="item.status == 'RETURNED'" class="status">
-            <p style="background-color: #B9D7FF">{{ item.status }}</p>
-          </button>
-
+        <template v-slot:item.statusDetail="{ item }">
           <v-dialog v-model="updateOrderDialog" persistent width="800">
             <v-card>
               <div class="popupHeader">Cập nhật trạng thái đơn hàng</div>
@@ -110,7 +78,7 @@
                 </button>
 
                 <button
-                  v-on:click="updateOrderStatus(item.order_code, newOrderStatus)"
+                  v-on:click="updateOrderStatus(updateOrderDialog, newOrderStatus)"
                   class="btn btn--green-1"
                   style="width: fit-content"
                 >
@@ -119,6 +87,38 @@
               </div>
             </v-card>
           </v-dialog>
+
+          <button
+            @click="updateOrderDialog = true"
+            v-if="item.status == 'DELIVERING'"
+            class="status"
+          >
+            <p style="background-color: #ffe4b2">{{ item.status }}</p>
+          </button>
+
+          <button @click="updateOrderDialog = item.order_code" v-if="item.status == 'TRANSIT'" class="status">
+            <p style="background-color: #99d9f2">{{ item.status }}</p>
+          </button>
+
+          <button @click="updateOrderDialog = item.order_code" v-if="item.status == 'PRE_TRANSIT'" class="status">
+            <p style="background-color: #FFB9B9">{{ item.status }}</p>
+          </button>
+
+          <button @click="updateOrderDialog = item.order_code" v-if="item.status == 'DELIVERING'" class="status">
+            <p style="background-color: #D5FFB9">{{ item.status }}</p>
+          </button>
+
+          <button @click="updateOrderDialog = item.order_code" v-if="item.status == 'DELIVERED'" class="status">
+            <p style="background-color: #B9F9FF">{{ item.status }}</p>
+          </button>
+
+          <button @click="updateOrderDialog = item.order_code" v-if="item.status == 'PRE-RETURN'" class="status">
+            <p style="background-color: #B9D7FF">{{ item.status }}</p>
+          </button>
+
+          <button @click="updateOrderDialog = item.order_code" v-if="item.status == 'RETURNED'" class="status">
+            <p style="background-color: #B9D7FF">{{ item.status }}</p>
+          </button>
           <!-- </button> -->
         </template>
 
@@ -222,6 +222,7 @@ export default {
 
       updateOrderDialog: false,
       newOrderStatus: '',
+      
 
       dataList: [],
       page: 1,
@@ -236,7 +237,8 @@ export default {
         { key: 'receiverName', title: 'Người nhận', align: 'center' },
         { key: 'fee', title: 'Chi phí', align: 'center' },
         { key: 'receiver_fee', title: 'Phí người nhận trả', align: 'center' },
-        { key: 'status', title: 'Trạng thái đơn hàng', align: 'center' },
+        // { key: 'status', title: 'Trạng thái đơn hàng', align: 'center' },
+        { title: 'Trạng thái đơn hàng', sortable: false, align: 'center', text: 'Trạng thái đơn hàng', value: 'statusDetail' },
         { title: 'Chi tiết', sortable: false, align: 'center', text: 'Chi tiết', value: 'action' }
       ]
     }
@@ -273,6 +275,7 @@ export default {
     },
 
     deleteOrder(id) {
+      console.log(id)
       this.loading = true
       let url = 'http://localhost:3000/api/orders/delete/' + id
       axios
@@ -297,20 +300,21 @@ export default {
     },
 
     updateOrderStatus(orderCode, newStatus) {
-      console.log(newStatus)
+      console.log(orderCode)
       let url = 'http://localhost:3000/api/orders/update/' + orderCode
       axios
         .put(url, {
-          status: newStatus
+          status: this.newOrderStatus
         })
         .then((response) => {
           console.log(response.data)
+          this.loading = true
           this.getList()
           toast.success('Successfully Updated', { position: toast.POSITION.BOTTOM_RIGHT }),
             {
               autoClose: 100
             }
-          this.updateOrderDialog = false
+          this.updateOrderDialog = null
         })
         .catch((error) => {
           console.log(error)

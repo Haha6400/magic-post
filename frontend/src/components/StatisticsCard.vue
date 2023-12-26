@@ -36,7 +36,7 @@ export default {
 }
 
 .content {
-  font-size: 50px;
+  font-size: 40px;
   font-size: 'Nunito', sans-serif;
 }
 

@@ -422,16 +422,17 @@ img{
 
 const printLabel = async (req, res) => {
   // console.log("OK");
-  const order_id = req.params.order_id;
+  var order_id = req.params.order_id;
   const order = await Order.findById(order_id);
 
+  order_id = order.order_code
   // Create a browser instance
   // const browser = await puppeteer.launch();
   const browser = await puppeteer.launch();
   const [page] = await browser.pages();
 
   //Create QR Code 
-  const qrcode = await QRCode.toDataURL('localhost:3000/api/orders/' + order.order_code);
+  const qrcode = await QRCode.toDataURL('http://localhost:5173/orderStatus/' + order_id);
   // console.log('localhost:3000/api/orders/' + order_id);
   // console.log(qrcode);
 
