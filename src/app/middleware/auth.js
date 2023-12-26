@@ -9,8 +9,10 @@ const access_token = require('../models/tokenModel')
 const staffAuth = async (req, res, next) => {
     const authHeader = req.headers['authorization']
     console.log(process.env.ACCESS_TOKEN_SECRET);
-    if (!authHeader) return res.sendStatus(403);
-    console.log(authHeader); //Bearer token
+    if (!authHeader) {
+        console.log(authHeader); //Bearer token
+        return res.sendStatus(403);
+    }
     const token = authHeader.split(' ')[0];
     console.log("token", token)
     const checkToken = await access_token.findOne({
