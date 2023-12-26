@@ -146,10 +146,25 @@ const allSend = asyncHandler(async (req, res) => {
 
 const allSendByStatus = asyncHandler(async (req, res) => {
     const currentBranch = await getCurrentBranch(req, res);
-    var statusArray;
-    statusArray.push(req.body.status)
-    const orders = await sendFunction(req, res, currentBranch, statusArray);
-    res.status(200).json({ orders, count: orders.length });
+    const statisticStatus = req.body.status;
+    const processes = await Process.find({
+        events: {
+            $elemMatch: {
+                'branch_id': currentBranch,
+                'status': statisticStatus
+            }
+        }
+    });
+    const senders = await Customer.find({ branch_id: currentBranch }).sort('createdAt');
+    console.log("senders", senders)
+    const filteredProcess = processes.filter(item => item.events[item.events.length - 1].status === statisticStatus);
+    console.log("filteredProcess", filteredProcess)
+    const orders = await Order.find({
+        processes_id: { $in: filteredProcess },
+        sender_id: senders
+    }).sort('createdAt');
+    const result = await getOrders(orders)
+    res.status(200).json({ result, count: result.length });
 })
 
 const allReceive_Supervisors = asyncHandler(async (req, res) => {
