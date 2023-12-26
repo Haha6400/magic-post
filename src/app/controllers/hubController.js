@@ -26,6 +26,7 @@ const Customer = require("../models/customerModel");
 const Process = require("../models/processesModel");
 
 const { getCurrentBranch } = require("../middleware/branch");
+const { getOrders } = require("../utils/orderFunctions");
 
 /*
 @desc Orders are received from warehouse, send to receiver
@@ -35,14 +36,18 @@ async function hubReceive_Function(req, res, currentHub, warehouse, statusArray)
     const end = req.body.end;
     console.log(new Date(start));
     if (!start || !end) return "Fill start and end";
-    const processes = await Process.find({
-        branch_id: currentHub, //Order has arrived at currentHub
-        status: { $in: statusArray } //At least 1 element of arr `status` in `statusArray`
-    }).sort('createdAt');
+    processes = await Process.find({
+        events: {
+            $elemMatch: {
+                'branch_id': currentHub,
+                'status': { $in: statusArray }
+            }
+        }
+    });
 
     const receivers = await Customer.find({ branch_id: currentHub }).sort('createdAt'); //Receiver receive order in currentHub
     if (warehouse == null) { //Orders from all warehouses
-        const orders = await Order.find({
+        var orders = await Order.find({
             createdAt: { $gt: new Date(start), $lt: new Date(end) },
             processes_id: processes,
             receiver_id: receivers
@@ -52,11 +57,12 @@ async function hubReceive_Function(req, res, currentHub, warehouse, statusArray)
             throw new Error("orders not found"); //hubA -> WHA-> WHB -> hubB -> receiver
             //huba -> WHa -> WHB -> hubB -> receiver
         }
+        orders = await getOrders(orders)
         return orders;
     } else { //Orders from a warehouse in request
         const fromHub = await Branch.find({ higherBranch_id: warehouse }).sort('createdAt');
         const senders = await Customer.find({ branch_id: fromHub }).sort('createdAt');
-        const orders = await Order.find({
+        var orders = await Order.find({
             createdAt: { $gt: new Date(start), $lt: new Date(end) },
             processes_id: processes,
             receiver_id: receivers,
@@ -66,6 +72,7 @@ async function hubReceive_Function(req, res, currentHub, warehouse, statusArray)
             res.status(404);
             throw new Error("orders not found");
         }
+        orders = await getOrders(orders)
         return orders;
     }
 }
@@ -79,11 +86,18 @@ async function hubSend_Function(req, res, currentHub, warehouse, statusArray) {
     console.log(new Date(start));
     if (!start || !end) return "Fill start and end";
     const senders = await Customer.find({ branch_id: currentHub }).sort('createdAt');
+
     const processes = await Process.find({
-        status: { $in: statusArray } //At least 1 element of arr `status` in `statusArray`
-    }).sort('createdAt');
+        events: {
+            $elemMatch: {
+                'status': { $in: statusArray }
+            }
+        }
+    });
+    console.log("senders", senders);
+    console.log("processes", processes);
     if (warehouse == null) { //All orders to all warehouse
-        const orders = await Order.find({
+        var orders = await Order.find({
             createdAt: { $gt: new Date(start), $lt: new Date(end) },
             processes_id: processes,
             sender_id: senders
@@ -91,13 +105,14 @@ async function hubSend_Function(req, res, currentHub, warehouse, statusArray) {
         if (!orders) {
             console.log("No orders");
         }
+        orders = await getOrders(orders)
         return orders;
     }
     else { //All orders to a warehouse in request
         const toHub = await Branch.find({ higherBranch_id: warehouse }).sort('createdAt');
         console.log(toHub);
         const receivers = await Customer.find({ branch_id: toHub }).sort('createdAt');
-        const orders = await Order.find({
+        var orders = await Order.find({
             createdAt: { $gt: new Date(start), $lt: new Date(end) },
             processes_id: processes,
             receiver_id: receivers
@@ -105,6 +120,7 @@ async function hubSend_Function(req, res, currentHub, warehouse, statusArray) {
         if (!orders) {
             console.log("No orders");
         }
+        orders = await getOrders(orders)
         return orders;
     }
 }
@@ -175,7 +191,7 @@ const allHubReceivByWH_Supervisor = asyncHandler(async (req, res) => {
 @desc All orders are received from sender, send to warehouse.
 */
 async function allHubSend_Function(req, res, currentHub, warehouse) {
-    const statusArray = ["PRE_TRANSIT", "TRANSIT", "DELIVERED", "PRE_RETURN", "RETURNED", "FAILRE"];
+    const statusArray = ["PRE_TRANSIT", "TRANSIT", "DELIVERED", "DELIVERING", "PRE_RETURN", "RETURNED", "FAILRE"];
     const orders = await hubSend_Function(req, res, currentHub, warehouse, statusArray);
     return orders;
 }
