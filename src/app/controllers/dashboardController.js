@@ -121,17 +121,23 @@ async function statisticReceiveFunction(req, res, currentBranch, statusArray, re
             }
         }
     }).sort('createdAt');
-
+    // console.log("processes", processes)
+    const filteredProcess = processes.filter(item => (item.events[item.events.length - 1].status === "DELIVERING" ||
+        item.events[item.events.length - 1].status === "DELIVERED" ||
+        item.events[item.events.length - 1].status === "RETURNED")
+        && item.events[item.events.length - 1].branch_id.toString() === currentBranch._id.toString());
+    // console.log("filteredProcess", filteredProcess)
     const orders = await Order.find({
         createdAt: { $gt: new Date(start), $lt: new Date(end) },
-        processes_id: processes,
+        processes_id: { $in: filteredProcess },
         receiver_id: receivers
     }).sort('createdAt');
     return orders;
 }
 
 async function receiveFunction(req, res, currentBranch, statusArray) {
-    const receivers = await Customer.find({ branch_id: currentBranch[0] }).sort('createdAt');
+    console.log("currentBranch", currentBranch)
+    const receivers = await Customer.find({ branch_id: currentBranch }).sort('createdAt');
     return statisticReceiveFunction(req, res, currentBranch, statusArray, receivers);
 }
 
