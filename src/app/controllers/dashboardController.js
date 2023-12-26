@@ -106,17 +106,33 @@ async function statisticFunction(req, res, currentBranch, statusArray, senders) 
         processes_id: processes,
         sender_id: senders
     }).sort('createdAt');
-    // console.log(orders);
-    // orders = 
+    return orders;
+}
+
+async function statisticReceiveFunction(req, res, currentBranch, statusArray, receivers) {
+    const start = req.body.start;
+    const end = req.body.end;
+    if (!start || !end) return "Fill start and end";
+    const processes = await Process.find({
+        events: {
+            $elemMatch: {
+                'branch_id': currentBranch,
+                'status': { $in: statusArray }
+            }
+        }
+    }).sort('createdAt');
+
+    const orders = await Order.find({
+        createdAt: { $gt: new Date(start), $lt: new Date(end) },
+        processes_id: processes,
+        receiver_id: receivers
+    }).sort('createdAt');
     return orders;
 }
 
 async function receiveFunction(req, res, currentBranch, statusArray) {
-    currentBranch = currentBranch[0]
-    const lowerBranch = await Branch.find({ higherBranch_id: currentBranch });
-    lowerBranch.push(currentBranch);
-    const senders = await Customer.find({ branch_id: { $nin: lowerBranch } }).sort('createdAt');
-    return statisticFunction(req, res, currentBranch, statusArray, senders);
+    const receivers = await Customer.find({ branch_id: currentBranch[0] }).sort('createdAt');
+    return statisticReceiveFunction(req, res, currentBranch, statusArray, receivers);
 }
 
 async function sendFunction(req, res, currentBranch, statusArray) {
