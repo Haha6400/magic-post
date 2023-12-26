@@ -1,4 +1,4 @@
-# **HỆ THỐNG QUẢN LÝ CHUYỂN PHÁT- MAGIC POST ✨**
+# **✨ HỆ THỐNG QUẢN LÝ CHUYỂN PHÁT- MAGIC POST ✨**
 ![image](https://github.com/Haha6400/magic-post/assets/100295385/3bbcf37d-09c0-49e4-a170-8ff87bfdc695)
 ## Mục lục
 - [Giới thiệu](https://github.com/Haha6400/magic-post?tab=readme-ov-file#gi%E1%BB%9Bi-thi%E1%BB%87u)
