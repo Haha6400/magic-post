@@ -11,7 +11,7 @@ router.get('/count/:branch_id', getMonthlyOrdersByBranch)
 router.post('/all/receive', staffAuth, allReceive);
 router.post('/all/send', staffAuth, allSend);
 router.post("/avail", staffAuth, sendConfirmList);
-router.post('/all/receive/supervisor', staffAuth, roleCheck(["supervisor"]), allReceive_Supervisors);
-router.post('/all/send/supervisor', staffAuth, roleCheck(["supervisor"]), allSend_Supervisors);
+router.post('/all/receive/supervisor', staffAuth, allReceive_Supervisors);
+router.post('/all/send/supervisor', staffAuth, allSend_Supervisors);
 router.post('/send/bystatus', staffAuth, allSendByStatus)
 module.exports = router

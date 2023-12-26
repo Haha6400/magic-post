@@ -68,6 +68,10 @@
           <button v-if="item.status == 'PRE-RETURN'" class="status">
             <p style="background-color: #B9D7FF">{{ item.status }}</p>
           </button>
+
+          <button v-if="item.status == 'FAILURE'" class="status">
+            <p style="background-color: #FFB9B9">{{ item.status }}</p>
+          </button>
         </template>
 
         <template v-slot:item.update="{ item }">

@@ -194,7 +194,7 @@ const allReceive_Supervisors = asyncHandler(async (req, res) => {
         name: req.body.name
     })
     const statusArray = ["DELIVERED", "TRANSIT", "RETURNED"]
-    const orders = await receiveFunction(req, res, currentBranch, statusArray);
+    const orders = await receiveFunction(req, res, currentBranch[0], statusArray);
     res.status(200).json({ orders, count: orders.length });
 })
 
