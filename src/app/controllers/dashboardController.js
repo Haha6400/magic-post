@@ -13,7 +13,7 @@ const { getAllWarehouse } = require("../controllers/branchController");
 
 const getMonthlyIncome = asyncHandler(async (req, res) => {
     const currentDate = new Date(req.body.currentDate)
-    var total = 0;
+    console.log("date: " + Date.now())
     const orders = await Order.find({
         createdAt: {
             $gte: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),

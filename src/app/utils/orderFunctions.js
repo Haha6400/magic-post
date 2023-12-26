@@ -96,6 +96,7 @@ async function getOrder(order_id) {
     const receiver_fee = await ReceiverFee.findById(order.receiver_fee_id);
     const processes = await Process.findById(order.processes_id);
     const lastEvent = processes.events;
+    const br = await branch.findById(lastEvent[lastEvent.length - 1].branch_id)
     return {
         note: order.note,
         special_service: order.special_service,
@@ -111,6 +112,7 @@ async function getOrder(order_id) {
         fee: fee.total,
         receiver_fee: receiver_fee.total,
         status: lastEvent[lastEvent.length - 1].status,
+        currentAt: br.name
     };
 }
 
