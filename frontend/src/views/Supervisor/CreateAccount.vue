@@ -150,6 +150,10 @@ $default: #c5c5c5;
 $green-1: #75cc65;
 $transiton: all 500ms ease;
 
+::-webkit-scrollbar {
+  display: none;
+}
+
 .container {
   display: flex;
   flex-direction: column;

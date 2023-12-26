@@ -1,9 +1,11 @@
 <template>
   <div class="container">
-    <h1 class="loginHeader">Xác nhận đơn hàng đến</h1>
+    <h1 class="loginHeader">Thống kê</h1>
     <div class="buttonList">
+      <ChipCard v-if="orderStatus" :title="'Trạng thái'" :content="orderStatus"></ChipCard>
+
       <form class="search-bar">
-        <input class="search-box" type="text" placeholder="Tìm kiếm đơn hàng" v-model="search" />
+        <input class="search-box" type="text" placeholder="Tìm kiếm trạng thái" v-model="search" />
         <button type="submit">
           <img src="@/assets/logo.png" />
         </button>
@@ -27,58 +29,9 @@
         </svg>
       </button>
 
-      <v-dialog v-model="dialog" persistent width="1024">
-        <v-card>
-          <div class="popupHeader">Bộ lọc</div>
-          <div class="input-container">
-            <label for="inputState">Trạng thái</label>
-            <select id="inputState" class="form-control" v-model="orderStatus">
-              <option>Còn trong kho</option>
-            </select>
-          </div>
-          <div class="input-container">
-            <label for="inputState">Nơi gửi</label>
-            <select id="inputState" class="form-control" v-model="senderName">
-              <option v-for="item in warehouseList">
-                {{ item }}
-              </option>
-            </select>
-          </div>
-
-          <div class="input-container">
-            <label for="startDate">Ngày bắt đầu</label>
-            <input id="startDate" class="form-control" type="date" v-model="start" />
-          </div>
-
-          <div class="input-container">
-            <label for="startDate">Ngày kết thúc</label>
-            <input id="startDate" class="form-control" type="date" v-model="end" />
-          </div>
-
-          <div class="bottomButton">
-            <button
-              @click="dialog = false"
-              v-on:click="getListFiltered()"
-              class="btn btn--green-1"
-              style="width: fit-content"
-            >
-              Đóng
-            </button>
-
-            <button
-              v-on:click="deleterFilter()"
-              class="btn btn--green-1"
-              style="width: fit-content"
-            >
-              Xóa bộ lọc
-            </button>
-          </div>
-        </v-card>
-      </v-dialog>
-
       <!-- <router-link class="signup" type="button" to="/hubStaff/newOrder">
-          + Tạo đơn hàng</router-link
-        > -->
+              + Tạo đơn hàng</router-link
+            > -->
     </div>
 
     <div class="loading">
@@ -99,34 +52,78 @@
         :items="dataList"
         :search="search"
       >
-        <template v-slot:item.status="{ item }">
-          <button v-if="item.status == 'DELIVERING'" class="status">
-            <p style="background-color: #ffe4b2;">{{ item.status }}</p>
-          </button>
-
-          <button v-if="item.status == 'TRANSIT'" class="status">
-            <p style="background-color: #6898c6;">{{ item.status }}</p>
-          </button>
-        </template>
-
-        <template v-slot:item.update="{ item }">
-          <button v-on:click="verifyOrder(item.order_code)">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="w-6 h-6 icon"
+        <!-- <template v-slot:item.statusDetail="{ item }">
+            <v-dialog v-model="updateOrderDialog" persistent width="800">
+              <v-card>
+                <div class="popupHeader">Cập nhật trạng thái đơn hàng</div>
+                <div class="input-container">
+                  <label for="inputState">Trạng thái</label>
+                  <select id="inputState" class="form-control" v-model="newOrderStatus">
+                    <option>PRE_TRANSIT</option>
+                    <option>TRANSIT</option>
+                    <option>DELIVERING</option>
+                    <option>DELIVERED</option>
+                    <option>PRE-RETURN</option>
+                    <option>RETURNED</option>
+                  </select>
+                </div>
+  
+                <div class="bottomButton">
+                  <button
+                    @click="updateOrderDialog = false"
+                    class="btn btn--green-1"
+                    style="width: fit-content"
+                  >
+                    Đóng
+                  </button>
+  
+                  <button
+                    v-on:click="updateOrderStatus(updateOrderDialog, newOrderStatus)"
+                    class="btn btn--green-1"
+                    style="width: fit-content"
+                  >
+                    Cập nhật
+                  </button>
+                </div>
+              </v-card>
+            </v-dialog>
+  
+            <button
+              @click="updateOrderDialog = true"
+              v-if="item.status == 'DELIVERING'"
+              class="status"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"
-              />
-            </svg>
-          </button>
-        </template>
+              <p style="background-color: #ffe4b2">{{ item.status }}</p>
+            </button>
+  
+            <button @click="updateOrderDialog = item.order_code" v-if="item.status == 'TRANSIT'" class="status">
+              <p style="background-color: #99d9f2">{{ item.status }}</p>
+            </button>
+  
+            <button @click="updateOrderDialog = item.order_code" v-if="item.status == 'PRE_TRANSIT'" class="status">
+              <p style="background-color: #FFB9B9">{{ item.status }}</p>
+            </button>
+  
+            <button @click="updateOrderDialog = item.order_code" v-if="item.status == 'DELIVERING'" class="status">
+              <p style="background-color: #D5FFB9">{{ item.status }}</p>
+            </button>
+  
+            <button @click="updateOrderDialog = item.order_code" v-if="item.status == 'DELIVERED'" class="status">
+              <p style="background-color: #B9F9FF">{{ item.status }}</p>
+            </button>
+  
+            <button @click="updateOrderDialog = item.order_code" v-if="item.status == 'PRE-RETURN'" class="status">
+              <p style="background-color: #B9D7FF">{{ item.status }}</p>
+            </button>
+  
+            <button @click="updateOrderDialog = item.order_code" v-if="item.status == 'RETURNED'" class="status">
+              <p style="background-color: #FFB9B9">{{ item.status }}</p>
+            </button>
+
+            <button @click="updateOrderDialog = item.order_code" v-if="item.status == 'FAILURE'" class="status">
+              <p style="background-color: #99d9f2">{{ item.status }}</p>
+            </button>
+          </template> -->
 
         <template v-slot:item.action="{ item }">
           <button v-on:click="deleteOrder(item.order_code)">
@@ -173,24 +170,65 @@
         </template>
       </v-data-table>
     </v-card>
+
+    <v-dialog v-model="dialog" persistent width="800">
+      <v-card>
+        <div class="popupHeader">Bộ lọc</div>
+        <div class="input-container">
+          <label for="inputState">Trạng thái</label>
+          <select id="inputState" class="form-control" v-model="orderStatus">
+            <option>FAILURE</option>
+            <option>DELIVERED</option>
+            <option>RETURNED</option>
+          </select>
+        </div>
+        <!-- <div class="input-container">
+              <label for="inputState">Nơi gửi</label>
+              <select id="inputState" class="form-control" v-model="senderName">
+                <option v-for="item in warehouseList">
+                  {{ item }}
+                </option>
+              </select>
+            </div> -->
+
+        <div class="bottomButton">
+          <button
+            @click="dialog = false"
+            v-on:click="getListFiltered()"
+            class="btn btn--green-1"
+            style="width: fit-content"
+          >
+            Đóng
+          </button>
+
+          <button v-on:click="deleterFilter()" class="btn btn--green-1" style="width: fit-content">
+            Xóa bộ lọc
+          </button>
+        </div>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
+import ChipCard from '../../components/ChipCard.vue'
+
 import axios from 'axios'
+
 import { toast } from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
-axios.defaults.headers.common.authorization = localStorage.getItem('token')
 
 export default {
   data() {
     return {
-      loading: true,
+      loading: false,
       dialog: false,
       orderStatus: null,
 
+      updateOrderDialog: false,
+      newOrderStatus: '',
+
       dataList: [],
-      dataListLength: 0,
       page: 1,
       itemsPerPage: 6,
       search: '',
@@ -203,8 +241,8 @@ export default {
         { key: 'receiverName', title: 'Người nhận', align: 'center' },
         { key: 'fee', title: 'Chi phí', align: 'center' },
         { key: 'receiver_fee', title: 'Phí người nhận trả', align: 'center' },
-        { key: 'status', title: 'Trạng thái đơn hàng', align: 'center', value: 'status' },
-        { title: 'Cập nhật', sortable: false, align: 'center', text: 'Xác nhận', value: 'update' },
+        { key: 'status', title: 'Trạng thái đơn hàng', align: 'center' },
+        //   { title: 'Trạng thái đơn hàng', sortable: false, align: 'center', text: 'Trạng thái đơn hàng', value: 'statusDetail' },
         { title: 'Chi tiết', sortable: false, align: 'center', text: 'Chi tiết', value: 'action' }
       ]
     }
@@ -212,36 +250,40 @@ export default {
 
   computed: {
     pageCount() {
-      return Math.ceil(this.dataListLength / this.itemsPerPage)
+      return Math.ceil(this.dataList.length / this.itemsPerPage)
     }
   },
 
   async created() {
-    let url = 'http://localhost:3000/api/workplace/coming/receive'
-    await axios
-      .post(url, {
-        headers: {
-          authorization: localStorage.getItem('token')
-        }
-      })
-      .then((response) => {
-        console.log(response.data)
-        this.dataList = response.data.result
-        this.dataListLength = response.data.count
-        this.loading = false
-      })
-      .catch((error) => {
-        console.log(error)
-        toast.error('???', { position: toast.POSITION.BOTTOM_RIGHT }),
-          {
-            autoClose: 100
-          }
-      })
+    if (this.orderStatus) {
+      let url = 'http://localhost:3000/api/dashboard/send/bystatus'
+      await axios
+        .post(url, {
+          status: orderStatus
+        })
+        .then((response) => {
+          console.log(response.data)
+          this.dataList = response.data.result
+          this.loading = false
+        })
+        .catch((error) => {
+          console.log(error)
+          toast.error('???', { position: toast.POSITION.BOTTOM_RIGHT }),
+            {
+              autoClose: 1000
+            }
+        })
+    }
   },
 
   methods: {
-    //delete
+    deleterFilter() {
+      this.dialog = false
+      this.orderStatus = null
+    },
+
     deleteOrder(id) {
+      console.log(id)
       this.loading = true
       let url = 'http://localhost:3000/api/orders/delete/' + id
       axios
@@ -253,61 +295,60 @@ export default {
           this.loading = true
           toast.success('Deleted successfully', { position: toast.POSITION.BOTTOM_RIGHT }),
             {
-              autoClose: 100
+              autoClose: 1000
             }
         })
         .catch((error) => {
           console.log(error)
           toast.error('Delete failed', { position: toast.POSITION.BOTTOM_RIGHT }),
             {
-              autoClose: 100
+              autoClose: 1000
             }
         })
     },
 
-    //update
-    verifyOrder(orderCode) {
-      let url = 'http://localhost:3000/api/workplace/confirm/send/' + orderCode
-      axios
-        .put(url)
-        .then((response) => {
-          console.log(response.data)
-          this.loading = true
-          this.getList()
-          toast.success('Successfully Updated', { position: toast.POSITION.BOTTOM_RIGHT }),
-            {
-              autoClose: 100
-            }
+    async getList() {
+      let url = 'http://localhost:3000/api/dashboard/send/bystatus'
+      await axios
+        .post(url, {
+          status: this.orderStatus
         })
-        .catch((error) => {
-          console.log(error)
-          toast.error('Update failed', { position: toast.POSITION.BOTTOM_RIGHT }),
-            {
-              autoClose: 100
-            }
-        })
-    },
-
-    //getList
-    getList() {
-      let url = 'http://localhost:3000/api/workplace/coming/receive'
-      axios
-        .post(url)
         .then((response) => {
           console.log(response.data)
           this.dataList = response.data.result
-          this.dataListLength = response.data.count
           this.loading = false
         })
         .catch((error) => {
           console.log(error)
-          toast.error('SOS', { position: toast.POSITION.BOTTOM_RIGHT }),
+          toast.error('???', { position: toast.POSITION.BOTTOM_RIGHT }),
             {
-              autoClose: 100
+              autoClose: 1000
             }
         })
     },
-  }
+
+    async getListFiltered() {
+      this.loading = true
+      let url = 'http://localhost:3000/api/dashboard/send/bystatus'
+      await axios
+        .post(url, {
+          status: this.orderStatus
+        })
+        .then((response) => {
+          console.log(response.data)
+          this.dataList = response.data.result
+          this.loading = false
+        })
+        .catch((error) => {
+          console.log(error)
+          toast.error('???', { position: toast.POSITION.BOTTOM_RIGHT }),
+            {
+              autoClose: 1000
+            }
+        })
+    }
+  },
+  components: { ChipCard }
 }
 </script>
 

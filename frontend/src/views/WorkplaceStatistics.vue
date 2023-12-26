@@ -15,8 +15,8 @@
       ></StatisticsCard>
       <StatisticsCard
         class="card"
-        :title="'Đơn hàng chưa xử lý'"
-        :content="avaiableOrders"
+        :title="'Đơn hàng đến'"
+        :content="allRecieved"
         :description="'Số liệu thống kê theo tháng'"
       ></StatisticsCard>
       <div class="card">
@@ -25,7 +25,7 @@
           width="300"
           type="donut"
           :options="options"
-          :series="[this.allRecieved, this.allSent, this.avaiableOrders]"
+          :series="[this.allRecieved, this.allSent]"
         ></apexchart>
       </div>
     </div>
@@ -201,12 +201,12 @@ export default {
 
       // chart
       options: {
-        labels: ['Đơn đến', 'Đơn đi', 'Đơn chưa xử lý'],
+        labels: ['Đơn đến', 'Đơn đi'],
         dataLabels: {
           enabled: false
         }
       },
-      series: [this.allRecieved, this.allSent, this.avaiableOrders],
+      series: [this.allRecieved, this.allSent],
 
       //loading
       loading: true,
@@ -351,23 +351,23 @@ export default {
     this.totalOrders = this.allRecieved + this.allSent
 
     //avaiableOrders
-    if (this.userRole != 'supervisor') {
-      url = 'http://localhost:3000/api/dashboard/avail'
-      await axios
-        .post(url, {
-          start: startDate,
-          end: date
-        })
-        .then((response) => {
-          console.log(response.data)
-          this.avaiableOrders = response.data.count
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    } 
+    // if (this.userRole != 'supervisor') {
+    //   url = 'http://localhost:3000/api/dashboard/avail'
+    //   await axios
+    //     .post(url, {
+    //       start: startDate,
+    //       end: date
+    //     })
+    //     .then((response) => {
+    //       console.log(response.data)
+    //       this.avaiableOrders = response.data.count
+    //     })
+    //     .catch((error) => {
+    //       console.log(error)
+    //     })
+    // }
 
-    //test table
+    // test table
     url = 'http://localhost:3000/api/orders/all'
     await axios
       .get(url)
