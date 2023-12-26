@@ -209,9 +209,15 @@ const sendConfirmList = asyncHandler(async (req, res) => {
             }
         }
     });
+
+    for (i in processes) {
+        console.log(i, processes[i]);
+        console.log(i, processes[i].events[processes[i].events.length - 1].branch_id.toString());
+    }
     const filteredProcess = processes.filter(item => item.events[item.events.length - 1].status !== "DELIVERING"
         && item.events[item.events.length - 1].status !== "RETURNED"
         && item.events[item.events.length - 1].status !== "DELIVERED"
+        && item.events[item.events.length - 1].status !== "FAILURE"
         && item.events[item.events.length - 1].branch_id.toString() === currentBranch._id.toString());
     const orders = await Order.find({
         processes_id: filteredProcess
