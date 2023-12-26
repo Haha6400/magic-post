@@ -64,6 +64,7 @@ export default {
           localStorage.setItem('token', response.data.accessToken)
           this.auth = true
           this.$router.push({ path: '/' })
+          // this.$router.go(0)
         })
         .catch((error) => {
           console.log(error)
