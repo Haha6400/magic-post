@@ -106,7 +106,8 @@ async function statisticFunction(req, res, currentBranch, statusArray, senders) 
         processes_id: processes,
         sender_id: senders
     }).sort('createdAt');
-    console.log(orders);
+    // console.log(orders);
+    // orders = 
     return orders;
 }
 
@@ -143,6 +144,29 @@ const allSend = asyncHandler(async (req, res) => {
     res.status(200).json({ orders, count: orders.length });
 })
 
+const allSendByStatus = asyncHandler(async (req, res) => {
+    const currentBranch = await getCurrentBranch(req, res);
+    const statisticStatus = req.body.status;
+    const processes = await Process.find({
+        events: {
+            $elemMatch: {
+                'branch_id': currentBranch,
+                'status': statisticStatus
+            }
+        }
+    });
+    const senders = await Customer.find({ branch_id: currentBranch }).sort('createdAt');
+    console.log("senders", senders)
+    const filteredProcess = processes.filter(item => item.events[item.events.length - 1].status === statisticStatus);
+    console.log("filteredProcess", filteredProcess)
+    const orders = await Order.find({
+        processes_id: { $in: filteredProcess },
+        sender_id: senders
+    }).sort('createdAt');
+    const result = await getOrders(orders)
+    res.status(200).json({ result, count: result.length });
+})
+
 const allReceive_Supervisors = asyncHandler(async (req, res) => {
     const currentBranch = await Branch.find({
         name: req.body.name
@@ -165,5 +189,5 @@ const allSend_Supervisors = asyncHandler(async (req, res) => {
 
 module.exports = {
     getMonthlyIncome, getMonthlyOrders, getMonthlyIncomeByBranch, getMonthlyOrdersByBranch,
-    allReceive, allSend, allReceive_Supervisors, allSend_Supervisors
+    allReceive, allSend, allReceive_Supervisors, allSend_Supervisors, allSendByStatus
 }

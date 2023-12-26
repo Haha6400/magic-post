@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { getMonthlyIncome, getMonthlyOrders, getMonthlyIncomeByBranch, getMonthlyOrdersByBranch, allReceive, allSend, allReceive_Supervisors, allSend_Supervisors } = require('../app/controllers/dashboardController')
+const { getMonthlyIncome, getMonthlyOrders, getMonthlyIncomeByBranch, getMonthlyOrdersByBranch, allReceive, allSend, allReceive_Supervisors, allSend_Supervisors, allSendByStatus } = require('../app/controllers/dashboardController')
 const { staffAuth, roleCheck, accessAccountCheck } = require("../app/middleware/auth");
 const { sendConfirmList } = require("../app/controllers/branchController");
 router.get('/income', getMonthlyIncome)
@@ -13,5 +13,5 @@ router.post('/all/send', staffAuth, allSend);
 router.post("/avail", staffAuth, sendConfirmList);
 router.post('/all/receive/supervisor', staffAuth, roleCheck(["supervisor"]), allReceive_Supervisors);
 router.post('/all/send/supervisor', staffAuth, roleCheck(["supervisor"]), allSend_Supervisors);
-
+router.post('/send/bystatus', staffAuth, allSendByStatus)
 module.exports = router
