@@ -106,7 +106,8 @@ async function statisticFunction(req, res, currentBranch, statusArray, senders) 
         processes_id: processes,
         sender_id: senders
     }).sort('createdAt');
-    console.log(orders);
+    // console.log(orders);
+    // orders = 
     return orders;
 }
 
@@ -143,6 +144,14 @@ const allSend = asyncHandler(async (req, res) => {
     res.status(200).json({ orders, count: orders.length });
 })
 
+const allSendByStatus = asyncHandler(async (req, res) => {
+    const currentBranch = await getCurrentBranch(req, res);
+    var statusArray;
+    statusArray.push(req.body.status)
+    const orders = await sendFunction(req, res, currentBranch, statusArray);
+    res.status(200).json({ orders, count: orders.length });
+})
+
 const allReceive_Supervisors = asyncHandler(async (req, res) => {
     const currentBranch = await Branch.find({
         name: req.body.name
@@ -165,5 +174,5 @@ const allSend_Supervisors = asyncHandler(async (req, res) => {
 
 module.exports = {
     getMonthlyIncome, getMonthlyOrders, getMonthlyIncomeByBranch, getMonthlyOrdersByBranch,
-    allReceive, allSend, allReceive_Supervisors, allSend_Supervisors
+    allReceive, allSend, allReceive_Supervisors, allSend_Supervisors, allSendByStatus
 }
