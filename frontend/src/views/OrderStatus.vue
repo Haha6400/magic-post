@@ -11,12 +11,11 @@
           v-model="order_code"
         />
 
-        <!-- <router-link :to="{ name: 'orderStatusByCustomer', params: { id: order_code } }">
-          <img src="@/assets/logo.png" />
-        </router-link> -->
         <button v-on:click="orderStatus()">
-          <!-- <img src="@/assets/logo.png" /> -->
-          <router-link v-if="order_code" :to="{ name: 'orderStatusByCustomer', params: { id: order_code } }">
+          <router-link
+            v-if="order_code"
+            :to="{ name: 'orderStatusByCustomer', params: { id: order_code } }"
+          >
             <img src="@/assets/logo.png" />
           </router-link>
           <img v-if="!order_code" src="@/assets/logo.png" />
@@ -65,6 +64,7 @@ export default {
       this.order_code = localStorage.getItem('orderCode')
       localStorage.removeItem('orderCode')
       console.log(this.order_code)
+
       let url = 'http://localhost:3000/api/orders/code/' + this.order_code
       await axios
         .get(url)
@@ -83,22 +83,6 @@ export default {
   methods: {
     async orderStatus() {
       this.$router.push({ name: 'orderStatusByCustomer', params: { id: this.order_code } })
-      // let url = 'http://localhost:3000/api/orders/code/' + this.order_code
-      // await axios
-      //   .get(url)
-      //   .then((response) => {
-      //     console.log(response.data)
-      //     this.order_status = response.data
-      //     this.auth = true
-      //     // this.loading = false
-      //   })
-      //   .catch((error) => {
-      //     console.log(error)
-      //     // toast.error('???', { position: toast.POSITION.BOTTOM_RIGHT }),
-      //     //   {
-      //     //     autoClose: 1000
-      //     //   }
-      //   })
     }
   }
 }

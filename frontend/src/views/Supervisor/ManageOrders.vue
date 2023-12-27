@@ -26,10 +26,6 @@
           />
         </svg>
       </button>
-
-      <!-- <router-link class="signup" type="button" to="/hubStaff/newOrder">
-        + Tạo đơn hàng</router-link
-      > -->
     </div>
 
     <div class="loading">
@@ -86,7 +82,6 @@
               </svg>
             </router-link>
           </button>
-
         </template>
 
         <template v-slot:bottom>
@@ -139,7 +134,6 @@ export default {
         console.log(response.data)
         this.dataList = response.data
         this.loading = false
-        
       })
       .catch((error) => {
         console.log(error)
@@ -151,18 +145,6 @@ export default {
   },
 
   methods: {
-    // beforeMount() {
-    //   let url = 'http://localhost:3000/api/orders/all'
-    //   axios
-    //     .get(url)
-    //     .then((response) => {
-    //       console.log(response.data)
-    //       this.dataList = response.data
-    //     })
-    //     .catch((error) => {
-    //       console.log(error)
-    //     })
-    // }
     deleteOrder(id) {
       this.loading = true
       let url = 'http://localhost:3000/api/orders/delete/' + id
@@ -265,7 +247,6 @@ export default {
   border: 0px;
   /* border-color: #ffe4b2; */
   width: 100%;
-
 }
 
 .v-text-field:hover {
@@ -372,8 +353,4 @@ export default {
 button {
   margin: 2px;
 }
-/* .v-data-table > .v-data-table__wrapper > table > thead > tr > th,
-td {
-  min-width: 200px !important;
-} */
 </style>

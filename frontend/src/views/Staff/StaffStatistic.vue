@@ -29,9 +29,6 @@
         </svg>
       </button>
 
-      <!-- <router-link class="signup" type="button" to="/hubStaff/newOrder">
-              + Tạo đơn hàng</router-link
-            > -->
     </div>
 
     <div class="loading">
@@ -52,79 +49,6 @@
         :items="dataList"
         :search="search"
       >
-        <!-- <template v-slot:item.statusDetail="{ item }">
-            <v-dialog v-model="updateOrderDialog" persistent width="800">
-              <v-card>
-                <div class="popupHeader">Cập nhật trạng thái đơn hàng</div>
-                <div class="input-container">
-                  <label for="inputState">Trạng thái</label>
-                  <select id="inputState" class="form-control" v-model="newOrderStatus">
-                    <option>PRE_TRANSIT</option>
-                    <option>TRANSIT</option>
-                    <option>DELIVERING</option>
-                    <option>DELIVERED</option>
-                    <option>PRE-RETURN</option>
-                    <option>RETURNED</option>
-                  </select>
-                </div>
-  
-                <div class="bottomButton">
-                  <button
-                    @click="updateOrderDialog = false"
-                    class="btn btn--green-1"
-                    style="width: fit-content"
-                  >
-                    Đóng
-                  </button>
-  
-                  <button
-                    v-on:click="updateOrderStatus(updateOrderDialog, newOrderStatus)"
-                    class="btn btn--green-1"
-                    style="width: fit-content"
-                  >
-                    Cập nhật
-                  </button>
-                </div>
-              </v-card>
-            </v-dialog>
-  
-            <button
-              @click="updateOrderDialog = true"
-              v-if="item.status == 'DELIVERING'"
-              class="status"
-            >
-              <p style="background-color: #ffe4b2">{{ item.status }}</p>
-            </button>
-  
-            <button @click="updateOrderDialog = item.order_code" v-if="item.status == 'TRANSIT'" class="status">
-              <p style="background-color: #99d9f2">{{ item.status }}</p>
-            </button>
-  
-            <button @click="updateOrderDialog = item.order_code" v-if="item.status == 'PRE_TRANSIT'" class="status">
-              <p style="background-color: #FFB9B9">{{ item.status }}</p>
-            </button>
-  
-            <button @click="updateOrderDialog = item.order_code" v-if="item.status == 'DELIVERING'" class="status">
-              <p style="background-color: #D5FFB9">{{ item.status }}</p>
-            </button>
-  
-            <button @click="updateOrderDialog = item.order_code" v-if="item.status == 'DELIVERED'" class="status">
-              <p style="background-color: #B9F9FF">{{ item.status }}</p>
-            </button>
-  
-            <button @click="updateOrderDialog = item.order_code" v-if="item.status == 'PRE-RETURN'" class="status">
-              <p style="background-color: #B9D7FF">{{ item.status }}</p>
-            </button>
-  
-            <button @click="updateOrderDialog = item.order_code" v-if="item.status == 'RETURNED'" class="status">
-              <p style="background-color: #FFB9B9">{{ item.status }}</p>
-            </button>
-
-            <button @click="updateOrderDialog = item.order_code" v-if="item.status == 'FAILURE'" class="status">
-              <p style="background-color: #99d9f2">{{ item.status }}</p>
-            </button>
-          </template> -->
-
         <template v-slot:item.action="{ item }">
           <button v-on:click="deleteOrder(item.order_code)">
             <svg
@@ -182,15 +106,6 @@
             <option>RETURNED</option>
           </select>
         </div>
-        <!-- <div class="input-container">
-              <label for="inputState">Nơi gửi</label>
-              <select id="inputState" class="form-control" v-model="senderName">
-                <option v-for="item in warehouseList">
-                  {{ item }}
-                </option>
-              </select>
-            </div> -->
-
         <div class="bottomButton">
           <button
             @click="dialog = false"
@@ -211,7 +126,7 @@
 </template>
 
 <script>
-import ChipCard from '../../components/ChipCard.vue'
+// import ChipCard from '../../components/ChipCard.vue'
 
 import axios from 'axios'
 
@@ -242,7 +157,6 @@ export default {
         { key: 'fee', title: 'Chi phí', align: 'center' },
         { key: 'receiver_fee', title: 'Phí người nhận trả', align: 'center' },
         { key: 'status', title: 'Trạng thái đơn hàng', align: 'center' },
-        //   { title: 'Trạng thái đơn hàng', sortable: false, align: 'center', text: 'Trạng thái đơn hàng', value: 'statusDetail' },
         { title: 'Chi tiết', sortable: false, align: 'center', text: 'Chi tiết', value: 'action' }
       ]
     }

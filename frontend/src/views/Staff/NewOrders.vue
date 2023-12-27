@@ -35,7 +35,6 @@
         </div>
       </div>
 
-      <!-- <div class="stepper-content" v-for="item in numStep" :key="item"> -->
       <div class="stepper-content">
         <div class="stepper-pane" v-if="step == 1">
           <form>
@@ -153,16 +152,6 @@
                 </select>
               </div>
 
-              <!-- <div class="input-container">
-                <label for="exampleInputEmail1" class="form-label">Cam kết người gửi</label>
-                <input
-                  class="form-control"
-                  id="exampleInputEmail1"
-                  v-model="sender_commitment"
-                  required
-                />
-              </div> -->
-
               <div class="input-container">
                 <label for="inputState">Địa chỉ hub đích</label>
                 <select id="inputState" class="form-control" v-model="receiverBranchName">
@@ -199,15 +188,6 @@
         >
           Tạo đơn hàng
         </button>
-
-        <!-- <button
-          v-if="step == 4"
-          class="btn btn--green-1"
-          v-on:click="newOrder()"
-          style="width: fit-content"
-        >
-          In đơn hàng
-        </button> -->
       </div>
     </div>
   </div>
@@ -217,7 +197,7 @@
 import axios from 'axios'
 import { toast } from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
-import {saveAs} from 'file-saver'
+import { saveAs } from 'file-saver'
 
 export default {
   data() {
@@ -312,10 +292,11 @@ export default {
       let url = 'http://localhost:3000/api/orders/label/' + id
       let fileName = '[magic_post] ' + orderCode
       axios
-        .get(url, {responseType: 'blob'})
-        .then(response => {
-            saveAs(response.data, fileName);
-        }).catch((error) => {
+        .get(url, { responseType: 'blob' })
+        .then((response) => {
+          saveAs(response.data, fileName)
+        })
+        .catch((error) => {
           console.log(error)
         })
     }

@@ -75,10 +75,6 @@
           </div>
         </v-card>
       </v-dialog>
-
-      <!-- <router-link class="signup" type="button" to="/hubStaff/newOrder">
-          + Tạo đơn hàng</router-link
-        > -->
     </div>
 
     <div class="loading">
@@ -101,11 +97,11 @@
       >
         <template v-slot:item.status="{ item }">
           <button v-if="item.status == 'DELIVERING'" class="status">
-            <p style="background-color: #ffe4b2;">{{ item.status }}</p>
+            <p style="background-color: #ffe4b2">{{ item.status }}</p>
           </button>
 
           <button v-if="item.status == 'TRANSIT'" class="status">
-            <p style="background-color: #6898c6;">{{ item.status }}</p>
+            <p style="background-color: #6898c6">{{ item.status }}</p>
           </button>
         </template>
 
@@ -306,7 +302,7 @@ export default {
               autoClose: 100
             }
         })
-    },
+    }
   }
 }
 </script>

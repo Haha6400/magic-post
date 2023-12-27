@@ -1,38 +1,8 @@
 <template>
-  <div class="container">
-    <div class="banner">
-      <div class="card">
-        <apexchart width="380" type="donut" :options="options" :series="series"></apexchart>
-      </div>
-      <div class="card">
-        jk
-      </div>
-      <div class="card">
-        jk
-      </div>
-    </div>
-  </div>
+  <p>More about us - Coming soon</p>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      // options: {},
-      // series: [44, 55, 41, 17, 15],
-      // labels: ['Apple', 'Mango', 'Orange', 'Watermelon', 'PineApple']
-      options: {
-        labels: ['Apple', 'Mango', 'Orange', 'Watermelon'],
-        dataLabels: {
-          enabled: false
-        },
-        
-      },
-      series: [44, 55, 13, 33]
-    }
-  }
-}
-</script>
+<script></script>
 
 <style scoped>
 .container {
@@ -58,21 +28,8 @@ export default {
 }
 
 .card {
-  /* flex-grow: 1;
-  flex-basis: 400px;
-  padding: 20px;
-  border-radius: 12px;
-  height: fit-content;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  background-color: #ffffff;
-  min-width: 50%; */
   height: fit-content;
   flex-grow: 1;
   flex-basis: 300px;
-
 }
-
-
 </style>

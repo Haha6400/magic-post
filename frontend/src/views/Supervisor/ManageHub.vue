@@ -10,7 +10,6 @@
         </button>
       </form>
 
-      <!-- <router-link class="signup" type="button" to="/admin/addExam" @click="dialog = true"> + Tạo điểm mới</router-link> -->
       <button class="signup" type="button" @click="dialog = true">+ Tạo điểm mới</button>
     </div>
 
@@ -67,9 +66,7 @@
 
     <v-dialog v-model="dialog" persistent width="1024">
       <v-card>
-        <!-- <h5 class="loginHeader">Tạo điểm giao dịch mới</h5> -->
         <div class="popupHeader">Tạo điểm giao dịch mới</div>
-        <!-- <v-sheet width="300" class="mx-auto"> -->
         <div class="input-container">
           <label for="inputState">Tên điểm thập kết cha</label>
           <select id="inputState" class="form-control" v-model="higherBranchName">
@@ -257,18 +254,6 @@ export default {
   padding: 0;
 }
 
-/* .v-text-field {
-    background-color: #ffe4b2;
-    border-radius: 30px;
-    border: 0px;
-    width: 10%;
-  }  */
-
-/* .v-text-field:hover {
-    background-color: #ffe4b2;
-    border-radius: 30px;
-    border: 0px;
-  }  */
 .buttonList {
   display: flex;
   flex-wrap: wrap;
@@ -371,14 +356,6 @@ export default {
 button {
   margin: 2px;
 }
-/* .v-data-table > .v-data-table__wrapper > table > thead > tr > th,
-  td {
-    min-width: 200px !important;
-  } */
-
-/* .v-select .v-select__selections input {
-      display: none;
-  } */
 
 .form-label {
   margin-bottom: 5px;

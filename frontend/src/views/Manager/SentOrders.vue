@@ -140,7 +140,7 @@
 import axios from 'axios'
 axios.defaults.headers.common.authorization = localStorage.getItem('token')
 
-import ChipCard from '../../components/ChipCard.vue'
+// import ChipCard from '../../components/ChipCard.vue'
 
 export default {
   data() {
@@ -198,18 +198,6 @@ export default {
         console.log(error)
       })
 
-    // url = 'http://localhost:3000/api/workplace/all/hub'
-    // console.log('check role')
-    // await axios
-    //   .get(url)
-    //   .then((response) => {
-    //     console.log(response.data)
-    //     this.hubList = response.data.hub
-    //   })
-    //   .catch((error) => {
-    //     console.log(error)
-    //   })
-
     this.getDefaultList()
   },
   methods: {
@@ -258,7 +246,7 @@ export default {
           await axios
             .post(url, {
               start: this.start,
-              end: this.end,
+              end: this.end
             })
             .then((response) => {
               console.log(response.data)
@@ -301,7 +289,7 @@ export default {
           await axios
             .post(url, {
               start: this.start,
-              end: this.end,
+              end: this.end
             })
             .then((response) => {
               console.log(response.data)
@@ -462,30 +450,6 @@ export default {
   height: 20px;
 }
 
-/* .searchButton {
-  background-color: #f7b85e;
-  text-decoration: none;
-  border-radius: 30px;
-  width: 80%;
-  height: 25px;
-  font-family: 'Nunito Sans', sans-serif;
-  color: #000000;
-  text-align: center;
-  margin-bottom: 5px;
-  margin-top: 5px;
-}
-
-.searchButton:hover {
-  background-color: #f7b85e;
-  text-decoration: none;
-  border-radius: 30px;
-  width: 80%;
-  height: 25px;
-  font-family: 'Nunito Sans', sans-serif;
-  color: #000000;
-  text-align: center;
-} */
-
 .signup {
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   background-color: #f7b85e;
@@ -599,9 +563,4 @@ label {
 .bottomButton button:hover {
   background-color: #ffe4b2;
 }
-
-/* .v-data-table > .v-data-table__wrapper > table > thead > tr > th,
-  td {
-    min-width: 200px !important;
-  } */
 </style>
