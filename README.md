@@ -51,22 +51,28 @@ npm install
 ```
 ###### Chạy giao diện
 ```sh
+cd .\frontend\
 npm run dev
 ```
-### Cài đặt cơ sở dữ liệu
-//////TODO: 
-
-
+###### Cài đặt cơ sở dữ liệu
+```sh
+npm install mongoose
+```
+###### Chạy server
+```sh
+cd .\magic-post\
+npm start
+```
 
 ## Công nghệ sử dụng
 Những công nghệ được sử dụng trong quá trình phát triển dự án:
 - Frontend: VueJS3, Bootstrap, Axios, ApexChart,...
-- Backend: //////TODO: 
-- Database: //////TODO: 
+- Backend: Javascript, Mongoose,...
+- Database: MongoDB
 ## Nhóm tác giả
 | MSSV | Họ và tên | Nhiệm vụ | Phân công công việc |
 | ------ | ------ | ------ | ------ |
 | 20210310 | [Nguyễn Thị Hồng Hà](https://github.com/Haha6400) | Back-end ||
 | 21020392 | [Nguyễn Đức Tân](https://github.com/ductan2003) | Front-end |<ul><li>Thiết kế giao diện người dùng</li><li>Hoàn thiện tất cả các giao diện của hệ thống</li></ul>|
-| 21020757 | [Nguyễn Đăng Dương](https://github.com/21020757) | Back-end ||
+| 21020757 | [Nguyễn Đăng Dương](https://github.com/21020757) | Back-end | <ul><li>Một số chức năng CRUD của đơn hàng, chi nhánh...</li></ul>|
 
