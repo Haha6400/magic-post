@@ -44,26 +44,25 @@ Các tác nhân trong hệ thống:
 - Tra cứu trạng thái và tiến trình chuyển phát của kiện hàng mình gửi.
 
 ## Cài đặt
+### Cài đặt cơ sở dữ liệu
+```sh
+npm install mongoose
+```
 ### Cài đặt giao diện
 ###### Cài đặt npm
 ```sh
 npm install
+```
+##### Chạy server
+```sh
+cd .\magic-post\
+npm start
 ```
 ###### Chạy giao diện
 ```sh
 cd .\frontend\
 npm run dev
 ```
-###### Cài đặt cơ sở dữ liệu
-```sh
-npm install mongoose
-```
-###### Chạy server
-```sh
-cd .\magic-post\
-npm start
-```
-
 ## Công nghệ sử dụng
 Những công nghệ được sử dụng trong quá trình phát triển dự án:
 - Frontend: VueJS3, Bootstrap, Axios, ApexChart,...
