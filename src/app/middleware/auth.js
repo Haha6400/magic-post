@@ -67,7 +67,6 @@ const accessAccountCheck = async (req, res, next) => {
         res.status(404);
         throw new Error("Account not found");
     }
-    // console.log(currentAccount.email);
 
     //Access own account
     if ((currentAccount.role == staffAccount.role) && (currentAccount.email !== staffAccount.email)) {
@@ -82,11 +81,8 @@ const accessAccountCheck = async (req, res, next) => {
         throw new Error("SOrry u dont have access");
     }
 
-    // console.log(currentAccount.branch_id);
     const currentBranch = await branch.findById(currentAccount.branch_id);
     const staffBranch = await branch.findById(staffAccount.branch_id);
-    // console.log("currentBranch:", currentBranch._id.toString());
-    // console.log(currentBranch._id.toString() === staffBranch._id.toString());
     //If currentAccount is manager: access same branch accounts
     if ((currentAccount.role === "hubManager" || currentAccount.role == "warehouseManager") &&
         (currentBranch._id.toString() !== staffBranch._id.toString())) {

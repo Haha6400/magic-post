@@ -25,7 +25,6 @@ const getAllOrders = asyncHandler(async (req, res) => {
     const orders = await Order.find()
     const result = await getOrders(orders)
     res.status(200).json(result)
-    // res.status(200).json(orders)
 })
 
 /*
@@ -107,25 +106,7 @@ const updateOrder = asyncHandler(async (req, res) => {
         res.status(404);
         throw new Error("Order not found")
     }
-    // var updateStatus;
     const currentBranch = req.currentAccount.branch_id
-    // const receiver = await Customer.findById(order.receiver_id)
-
-    // if (currentBranch.lowerBranch !== null) {
-    //     updateStatus = "TRANSIT"
-    // }
-    // else if (currentBranch.toString() === receiver.branch_id.toString()) {
-    //     console.log()
-    //     if (order.is_returned) {
-    //         updateStatus = "RETURNED";
-    //     } else {
-    //         updateStatus = "DELIVERED";
-    //     }
-    // } else {
-
-    //     updateStatus = "DELIVERING";
-    // }
-
 
     const processes = await Process.updateOne(
         { _id: order.processes_id._id },
@@ -171,7 +152,6 @@ const updateOrder = asyncHandler(async (req, res) => {
 @access staff
 */
 const deleteOrder = asyncHandler(async (req, res) => {
-    console.log("OK");
     const order = await Order.findOne({ order_code: req.params.order_code })
     if (!order) {
         res.status(404)
@@ -216,7 +196,6 @@ const getOrderByCode = asyncHandler(async (req, res) => {
 @access staff
 */
 const printOrderLabel = asyncHandler(async (req, res) => {
-    // res.status(200).json(req.params.order_id);
     await printLabel(req, res);
 });
 

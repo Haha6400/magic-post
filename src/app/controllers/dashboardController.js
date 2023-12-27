@@ -5,12 +5,15 @@ const Process = require('../models/processesModel');
 const Branch = require("../models/branchModel");
 const Customer = require("../models/customerModel");
 
-const {
-    getOrder, getOrders } = require('../utils/orderFunctions');
+const { getOrder, getOrders } = require('../utils/orderFunctions');
 const { getCurrentBranch } = require("../middleware/branch");
 const { getAllWarehouse } = require("../controllers/branchController");
 
 
+/*
+@desc get monthly income of a branch
+@path GET /api/dashboard/income
+*/
 const getMonthlyIncome = asyncHandler(async (req, res) => {
     const currentDate = new Date(req.body.currentDate)
     console.log("date: " + Date.now())
@@ -27,6 +30,10 @@ const getMonthlyIncome = asyncHandler(async (req, res) => {
     res.status(200).json(total)
 })
 
+/*
+@desc get monthly orders of a branch
+@path GET /api/dashboard/count
+*/
 const getMonthlyOrders = asyncHandler(async (req, res) => {
     const currentDate = new Date(req.body.currentDate)
 
@@ -40,6 +47,10 @@ const getMonthlyOrders = asyncHandler(async (req, res) => {
     res.status(200).json(ordersCount)
 })
 
+/*
+@desc get monthly income of a branch that has req.params.branch_id
+@path POST /api/dashboard/income/:branch_id
+*/
 const getMonthlyIncomeByBranch = asyncHandler(async (req, res) => {
     const currentDate = new Date(req.body.currentDate)
     const currentBranch = req.params.branch_id
@@ -50,7 +61,6 @@ const getMonthlyIncomeByBranch = asyncHandler(async (req, res) => {
     const processes = await Process.find({
         'events.branch_id': currentBranch
     })
-    console.log(processes)
     const orders = await Order.find({
         processes_id: processes,
         createdAt: {
@@ -59,13 +69,16 @@ const getMonthlyIncomeByBranch = asyncHandler(async (req, res) => {
         },
     })
     for await (const order of orders) {
-        console.log(order.processes_id.branch_id)
         const fee = await Fee.findById({ _id: order.fee_id })
         total += fee.total
     }
     res.status(200).json(total)
 })
 
+/*
+@desc get monthly income of a branch that has req.params.branch_id
+@path GET /api/dashboard/count/:branch_id
+*/
 const getMonthlyOrdersByBranch = asyncHandler(async (req, res) => {
     const currentDate = new Date(req.body.currentDate)
     const currentBranch = req.params.branch_id
@@ -121,12 +134,10 @@ async function statisticReceiveFunction(req, res, currentBranch, statusArray, re
             }
         }
     }).sort('createdAt');
-    // console.log("processes", processes)
     const filteredProcess = processes.filter(item => (item.events[item.events.length - 1].status === "DELIVERING" ||
         item.events[item.events.length - 1].status === "DELIVERED" ||
         item.events[item.events.length - 1].status === "RETURNED")
         && item.events[item.events.length - 1].branch_id.toString() === currentBranch._id.toString());
-    // console.log("filteredProcess", filteredProcess)
     const orders = await Order.find({
         createdAt: { $gt: new Date(start), $lt: new Date(end) },
         processes_id: { $in: filteredProcess },
@@ -143,14 +154,17 @@ async function receiveFunction(req, res, currentBranch, statusArray) {
 
 async function sendFunction(req, res, currentBranch, statusArray) {
     currentBranch = currentBranch[0]
-    // console.log("currentBranch", currentBranch)
     const lowerBranch = await Branch.find({ higherBranch_id: currentBranch });
     lowerBranch.push(currentBranch);
-    // console.log("lowerBranch", lowerBranch)
     const senders = await Customer.find({ branch_id: { $in: lowerBranch } }).sort('createdAt');
     return statisticFunction(req, res, currentBranch, statusArray, senders);
 }
 
+/*
+@desc get all receive orders of a branch
+@access login user
+@path POST /api/dashboard/all/receive
+*/
 const allReceive = asyncHandler(async (req, res) => {
     const currentBranch = await getCurrentBranch(req, res);
     const statusArray = ["DELIVERED", "TRANSIT", "RETURNED"]
@@ -158,7 +172,11 @@ const allReceive = asyncHandler(async (req, res) => {
     res.status(200).json({ orders, count: orders.length });
 })
 
-
+/*
+@desc get all send orders of a branch
+@access login user
+@path POST /api/dashboard/all/send
+*/
 const allSend = asyncHandler(async (req, res) => {
     const currentBranch = await getCurrentBranch(req, res);
     const statusArray = ["PRE_TRANSIT", "TRANSIT", "DELIVERED", "PRE_RETURN", "RETURNED", "FAILRE"];
@@ -166,6 +184,11 @@ const allSend = asyncHandler(async (req, res) => {
     res.status(200).json({ orders, count: orders.length });
 })
 
+/*
+@desc get all send orders of a branch by status
+@access login user
+@path POST /api/dashboard/send/bystatus
+*/
 const allSendByStatus = asyncHandler(async (req, res) => {
     const currentBranch = await getCurrentBranch(req, res);
     const statisticStatus = req.body.status;
@@ -178,9 +201,7 @@ const allSendByStatus = asyncHandler(async (req, res) => {
         }
     });
     const senders = await Customer.find({ branch_id: currentBranch }).sort('createdAt');
-    console.log("senders", senders)
     const filteredProcess = processes.filter(item => item.events[item.events.length - 1].status === statisticStatus);
-    console.log("filteredProcess", filteredProcess)
     const orders = await Order.find({
         processes_id: { $in: filteredProcess },
         sender_id: senders
@@ -189,6 +210,11 @@ const allSendByStatus = asyncHandler(async (req, res) => {
     res.status(200).json({ result, count: result.length });
 })
 
+/*
+@desc get all receive orders of a branch
+@access supervisor
+@path POST /api/dashboard/all/receive/supervisor
+*/
 const allReceive_Supervisors = asyncHandler(async (req, res) => {
     const currentBranch = await Branch.find({
         name: req.body.name
@@ -198,11 +224,15 @@ const allReceive_Supervisors = asyncHandler(async (req, res) => {
     res.status(200).json({ orders, count: orders.length });
 })
 
+/*
+@desc get all send orders of a branch
+@access supervisor
+@path POST /api/dashboard/all/send/supervisor
+*/
 const allSend_Supervisors = asyncHandler(async (req, res) => {
     const currentBranch = await Branch.find({
         name: req.body.name
     })
-    console.log("currentBranch", currentBranch)
     const statusArray = ["PRE_TRANSIT", "TRANSIT", "DELIVERED", "PRE_RETURN", "RETURNED", "FAILRE"];
     const orders = await sendFunction(req, res, currentBranch, statusArray);
     res.status(200).json({ orders, count: orders.length });
