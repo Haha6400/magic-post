@@ -1,8 +1,4 @@
 <template>
-  <!-- <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav> -->
     <SideBar :key="$route.fullPath"/>
   
   <router-view />
@@ -11,12 +7,11 @@
 <script setup>
 import axios from "axios";
 axios.defaults.headers.common.authorization = localStorage.getItem("token");
-
 import SideBar from "@/components/SideBar.vue";
+
 </script>
 <style>
 #app {
-  /* font-family: Avenir, Helvetica, Arial, sans-serif; */
   font-family: 'Nunito Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

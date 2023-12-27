@@ -29,9 +29,6 @@
         </svg>
       </button>
 
-      <!-- <router-link class="signup" type="button" to="/hubStaff/newOrder">
-            + Tạo đơn hàng</router-link
-          > -->
     </div>
 
     <div class="loading">
@@ -119,7 +116,6 @@
           <button @click="updateOrderDialog = item.order_code" v-if="item.status == 'RETURNED'" class="status">
             <p style="background-color: #B9D7FF">{{ item.status }}</p>
           </button>
-          <!-- </button> -->
         </template>
 
         <template v-slot:item.action="{ item }">
@@ -177,14 +173,6 @@
             <option>Còn trong kho</option>
           </select>
         </div>
-        <!-- <div class="input-container">
-            <label for="inputState">Nơi gửi</label>
-            <select id="inputState" class="form-control" v-model="senderName">
-              <option v-for="item in warehouseList">
-                {{ item }}
-              </option>
-            </select>
-          </div> -->
 
         <div class="bottomButton">
           <button
@@ -206,7 +194,7 @@
 </template>
 
 <script>
-import ChipCard from '../../components/ChipCard.vue'
+// import ChipCard from '../../components/ChipCard.vue'
 
 import axios from 'axios'
 
@@ -237,7 +225,6 @@ export default {
         { key: 'receiverName', title: 'Người nhận', align: 'center' },
         { key: 'fee', title: 'Chi phí', align: 'center' },
         { key: 'receiver_fee', title: 'Phí người nhận trả', align: 'center' },
-        // { key: 'status', title: 'Trạng thái đơn hàng', align: 'center' },
         { title: 'Trạng thái đơn hàng', sortable: false, align: 'center', text: 'Trạng thái đơn hàng', value: 'statusDetail' },
         { title: 'Chi tiết', sortable: false, align: 'center', text: 'Chi tiết', value: 'action' }
       ]

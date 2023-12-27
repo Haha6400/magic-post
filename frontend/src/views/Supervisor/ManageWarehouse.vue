@@ -10,7 +10,6 @@
         </button>
       </form>
 
-      <!-- <router-link class="signup" type="button" to="/admin/addExam" @click="dialog = true"> + Tạo điểm mới</router-link> -->
       <button class="signup" type="button" @click="dialog = true">+ Tạo điểm mới</button>
     </div>
 
@@ -143,7 +142,7 @@ export default {
     async createWarehouse() {
       let url = 'http://localhost:3000/api/workplace/create/warehouse'
       await axios
-        .post(url, { name: this.name})
+        .post(url, { name: this.name })
         .then((response) => {
           console.log(response.data)
           this.dialog = false
@@ -240,18 +239,6 @@ export default {
   padding: 0;
 }
 
-/* .v-text-field {
-      background-color: #ffe4b2;
-      border-radius: 30px;
-      border: 0px;
-      width: 10%;
-    }  */
-
-/* .v-text-field:hover {
-      background-color: #ffe4b2;
-      border-radius: 30px;
-      border: 0px;
-    }  */
 .buttonList {
   display: flex;
   flex-wrap: wrap;
@@ -267,10 +254,8 @@ export default {
 }
 .search-bar {
   box-sizing: border-box;
-  /*width: 15%;*/
   min-width: 140px;
   height: 40px;
-  /* height: 56px; */
 
   display: flex;
   align-items: center;
@@ -354,15 +339,6 @@ export default {
 button {
   margin: 2px;
 }
-/* .v-data-table > .v-data-table__wrapper > table > thead > tr > th,
-    td {
-      min-width: 200px !important;
-    } */
-
-/* .v-select .v-select__selections input {
-        display: none;
-    } */
-
 .v-card {
   border-radius: 30px;
 }

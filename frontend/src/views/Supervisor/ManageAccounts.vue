@@ -3,7 +3,6 @@
     <h1 class="loginHeader">Quản lý tài khoản</h1>
 
     <div class="buttonList">
-
       <form class="search-bar">
         <input class="search-box" type="text" placeholder="Tìm kiếm tài khoản" v-model="search" />
         <button type="submit">
@@ -11,7 +10,9 @@
         </button>
       </form>
 
-      <router-link class="signup" type="button" to="/supervisor/createAccount"> + Tạo tài khoản</router-link>
+      <router-link class="signup" type="button" to="/supervisor/createAccount">
+        + Tạo tài khoản</router-link
+      >
     </div>
 
     <div class="loading">
@@ -86,7 +87,6 @@ axios.defaults.headers.common.authorization = localStorage.getItem('token')
 import { toast } from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
 
-
 export default {
   data() {
     return {
@@ -152,9 +152,10 @@ export default {
         })
         .catch((error) => {
           console.log(error)
-          toast.error("Delete failed", { position: toast.POSITION.BOTTOM_RIGHT }), {
-            autoClose: 100,
-          }
+          toast.error('Delete failed', { position: toast.POSITION.BOTTOM_RIGHT }),
+            {
+              autoClose: 100
+            }
         })
     },
 
@@ -231,18 +232,6 @@ export default {
   padding: 0;
 }
 
-/* .v-text-field {
-  background-color: #ffe4b2;
-  border-radius: 30px;
-  border: 0px;
-  width: 10%;
-}  */
-
-/* .v-text-field:hover {
-  background-color: #ffe4b2;
-  border-radius: 30px;
-  border: 0px;
-}  */
 .buttonList {
   display: flex;
   flex-wrap: wrap;
@@ -345,15 +334,6 @@ export default {
 button {
   margin: 2px;
 }
-/* .v-data-table > .v-data-table__wrapper > table > thead > tr > th,
-td {
-  min-width: 200px !important;
-} */
-
-/* .v-select .v-select__selections input {
-    display: none;
-} */
-
 .form-control {
   width: 15%;
 }

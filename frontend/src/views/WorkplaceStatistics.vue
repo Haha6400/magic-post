@@ -180,7 +180,7 @@
 
 <script>
 import StatisticsCard from '../components/StatisticsCard.vue'
-import ChipCard from '../components/ChipCard.vue'
+// import ChipCard from '../components/ChipCard.vue'
 import axios from 'axios'
 axios.defaults.headers.common.authorization = localStorage.getItem('token')
 
@@ -241,6 +241,7 @@ export default {
       ]
     }
   },
+
   async created() {
     console.log(this.$route.params.id)
     if (localStorage.getItem('userData')) {
@@ -282,38 +283,6 @@ export default {
       })
 
     //allRecieved
-    // if (this.userRole != 'supervisor') {
-    //   url = 'http://localhost:3000/api/dashboard/all/receive'
-    //   await axios
-    //     .post(url, {
-    //       start: startDate,
-    //       end: date
-    //     })
-    //     .then((response) => {
-    //       console.log(response.data)
-    //       this.allRecieved = response.data.count
-    //     })
-    //     .catch((error) => {
-    //       console.log(error)
-    //     })
-    // }
-
-    // if (this.userRole == 'supervisor') {
-    //   url = 'http://localhost:3000/api/dashboard/all/receive/supervisor'
-    //   await axios
-    //     .post(url, {
-    //       start: startDate,
-    //       end: date,
-    //       name: this.branchName
-    //     })
-    //     .then((response) => {
-    //       console.log(response.data)
-    //       this.allRecieved = response.data.count
-    //     })
-    //     .catch((error) => {
-    //       console.log(error)
-    //     })
-    // }
     url = 'http://localhost:3000/api/dashboard/all/receive/supervisor'
     await axios
       .post(url, {
@@ -330,36 +299,6 @@ export default {
       })
 
     //allSent
-    // if (this.userRole != 'supervisor') {
-    //   url = 'http://localhost:3000/api/dashboard/all/send'
-    //   await axios
-    //     .post(url, {
-    //       start: startDate,
-    //       end: date
-    //     })
-    //     .then((response) => {
-    //       console.log(response.data)
-    //       this.allSent = response.data.count
-    //     })
-    //     .catch((error) => {
-    //       console.log(error)
-    //     })
-    // } else {
-    //   url = 'http://localhost:3000/api/dashboard/all/send/supervisor'
-    //   await axios
-    //     .post(url, {
-    //       start: startDate,
-    //       end: date,
-    //       name: this.branchName
-    //     })
-    //     .then((response) => {
-    //       console.log(response.data)
-    //       this.allSent = response.data.count
-    //     })
-    //     .catch((error) => {
-    //       console.log(error)
-    //     })
-    // }
     url = 'http://localhost:3000/api/dashboard/all/send/supervisor'
     await axios
       .post(url, {
@@ -378,24 +317,7 @@ export default {
     //totalOrder
     this.totalOrders = this.allRecieved + this.allSent
 
-    //avaiableOrders
-    // if (this.userRole != 'supervisor') {
-    //   url = 'http://localhost:3000/api/dashboard/avail'
-    //   await axios
-    //     .post(url, {
-    //       start: startDate,
-    //       end: date
-    //     })
-    //     .then((response) => {
-    //       console.log(response.data)
-    //       this.avaiableOrders = response.data.count
-    //     })
-    //     .catch((error) => {
-    //       console.log(error)
-    //     })
-    // }
-
-    // test table
+    //table
     url = 'http://localhost:3000/api/orders/all'
     await axios
       .get(url)
@@ -630,12 +552,8 @@ label {
 }
 
 .v-card {
-  /* margin-right: 7%;
-  margin-left: 7%; */
   height: 70%;
-  /* max-height: 65%; */
   overflow-y: scroll;
-  /* min-height: 70%; */
   display: flex;
   flex-direction: column;
   align-items: center;

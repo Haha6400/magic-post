@@ -30,7 +30,6 @@
                 v-model="search"
               />
               <button type="submit">
-                <!-- <img alt="logo" src="../assets/home/search.png" /> -->
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -47,10 +46,11 @@
                 </svg>
               </button>
             </form>
-            <!-- <button class="searchButton" v-on:click="getOrderStatus()"
-              >Tra cứu</button
-            > -->
-            <router-link class="searchButton" type="button" to="/orderStatus" v-on:click="getOrderStatus()"
+            <router-link
+              class="searchButton"
+              type="button"
+              to="/orderStatus"
+              v-on:click="getOrderStatus()"
               >Tra cứu</router-link
             >
           </div>
@@ -65,13 +65,11 @@
 
           <div class="text">
             <div class="card-header">
-              <router-link class="card-title" to="/"
-                >Giao trọn trái tim
-              </router-link>
+              <router-link class="card-title" to="/">Giao trọn trái tim </router-link>
               <p class="card-description">
                 <i
-                  >Cùng Magic Post điểm lại 11 năm hành trình trên con đường xây
-                  dựng và phát triển...</i
+                  >Cùng Magic Post điểm lại 11 năm hành trình trên con đường xây dựng và phát
+                  triển...</i
                 >
               </p>
             </div>
@@ -84,14 +82,9 @@
 
           <div class="text">
             <div class="card-header">
-              <router-link class="card-title" to="/"
-                >Chủ nhật hết xảy
-              </router-link>
+              <router-link class="card-title" to="/">Chủ nhật hết xảy </router-link>
               <p class="card-description">
-                <i
-                  >Cùng Magic Post tìm hiểu chương trình giảm 50% phí giao
-                  hàng..</i
-                >
+                <i>Cùng Magic Post tìm hiểu chương trình giảm 50% phí giao hàng..</i>
               </p>
             </div>
           </div>
@@ -102,21 +95,12 @@
       <div class="card">
         <div class="banner-text">
           <div class="banner-header">Về chúng tôi</div>
-          <!-- <ul class="aboutus">
-            <li>
-              Chuyển phát nhanh hàng hóa, tài liệu
-            </li>
-            <li>Chuyển phát hỏa tốc, hẹn giờ</li>
-            <li>Chuyển phát tiết kiệm</li>
-            <li>Chuyển phát thương mại điện tử</li>
-          </ul> -->
           <div class="banner-description" style="font-size: 15px">
-            Magic Post là một công ty vận chuyển hàng đầu, chuyên cung cấp dịch
-            vụ vận chuyển nhanh chóng và đáng tin cậy. Với đội ngũ nhân viên
-            chuyên nghiệp và hệ thống logistics hiện đại, chúng tôi cam kết mang
-            đến trải nghiệm gửi hàng an toàn và tiện lợi. Đặt niềm tin vào chúng
-            tôi, bạn sẽ trải qua sự thuận tiện và đảm bảo mọi đợt vận chuyển đều
-            diễn ra suôn sẻ.
+            Magic Post là một công ty vận chuyển hàng đầu, chuyên cung cấp dịch vụ vận chuyển nhanh
+            chóng và đáng tin cậy. Với đội ngũ nhân viên chuyên nghiệp và hệ thống logistics hiện
+            đại, chúng tôi cam kết mang đến trải nghiệm gửi hàng an toàn và tiện lợi. Đặt niềm tin
+            vào chúng tôi, bạn sẽ trải qua sự thuận tiện và đảm bảo mọi đợt vận chuyển đều diễn ra
+            suôn sẻ.
           </div>
         </div>
         <div class="image-footer">
@@ -129,10 +113,10 @@
 
 <script>
 export default {
-  name: "HomeView",
+  name: 'HomeView',
   data() {
     return {
-      search: "",
+      search: ''
     }
   },
 
@@ -141,13 +125,11 @@ export default {
       localStorage.setItem('orderCode', this.search)
     }
   }
-
-
-};
+}
 </script>
 
 <style scoped>
-::placeholder { 
+::placeholder {
   color: #000000;
 }
 
@@ -159,9 +141,6 @@ export default {
   animation: slide-in 1s ease-in forwards;
   transition: opacity 0.5s;
 }
-
-/* .slide-leave {
-} */
 
 .slide-leave-active {
   animation: slide-out 1s ease-out forwards;
@@ -216,7 +195,7 @@ export default {
 .banner-text {
   /* margin-left: 20vh;
   margin-top: 2.5vh; */
-  font-family: "Nunito", sans-serif;
+  font-family: 'Nunito', sans-serif;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -228,13 +207,13 @@ export default {
 }
 
 .banner-header {
-  font-family: "Nunito", sans-serif;
-  color: #FFA500;
+  font-family: 'Nunito', sans-serif;
+  color: #ffa500;
   font-size: 50px;
 }
 
 .banner-description {
-  font-family: "Nunito Sans", sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
   color: #5d7283;
   font-size: 20px;
 }
@@ -277,9 +256,9 @@ export default {
 }
 
 .content-header {
-  font-family: "Nunito Sans", sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
   font-weight: 900;
-  color: #FFA500;
+  color: #ffa500;
   font-size: 25px;
   margin-top: 10px;
 }
@@ -327,7 +306,7 @@ export default {
   border: 0;
   outline: none;
   padding: 2% 3%;
-  font-family: "Nunito Sans", sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
 }
 
 .search-bar button svg {
@@ -345,18 +324,18 @@ export default {
   border-radius: 30px;
   width: 40%;
   height: 25px;
-  font-family: "Nunito Sans", sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
   color: #000000;
   text-align: center;
 }
 
-.searchButton:hover{
+.searchButton:hover {
   background-color: #f7b85e;
   text-decoration: none;
   border-radius: 30px;
   width: 40%;
   height: 25px;
-  font-family: "Nunito Sans", sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
   color: #000000;
   text-align: center;
 }
@@ -372,7 +351,7 @@ export default {
 
 .card-title {
   text-align: left;
-  font-family: "Nunito Sans", sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
   font-style: normal;
   font-size: 20px;
 
@@ -387,7 +366,7 @@ export default {
   color: #f7b85e;
 }
 
-.card-header:hover{
+.card-header:hover {
   color: #f7b85e;
 }
 
@@ -412,7 +391,7 @@ export default {
 
 .card-description {
   text-align: left;
-  font-family: "Nunito Sans", sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 12px;
@@ -422,7 +401,7 @@ export default {
 
 .aboutus {
   text-align: left;
-  font-family: "Nunito Sans", sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
   margin: 0;
   padding: 0;
 }
@@ -436,7 +415,7 @@ li {
 }
 
 .aboutus li {
-  font-family: "Nunito Sans", sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
   font-size: larger;
   font-weight: 500;
 }

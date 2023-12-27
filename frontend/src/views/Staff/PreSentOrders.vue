@@ -28,10 +28,6 @@
           />
         </svg>
       </button>
-
-      <!-- <router-link class="signup" type="button" to="/hubStaff/newOrder">
-          + Tạo đơn hàng</router-link
-        > -->
     </div>
 
     <div class="loading">
@@ -58,7 +54,7 @@
           </button>
 
           <button v-if="item.status == 'TRANSIT'" class="status">
-            <p style="background-color: #99D9F2">{{ item.status }}</p>
+            <p style="background-color: #99d9f2">{{ item.status }}</p>
           </button>
 
           <button v-if="item.status == 'PRE_TRANSIT'" class="status">
@@ -66,11 +62,11 @@
           </button>
 
           <button v-if="item.status == 'PRE-RETURN'" class="status">
-            <p style="background-color: #B9D7FF">{{ item.status }}</p>
+            <p style="background-color: #b9d7ff">{{ item.status }}</p>
           </button>
 
           <button v-if="item.status == 'FAILURE'" class="status">
-            <p style="background-color: #FFB9B9">{{ item.status }}</p>
+            <p style="background-color: #ffb9b9">{{ item.status }}</p>
           </button>
         </template>
 
@@ -148,14 +144,6 @@
             <option>Còn trong kho</option>
           </select>
         </div>
-        <!-- <div class="input-container">
-          <label for="inputState">Nơi gửi</label>
-          <select id="inputState" class="form-control" v-model="senderName">
-            <option v-for="item in warehouseList">
-              {{ item }}
-            </option>
-          </select>
-        </div> -->
 
         <div class="bottomButton">
           <button
@@ -182,7 +170,6 @@ import axios from 'axios'
 import { toast } from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
 axios.defaults.headers.common.authorization = localStorage.getItem('token')
-
 
 export default {
   data() {
@@ -311,7 +298,7 @@ export default {
             }
         })
     }
-  },
+  }
 }
 </script>
 

@@ -2,9 +2,6 @@
   <div class="container">
     <div class="header">
       <h1 class="loginHeader">Đơn hàng {{ $route.params.id }}</h1>
-      <!-- <p class="discription">
-          Hoàn thiện đầy đủ thông tin để đến bước thiếp theo
-        </p> -->
     </div>
 
     <div class="wrapper-stepper">
@@ -33,11 +30,9 @@
           <span class="stepper-item-title" v-if="item == 1">Thông tin người gửi </span>
           <span class="stepper-item-title" v-if="item == 2">Thông tin người nhận </span>
           <span class="stepper-item-title" v-if="item == 3">Thông tin gói hàng </span>
-          <!-- <span class="stepper-item-title" v-if="item == 4">Thông tin khác </span> -->
         </div>
       </div>
 
-      <!-- <div class="stepper-content" v-for="item in numStep" :key="item"> -->
       <div class="stepper-content">
         <div class="stepper-pane" v-if="step == 1">
           <form>
@@ -109,39 +104,13 @@
         <div class="stepper-pane" v-if="step == 3">
           <form>
             <div class="form-container">
-              <div class="row-container">
-                <!-- <div class="input-container">
-                  <label for="inputState">Loại hàng hóa</label>
-                  <select id="inputState" class="form-control" v-model="orderData.type">
-                    <option selected>Tài liệu</option>
-                    <option>docs</option>
-                  </select>
-                </div> -->
-                <!-- <div class="input-container">
-                  <label for="exampleInputEmail1" class="form-label">Số lượng</label>
-                  <input
-                    class="form-control"
-                    id="exampleInputEmail1"
-                    v-model="orderData.note"
-                    required
-                  />
-                </div> -->
-              </div>
+              <div class="row-container"></div>
 
               <div class="row-container">
                 <div class="input-container">
                   <label for="exampleInputEmail1" class="form-label">Trị giá</label>
                   <input class="form-control" id="exampleInputEmail1" v-model="fee" required />
                 </div>
-                <!-- <div class="input-container">
-                  <label for="exampleInputEmail1" class="form-label">Khối lượng</label>
-                  <input
-                    class="form-control"
-                    id="exampleInputEmail1"
-                    v-model="actual_mass"
-                    required
-                  />
-                </div> -->
               </div>
 
               <div class="input-container">
@@ -161,37 +130,6 @@
             </div>
           </form>
         </div>
-
-        <!-- <div class="stepper-pane" v-if="step == 4">
-          <form>
-            <div class="form-container">
-              <div class="input-container">
-                <label for="inputState">Chỉ dẫn nếu không thể gửi hàng hóa</label>
-                <select id="inputState" class="form-control" v-model="orderData.instruction">
-                  <option selected>Chuyển hoàn ngay</option>
-                  <option>Chuyển hoàn trước ngày</option>
-                  <option>Chuyển hoàn trước khi thời gian lưu trữ</option>
-                  <option>Hủy</option>
-                </select>
-              </div>
-
-              <div class="input-container">
-                <label for="exampleInputEmail1" class="form-label">Cam kết người gửi</label>
-                <input
-                  class="form-control"
-                  id="exampleInputEmail1"
-                  v-model="orderData.note"
-                  required
-                />
-              </div>
-
-              <div class="input-container">
-                <label for="exampleInputEmail1" class="form-label">Chú dẫn nghiệp vụ</label>
-                <input class="form-control" id="exampleInputEmail1" v-model="email" required />
-              </div>
-            </div>
-          </form>
-        </div> -->
       </div>
 
       <div class="controls">
@@ -205,7 +143,6 @@
         >
           Tiếp
         </button>
-        <!-- v-if="step != 4" -->
 
         <button v-if="step == 3" class="btn btn--green-1" v-on:click="updateOrder()">Lưu</button>
       </div>

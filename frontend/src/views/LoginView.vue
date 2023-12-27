@@ -5,7 +5,6 @@
         <h1 class="loginHeader">Đăng nhập</h1>
         <div class="mb-3">
           <label for="exampleInputEmail1" class="form-label">Tên đăng nhập</label>
-          <!-- type="email" -->
           <input
             class="form-control"
             id="exampleInputEmail1"
@@ -24,10 +23,7 @@
             required
           />
         </div>
-        <button v-if="!auth" type="submit" class="btn btn-primary">
-          Đăng nhập
-          <!-- v-on:click="Login()" -->
-        </button>
+        <button v-if="!auth" type="submit" class="btn btn-primary">Đăng nhập</button>
 
         <hr />
         <div class="forgotPass">
@@ -64,7 +60,6 @@ export default {
           localStorage.setItem('token', response.data.accessToken)
           this.auth = true
           this.$router.push({ path: '/' })
-          // this.$router.go(0)
         })
         .catch((error) => {
           console.log(error)
@@ -166,7 +161,6 @@ form {
 
 .btn {
   color: #000000;
-
   /* color: #282225; */
   border: none;
   background-color: #f7b85e;

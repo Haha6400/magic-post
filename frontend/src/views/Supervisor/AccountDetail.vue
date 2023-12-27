@@ -2,7 +2,6 @@
   <div class="container">
     <div class="header">
       <h1 class="loginHeader">Tài khoản {{ $route.params.id }}</h1>
-      <!-- <p class="discription">Hoàn thiện đầy đủ thông tin để tạo tài khoản mới</p> -->
     </div>
 
     <div class="form-container">
