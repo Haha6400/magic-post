@@ -71,7 +71,7 @@ Những công nghệ được sử dụng trong quá trình phát triển dự �
 ## Nhóm tác giả
 | MSSV | Họ và tên | Nhiệm vụ | Phân công công việc |
 | ------ | ------ | ------ | ------ |
-| 20210310 | [Nguyễn Thị Hồng Hà](https://github.com/Haha6400) | Back-end | <ul><li>Cân tất</li></ul>|
-| 21020392 | [Nguyễn Đức Tân](https://github.com/ductan2003) | Front-end |<ul><li>Thiết kế giao diện người dùng</li><li>Hoàn thiện tất cả các giao diện của hệ thống</li></ul>|
-| 21020757 | [Nguyễn Đăng Dương](https://github.com/21020757) | Back-end | <ul><li>Các chức năng CRUD của đơn hàng, chi nhánh...</li></ul>|
+| 20210310 | [Nguyễn Thị Hồng Hà](https://github.com/Haha6400) | Back-end | <ul><li>Các chức năng CRUD, quản lý tài khoảng người dùng</li><li>Các chức năng thống kê đơn hàng của các chi nhánh...</li><li>Các chức năng an ninh</li><li>Thiết kế cơ sở dữ liệu</li></ul>|
+| 21020392 | [Nguyễn Đức Tân](https://github.com/ductan2003) | Front-end |<ul><li>Thiết kế giao diện người dùng</li><li>Hoàn thiện tất cả các giao diện của hệ thống</li><li>Viết lại và định tuyến URL</li></ul>|
+| 21020757 | [Nguyễn Đăng Dương](https://github.com/21020757) | Back-end | <ul><li>Các chức năng CRUD của đơn hàng</li><li>Các chức năng thống kê doanh thu của các chi nhánh...</li><li>Xử lý mấy cái chức năng cần hàm tính toán</li><li>Thiết kế cơ sở dữ liệu</li></ul>|
 
