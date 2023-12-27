@@ -43,13 +43,13 @@ const createAccount = asyncHandler(async (req, res) => {
     - If the user is hubManager, they can only create accounts for hubStaff.
     - If the user is warehouseManager, they can only create accounts for warehouseStaff.
     */
-    // const currentAccount = req.currentAccount;
-    // if ((currentAccount.role === "supervisor" && (role !== "hubManager" && role !== "warehouseManager")) ||
-    //     (currentAccount.role === "hubManager" && (role !== "hubStaff")) ||
-    //     (currentAccount.role === "warehouseManager" && (role !== "warehouseStaff"))) {
-    //     res.status(400);
-    //     throw new Error(`Select correct staff's role that you want to create account for`);
-    // }
+    const currentAccount = req.currentAccount;
+    if ((currentAccount.role === "supervisor" && (role !== "hubManager" && role !== "warehouseManager")) ||
+        (currentAccount.role === "hubManager" && (role !== "hubStaff")) ||
+        (currentAccount.role === "warehouseManager" && (role !== "warehouseStaff"))) {
+        res.status(400);
+        throw new Error(`Select correct staff's role that you want to create account for`);
+    }
 
     //Check if the staff account already exists
     if (await staff.findOne({ email })) {
@@ -70,8 +70,6 @@ const createAccount = asyncHandler(async (req, res) => {
         role
     });
 
-
-
     if (staffAccount) {
         if (role === "hubManager" || role === "warehouseManager") {
             const updateBranch = await branch.findOneAndUpdate({ name: branchName }, { manager_id: staffAccount }, { new: true });
@@ -91,7 +89,6 @@ const createAccount = asyncHandler(async (req, res) => {
 */
 const deleteAccount = asyncHandler(async (req, res) => {
     const staffAccount = await staff.findById(req.params.id);
-    console.log("staffAccount ID: ", staffAccount.id);
     if (!staffAccount) {
         res.status(404);
         throw new Error("Staff account not found");
@@ -132,7 +129,6 @@ async function resetToken(req, res) {
 const updateAccount = asyncHandler(async (req, res) => {
     console.log("updateAccount check");
     const staffAccount = await staff.findById(req.params.id);
-    // console.log(staffAccount.email);
     if (!staffAccount) {
         res.status(404);
         throw new Error("Account not found");
@@ -140,7 +136,6 @@ const updateAccount = asyncHandler(async (req, res) => {
     const { email, phoneNumber } = req.body;
     console.log("email new: ", email, "phone number: ", phoneNumber);
     const updatedAccount = await staff.findByIdAndUpdate(staffAccount.id, req.body, { new: true });
-    // res.status(200).json({updatedAccount});
 
     //reset JWTs
     const accessToken = await resetToken(req, res)
@@ -188,12 +183,10 @@ const loginStaff = asyncHandler(async (req, res) => {
             maxAge: maxAge * 1000
         });
 
-        ////////////////////////////////
         const token = await access_token.create({
             'token': accessToken,
             'account_id': account
         })
-        ////////////////////////////////
         res.status(200).json({ accessToken, account });
     } else {
         res.status(401);
@@ -246,7 +239,6 @@ async function formatAccount(req, res, account) {
 }
 
 const getAllAccounts = asyncHandler(async (req, res) => {
-    console.log("OK");
     const unformattedStaffAccounts = await staff.find().sort('createdAt');
     var staffAccounts = []
     for (i in unformattedStaffAccounts) {
@@ -304,14 +296,11 @@ const getAccountsByEachBranch = asyncHandler(async (req, res) => {
 @access hubManager, warehouseManager, supervisor
 */
 const getAccountByEmail = asyncHandler(async (req, res) => {
-    // console.log("Get by email check");
     const staffAccount = await staff.findOne({ email: req.params.email });
-    // console.log("HERE");
     if (!staffAccount) {
         res.status(404);
         throw new Error("Account not found");
     }
-    // console.log("staffAccount: ", staffAccount);
     res.status(200).json(staffAccount);
 });
 
@@ -394,7 +383,6 @@ const forgotPasswordEmail = asyncHandler(async (req, res) => {
         var message = crypto.AES.encrypt(email, 'DinhMaiGetSai').toString();
         const link = `http://localhost:3000/api/accounts/forgot-password/${message}`
         await sendEmail(email, "Magic Post Password Reset", link);
-        // await sendEmail(currentAccount.email, "Magic Post Password Reset", text);
         res.send("password reset link sent to your email account");
     } catch {
         res.send("error forgot password");
@@ -411,7 +399,6 @@ const passwordForgot = asyncHandler(async (req, res) => {
     var emailStaff = bytes.toString(crypto.enc.Utf8);
     const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
     const updateAccount = await staff.findOneAndUpdate({ email: emailStaff }, { password: hashedPassword }, { new: true });
-    // await currentAccount.accessToken.delete();
     const accessToken = await resetToken(req, res)
     res.status(200).json("password reset sucessfully.");
 

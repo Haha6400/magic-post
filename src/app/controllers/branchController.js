@@ -2,7 +2,6 @@ const asyncHandler = require("express-async-handler");
 const staff = require("../models/staffModel");
 const branch = require("../models/branchModel");
 const Order = require("../models/orderModel");
-const Fee = require("../models/feeModel");
 const Process = require('../models/processesModel');
 const Customer = require("../models/customerModel");
 const { getCurrentBranch } = require("../middleware/branch");
@@ -36,6 +35,11 @@ async function createBranch(req, res, name, higherBranchName, lowerBranchName) {
     return newBranch;
 }
 
+/*
+@desc create a hub
+@access supervisor
+@path POST /api/workplace/create/hub
+*/
 const createHub = asyncHandler(async (req, res) => {
     const hub = await createBranch(req, res, req.body.name, req.body.higherBranchName, null);
 
@@ -52,6 +56,12 @@ const createHub = asyncHandler(async (req, res) => {
     }
 });
 
+
+/*
+@desc create a warehouse
+@access supervisor
+@path POST /api/workplace/create/warehouse
+*/
 const createWarehouse = asyncHandler(async (req, res) => {
     const lowerBranch = await branch.find({ higherBranchName: req.body.name });
     var lowerBranchName = [];
@@ -86,6 +96,12 @@ const getAllWarehouse = asyncHandler(async (req, res) => {
     res.status(200).json({ allWarehouse });
 })
 
+
+/*
+@desc get all warehouse
+@access login user
+@path GET /api/workplace/all/warehouse/name
+*/
 const getAllWarehouseName = asyncHandler(async (req, res) => {
     const allWarehouse = await branch.find({ higherBranch_id: "6554dd73872582fea16dd837" });
     if (!allWarehouse) {
@@ -100,10 +116,9 @@ const getAllWarehouseName = asyncHandler(async (req, res) => {
 
 /*
 @desc get all warehouse
-@access supervisor
+@access login user
 @path GET /api/workplace/all/hub
 */
-
 const getAllHub = asyncHandler(async (req, res) => {
     const allWarehouse = await branch.find({ higherBranch_id: "6554dd73872582fea16dd837" });
     if (!allWarehouse) {
@@ -116,6 +131,11 @@ const getAllHub = asyncHandler(async (req, res) => {
     res.status(200).json({ hub });
 });
 
+/*
+@desc get branch name by id
+@access login user
+@path GET /api/workplace/all/hub
+*/
 const getBranchNameById = asyncHandler(async (req, res) => {
     const currentBranch = await branch.findById(req.params.branchId);
     if (!currentBranch) {
@@ -127,6 +147,8 @@ const getBranchNameById = asyncHandler(async (req, res) => {
 
 /*
 @desc List orders preparing to arrive at the branch.
+@access private
+@path GET /api/workplace/coming/receive
 */
 const receiveConfirmList = asyncHandler(async (req, res) => {
     const currentBranch = await getCurrentBranch(req, res);
@@ -185,11 +207,9 @@ const receiveConfirmList = asyncHandler(async (req, res) => {
         });
         filteredStatusProcess = processes.filter(item => item.events[item.events.length - 1].status === "DELIVERING");
         const filteredProcess = filteredStatusProcess.filter(item => item.events[item.events.length - 1].branch_id.toString() === currentHigherBranch._id.toString());
-        console.log("filteredProcess", filteredProcess);
         const orders = await Order.find({
             processes_id: { $in: filteredProcess }
         }).sort('createdAt');
-        console.log("orders", orders);
         const result = await getOrders(orders)
         res.status(200).json({ result, count: result.length });
     }
@@ -198,6 +218,8 @@ const receiveConfirmList = asyncHandler(async (req, res) => {
 /*
 @desc List orders preparing to leave branch
 a.k.a the last event is in current branch and status = TRANSIT
+@access private
+@path GET /api/workplace/coming/send
 */
 const sendConfirmList = asyncHandler(async (req, res) => {
     const currentBranch = await getCurrentBranch(req, res);
@@ -209,11 +231,6 @@ const sendConfirmList = asyncHandler(async (req, res) => {
             }
         }
     });
-
-    for (i in processes) {
-        console.log(i, processes[i]);
-        console.log(i, processes[i].events[processes[i].events.length - 1].branch_id.toString());
-    }
     const filteredProcess = processes.filter(item => item.events[item.events.length - 1].status !== "DELIVERING"
         && item.events[item.events.length - 1].status !== "RETURNED"
         && item.events[item.events.length - 1].status !== "DELIVERED"
@@ -226,50 +243,6 @@ const sendConfirmList = asyncHandler(async (req, res) => {
     res.status(200).json({ result, count: result.length });
 });
 
-
-// const sendConfirm = asyncHandler(async (req, res) => {
-//     const order = await Order.findOne({
-//         order_code: req.params.order_code
-//     })
-//     if (!order) {
-//         res.status(404);
-//         throw new Error("Order not found")
-//     }
-//     updateStatus = null;
-//     const currentBranch = await getCurrentBranch(req, res);
-//     const receiver = await Customer.findById(order.receiver_id);
-//     if (currentBranch.toString() === receiver.branch_id.toString()) {
-//         if (order.is_returned) {
-//             updateStatus = "RETURNED";
-//         } else {
-//             updateStatus = "DELIVERED";
-//         }
-//     } else {
-//         updateStatus = "DELIVERING";
-//     }
-
-//     const processes = await Process.findByIdAndUpdate(
-//         order.processes_id._id,
-//         {
-//             $push: {
-//                 'events': {
-//                     'branch_id': req.currentAccount.branch_id,
-//                     'status': updateStatus
-//                 }
-//             }
-//         },
-//         { new: true }
-//     )
-
-//     var updatedOrder = await Order.findByIdAndUpdate(
-//         order._id,
-//         {
-//             ...req.body
-//         },
-//         { new: true }
-//     )
-//     res.status(200).json(updatedOrder)
-// })
 
 async function confirmFunction(req, res, order, updateStatus) {
     const processes = await Process.findByIdAndUpdate(
@@ -295,6 +268,11 @@ async function confirmFunction(req, res, order, updateStatus) {
     res.status(200).json(updatedOrder)
 }
 
+/*
+@desc confirm button click handler for send order
+@access private
+@path PUT /api/workplace/coming/send/:order_code
+*/
 const sendConfirm = asyncHandler(async (req, res) => {
     const order = await Order.findOne({
         order_code: req.params.order_code
@@ -318,6 +296,11 @@ const sendConfirm = asyncHandler(async (req, res) => {
     confirmFunction(req, res, order, updateStatus);
 })
 
+/*
+@desc confirm button click handler for receive order
+@access private
+@path PUT /api/workplace/coming/receive/:order_code
+*/
 const receiveConfirm = asyncHandler(async (req, res) => {
     const order = await Order.findOne({
         order_code: req.params.order_code

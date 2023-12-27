@@ -8,7 +8,7 @@ const Package = require("../models/packageModel");
 const Order = require("../models/orderModel.js");
 const { Code } = require("mongodb");
 
-//create customer
+//@desc create customer
 async function createCustomer(fullname, address, phoneNumber, branchName) {
     var customer = await Customer.findOne({
         fullname: fullname,
@@ -25,7 +25,7 @@ async function createCustomer(fullname, address, phoneNumber, branchName) {
     return customer;
 }
 
-//create fee
+//@desc create fee
 async function createFeeModel(charge, surcharge, other_fee) {
     charge = parseInt(charge) || 0;
     surcharge = parseInt(surcharge) || 0;
@@ -41,7 +41,7 @@ async function createFeeModel(charge, surcharge, other_fee) {
     return fee;
 }
 
-//create receiver fee
+//@desc create receiver fee
 async function createReceiverFeeModel(cod, rf_other_fee) {
     cod = parseInt(cod) || 0;
     rf_other_fee = parseInt(rf_other_fee) || 0;
@@ -54,7 +54,7 @@ async function createReceiverFeeModel(cod, rf_other_fee) {
     return receiver_fee
 }
 
-//create mass
+//@desc create mass
 async function createMassModel(actual_mass, converted_mass) {
     mass = await Mass.create({
         actual: actual_mass,
@@ -63,7 +63,7 @@ async function createMassModel(actual_mass, converted_mass) {
     return mass;
 }
 
-//create process
+//@desc create process
 async function createProcesses(branch) {
     processes = await Process.create({
         events: [
@@ -76,6 +76,7 @@ async function createProcesses(branch) {
     return processes;
 }
 
+//@desc create package
 async function createPackage(type, amount, price, mass) {
     package = await Package.create({
         type: type,
@@ -125,6 +126,7 @@ async function getOrders(orders) {
     return result;
 }
 
+//@desc find process by last event
 async function findProcessByLastEvent(newEvent) {
     try {
         const result = await Process.findOne({
