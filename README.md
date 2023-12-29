@@ -7,6 +7,8 @@
 - [Nhóm tác giả](https://github.com/Haha6400/magic-post?tab=readme-ov-file#nh%C3%B3m-t%C3%A1c-gi%E1%BA%A3)
 
 ## Giới thiệu
+#### Video demo
+[Link video đề mô các tính năng cơ bản](https://drive.google.com/file/d/1Ht0HBp6BUx1foF47GM5B6gqZKtbWlHr9/view?usp=sharing)
 #### Tổng quan
 Magic Post là công ty hoạt động trong lĩnh vực chuyển phát. Công ty này có các điểm giao dịch phủ khắp cả nước. Mỗi điểm giao dịch phụ trách một vùng. Ngoài các điểm giao dịch, công ty cũng có nhiều điểm tập kết hàng hóa. Mỗi điểm giao dịch sẽ làm việc với một điểm tập kết. Ngược lại, một điểm tập kết sẽ làm việc với nhiều điểm giao dịch.
 
