@@ -89,12 +89,16 @@ export default {
 </script>
 
 <style scoped>
+
+::-webkit-scrollbar {
+  display: none;
+}
 .container {
   display: flex;
   flex-direction: column;
   align-items: normal;
   justify-content: center;
-  min-width: 300px;
+  /* min-width: 300px; */
   background-color: #ffffff;
   gap: 30px;
   margin-left: 20px;
@@ -190,8 +194,27 @@ export default {
 }
 
 img {
-  max-width: 900px;
+  max-width: 800px;
   max-height: 50%;
   align-self: center;
+}
+
+@media (max-width: 800px) {
+
+  img {
+    width: 90%;
+  }
+
+  .search-bar {
+    width: 70%;
+  }
+
+  .search-bar button img {
+    display: none;
+  }
+
+  .loginHeader{
+    font-size: 30px;
+  }
 }
 </style>

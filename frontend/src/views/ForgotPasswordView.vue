@@ -4,9 +4,7 @@
       <form>
         <h1 class="loginHeader">Quên mật khẩu</h1>
         <div class="mb-3">
-          <label for="exampleInputEmail1" class="form-label"
-            >Địa chỉ email</label
-          >
+          <label for="exampleInputEmail1" class="form-label">Địa chỉ email</label>
           <input
             type="email"
             class="form-control"
@@ -55,10 +53,10 @@
   margin-bottom: 10px;
 }
 .loginHeader {
-  font-family: "Nunito Sans", sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
   font-weight: 600;
   font-size: 30px;
-  color: #FFA500;
+  color: #ffa500;
   line-height: 28px;
   text-align: center;
   margin-bottom: 20px;
@@ -74,7 +72,7 @@
 .forgotPass-p {
   width: fit-content;
   margin-bottom: 0%;
-  font-family: "Nunito Sans", sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
 }
 .forgot {
   color: #282225;
@@ -91,7 +89,7 @@
   text-align: center;
 
   text-decoration: none;
-  font-family: "Nunito Sans", sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
   border-width: 0px;
 }
 
@@ -104,13 +102,13 @@ form {
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-family: "Nunito Sans", sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
   width: 100%;
 }
 
 .mb-3 {
   text-align: left;
-  font-family: "Nunito Sans", sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
   margin-bottom: 10px;
   width: 60%;
 }
