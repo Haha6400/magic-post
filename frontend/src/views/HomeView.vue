@@ -182,7 +182,7 @@ export default {
 .card {
   flex-grow: 1;
   flex-basis: 400px;
-  /* padding: 20px; */
+  /* padding: 10px; */
   border-radius: 12px;
   /* height: fit-content; */
   display: flex;
@@ -278,7 +278,7 @@ export default {
 .search-post img {
   /* width: 220px; */
   width: 40%;
-  min-width: 155px;
+  /* min-width: 155px; */
 }
 
 .search-side {
@@ -430,12 +430,17 @@ li {
   margin-right: 6px;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 800px) {
   /* .banner-description {
     visibility: hidden;
   } */
   .card {
     min-height: 100px;
+    flex-direction: column;
+  }
+
+  .banner-text{
+    padding: 10px;
   }
 
   .banner-header {
@@ -443,7 +448,8 @@ li {
   }
 
   .banner-description {
-    font-size: 20px;
+    font-size: 18px;
+    padding-right: 10px;
   }
 
   .image-header {
@@ -454,5 +460,42 @@ li {
   .banner-text {
     width: 100%;
   }
+
+  .search-post {
+    flex-direction: column;
+  }
+
+  .image-footer{
+    width: 90%;
+    align-items: center;
+  }
+
+  .exam-container {
+    flex-direction: column;
+  }
+
+  .exam-image {
+    width: 95%;
+  }
+
+  .card-header {
+    align-items: center;
+  }
+
+  
 }
+
+@media (max-width: 400px) {
+
+  .search-bar {
+    width: 80%;
+  }
+
+  .search-bar button {
+    display: none;
+  }
+
+
+}
+
 </style>
