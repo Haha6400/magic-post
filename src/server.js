@@ -9,7 +9,6 @@ const dotenv = require("dotenv").config();
 const cookieParser = require('cookie-parser');
 
 connectDB();
-// const staff = require('./models/staff'); //import class staff
 
 app.use(express.json());
 app.use(errorHandler);

@@ -1,5 +1,3 @@
-//TODO: Thống kê hàng đi, đến của từng warehouse và tất cả warehouse trên cả nước
-
 /*
 @desc Functions for warehouse management.
 Includes: Thống kê tất cả mặt hàng (bao gồm đã và đang có tại branch):
@@ -14,8 +12,6 @@ Hàng gửi tới nơi khác:
 
 => Input có start và end date
 => Chia ra với currentAccount là warehouseManager, supervisor
-
-=> Tổng là: 2x2x2x2 = 16 link hehe
 */
 
 const asyncHandler = require('express-async-handler');
@@ -48,24 +44,6 @@ const getCurrentBranchReceivingOrders = asyncHandler(async (req, res) => {
     const result = (await getOrders(ordersFromHUB)).concat(await getOrders(ordersFromOtherWH))
     res.status(200).json(result)
 })
-
-//TODO: logic giống receiving nên trả lại y hệt receiving :)
-// const getCurrentBranchSendingOrders = asyncHandler(async (req, res) => {
-//     const currentStaff = req.currentAccount
-//     const currentBranch = currentStaff.branch_id
-//     if (!currentBranch.higherBranch_id) {
-//         const lower_branch = await Branch.findOne({ 'higherBranch_id': currentBranch })
-//         const sender = await Customer.find({ 'branch_id': lower_branch })
-//         const processes = await Process.find({ 'branch_id': currentBranch })
-//         const ordersFromHUB = await Order.find({ 'processes_id': processes, 'sender_id': sender })
-//         //Order from other warehouses
-//         const receiver = await Customer.find({ 'branch_id': lower_branch })
-//         const ordersFromOtherWH = await Order.find({ 'processes_id': processes, 'receiver_id': receiver })
-//         const result = (await getOrders(ordersFromHUB)).concat(await getOrders(ordersFromOtherWH))
-
-//         res.status(200).json(result)
-//     }
-// })
 
 /**
  * @access supervisor

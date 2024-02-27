@@ -1,5 +1,3 @@
-//TODO: Thống kê các hàng đã chuyển thành công, các hàng chuyển không thành công và trả lại điểm giao dịch.
-
 /*
 @desc Functions for hub management.
 Includes: Thống kê tất cả mặt hàng (bao gồm đã và đang có tại branch):
@@ -19,6 +17,7 @@ Hàng gửi tới nơi khác:
 => Tìm kiếm theo tên warehouse, theo ngày, tháng, năm
 => Chia hubManager, supervisor
 */
+
 const asyncHandler = require('express-async-handler');
 const Order = require("../models/orderModel");
 const Branch = require("../models/branchModel");
@@ -83,10 +82,8 @@ async function hubReceive_Function(req, res, currentHub, warehouse, statusArray)
 async function hubSend_Function(req, res, currentHub, warehouse, statusArray) {
     const start = req.body.start;
     const end = req.body.end;
-    console.log(new Date(start));
     if (!start || !end) return "Fill start and end";
     const senders = await Customer.find({ branch_id: currentHub }).sort('createdAt');
-
     const processes = await Process.find({
         events: {
             $elemMatch: {
@@ -94,8 +91,7 @@ async function hubSend_Function(req, res, currentHub, warehouse, statusArray) {
             }
         }
     });
-    console.log("senders", senders);
-    console.log("processes", processes);
+
     if (warehouse == null) { //All orders to all warehouse
         var orders = await Order.find({
             createdAt: { $gt: new Date(start), $lt: new Date(end) },
@@ -110,7 +106,6 @@ async function hubSend_Function(req, res, currentHub, warehouse, statusArray) {
     }
     else { //All orders to a warehouse in request
         const toHub = await Branch.find({ higherBranch_id: warehouse }).sort('createdAt');
-        console.log(toHub);
         const receivers = await Customer.find({ branch_id: toHub }).sort('createdAt');
         var orders = await Order.find({
             createdAt: { $gt: new Date(start), $lt: new Date(end) },
@@ -131,9 +126,6 @@ async function hubSend_Function(req, res, currentHub, warehouse, statusArray) {
 @desc All orders are received from warehouse, send to receiver
 */
 async function allHubReceive_Function(req, res, currentHub, warehouse) {
-    //If status == "DELIVERED" => Order sent to receiver successfully
-    //If status == "TRANSIT" => Order has been transited to currentHub and waiting for receiver OR waiting for return
-    //If status == "RETURNED" => Order has been returned to sender
     const statusArray = ["DELIVERED", "TRANSIT", "RETURNED"]
     const orders = await hubReceive_Function(req, res, currentHub, warehouse, statusArray);
     return orders;
@@ -158,7 +150,7 @@ const allHubReceive_Manager = asyncHandler(async (req, res) => {
 const allHubReceiveByWH_Manager = asyncHandler(async (req, res) => {
     const currentHub = await getCurrentBranch(req, res);
     const warehouse = await Branch.findOne({ name: req.body.warehouseName });
-    console.log("warehouse:", warehouse);
+
     const orders = await allHubReceive_Function(req, res, currentHub, warehouse);
     res.status(200).json({ orders, count: orders.length });
 })
@@ -245,7 +237,6 @@ const allHubSendByWH_Supervisor = asyncHandler(async (req, res) => {
 @desc All orders are received from warehouse, send to receiver
 */
 async function availableHubReceive_Function(req, res, currentHub, warehouse) {
-    //If status == "TRANSIT" => Order has been transited to currentHub and waiting for receiver OR waiting for return
     const statusArray = ["TRANSIT"]
     const orders = await hubReceive_Function(req, res, currentHub, warehouse, statusArray);
     return orders;

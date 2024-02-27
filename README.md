@@ -1,5 +1,5 @@
-# **HỆ THỐNG QUẢN LÝ CHUYỂN PHÁT- MAGIC POST ✨**
- ![Logo Magic Post](https://raw.githubusercontent.com/Haha6400/magic-post/main/src/app/utils/mgic-post-logo.png?token=GHSAT0AAAAAACIMJ2KMHXO5X6GEKFLPRUH6ZL5OPEA)
+# **✨ HỆ THỐNG QUẢN LÝ CHUYỂN PHÁT ✨**
+![image](https://github.com/Haha6400/magic-post/assets/100295385/3bbcf37d-09c0-49e4-a170-8ff87bfdc695)
 ## Mục lục
 - [Giới thiệu](https://github.com/Haha6400/magic-post?tab=readme-ov-file#gi%E1%BB%9Bi-thi%E1%BB%87u)
 - [Cài đặt](https://github.com/Haha6400/magic-post?tab=readme-ov-file#c%C3%A0i-%C4%91%E1%BA%B7t)
@@ -44,16 +44,34 @@ Các tác nhân trong hệ thống:
 - Tra cứu trạng thái và tiến trình chuyển phát của kiện hàng mình gửi.
 
 ## Cài đặt
-
+### Cài đặt cơ sở dữ liệu
+```sh
+npm install mongoose
+```
+### Cài đặt giao diện
+###### Cài đặt npm
+```sh
+npm install
+```
+###### Chạy server
+```sh
+cd .\magic-post\
+npm start
+```
+###### Chạy giao diện
+```sh
+cd .\frontend\
+npm run dev
+```
 ## Công nghệ sử dụng
 Những công nghệ được sử dụng trong quá trình phát triển dự án:
-- Frontend: 
-- Backend: 
-- Database: 
+- Frontend: VueJS3, Bootstrap, Axios, ApexChart,...
+- Backend: Javascript, Mongoose,...
+- Database: MongoDB
 ## Nhóm tác giả
-| MSSV | Họ và tên | Đóng góp |
-| ------ | ------ | ------ |
-| 20210310 | [Nguyễn Thị Hồng Hà](https://github.com/Haha6400) | Back-end |
-| 21020392 | [Nguyễn Đức Tân](https://github.com/ductan2003) | Front-end |
-| 21020757 | [Nguyễn Đăng Dương](https://github.com/21020757) | Back-end |
+| MSSV | Họ và tên | Nhiệm vụ | Phân công công việc |
+| ------ | ------ | ------ | ------ |
+| 20210310 | [Nguyễn Thị Hồng Hà](https://github.com/Haha6400) | Back-end | <ul><li>Các chức năng CRUD, quản lý tài khoảng người dùng</li><li>Các chức năng thống kê đơn hàng của các chi nhánh...</li><li>Các chức năng an ninh</li><li>Thiết kế cơ sở dữ liệu</li></ul>|
+| 21020392 | [Nguyễn Đức Tân](https://github.com/ductan2003) | Front-end |<ul><li>Thiết kế giao diện người dùng</li><li>Hoàn thiện tất cả các giao diện của hệ thống</li><li>Viết lại và định tuyến URL</li><li>Xử lý nhập liệu</li></ul>|
+| 21020757 | [Nguyễn Đăng Dương](https://github.com/21020757) | Back-end | <ul><li>Các chức năng CRUD của đơn hàng</li><li>Các chức năng thống kê doanh thu của các chi nhánh...</li><li>Xử lý mấy cái chức năng cần hàm tính toán</li><li>Thiết kế cơ sở dữ liệu</li></ul>|
 

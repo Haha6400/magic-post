@@ -421,20 +421,16 @@ img{
 
 
 const printLabel = async (req, res) => {
-  // console.log("OK");
   var order_id = req.params.order_id;
   const order = await Order.findById(order_id);
 
   order_id = order.order_code
   // Create a browser instance
-  // const browser = await puppeteer.launch();
   const browser = await puppeteer.launch();
   const [page] = await browser.pages();
 
   //Create QR Code 
   const qrcode = await QRCode.toDataURL('http://localhost:5173/orderStatus/' + order_id);
-  // console.log('localhost:3000/api/orders/' + order_id);
-  // console.log(qrcode);
 
   const sender = await Customer.findById(order.sender_id);
   const senderBranch = await Branch.findById(sender.branch_id);
@@ -443,8 +439,6 @@ const printLabel = async (req, res) => {
   const fee = await Fee.findById(order.fee_id);
   const mass = await Mass.findById(order.mass_id);
   const receiverFee = await ReceiverFee.findById(order.receiver_fee_id);
-  // console.log(order)
-
   // Website URL to export as pdf
   const filledHTML = mustache.render(html, {
     "order_code": order.order_code,
@@ -457,7 +451,6 @@ const printLabel = async (req, res) => {
     "receiverName": receiver.fullname,
     "receiverAddress": receiver.address,
     "receiverPhonenumber": receiver.phoneNumber,
-    // "senderId": sender._id,
     "receiverHubId": receiverBranch.postal_code,
 
     "orderType": order.type,
@@ -488,7 +481,6 @@ const printLabel = async (req, res) => {
   await page.emulateMediaType('screen');
 
   const pdf = await page.pdf({
-    // path: 'result.pdf',
     margin: { top: '100px', right: '50px', bottom: '100px', left: '50px' },
     printBackground: true,
     format: 'A4',
